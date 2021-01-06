@@ -1,8 +1,6 @@
 # Social-Animal-Models
 Supplementary files for the social animal models presented in Martin and Jaeggi (under review). //reference
 
-This repository contains all files necessary to reproduce the simulations presented in Martin and Jaeggi (under review).
+The guidebook "" can be accessed from the .... `xxx.R` contains the code necessary for reviewing or reproducing the simulations presented in Martin and Jaeggi (under review).
 
-//Information on specific R and Stan files
-
-The simulation files can also be modified for investigating the parameter bias, standard error, coverage, and/or power any social animal model of interest.
+Please contact jordan.martin@uzh.ch if you have any questions, comments, or concerns!
