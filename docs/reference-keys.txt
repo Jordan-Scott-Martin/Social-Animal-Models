@@ -1,0 +1,16 @@
+using-stan-in-r
+why-stan
+getting-started
+bayesian-inference
+basic-coding-tutorial
+cholesky-decompositions
+non-centered-random-effects
+animal-models
+kronecker-products
+identifying-genetic-effects
+sam-coding-tutorial
+coding-the-model
+quantifying-assortment
+selection-differentials
+the-response-to-selection
+extending-sams
