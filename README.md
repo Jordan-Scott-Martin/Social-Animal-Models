@@ -1,5 +1,5 @@
 # Social-Animal-Models
-Supplementary R and Stan code for the social animal models presented in Martin and Jaeggi (under review). //reference
+Supplementary files for the social animal models presented in Martin and Jaeggi (under review). //reference
 
 This repository contains all files necessary to reproduce the simulations presented in Martin and Jaeggi (under review).
 
