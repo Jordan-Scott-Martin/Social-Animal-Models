@@ -24,7 +24,7 @@
 <meta name="author" content="Jordan S. Martin &amp; Adrian V. Jaeggi" />
 
 
-<meta name="date" content="2021-01-07" />
+<meta name="date" content="2021-01-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -770,7 +770,7 @@ vector&lt;lower=0&gt;[2] V_R = sd_R .* sd_R;
 </code></pre>
 <p>Note that because we specify phenotypic SDs <code>sd_P</code>, the genetic SDs <code>sd_G</code> are calculated as <span class="math inline">\(\mathrm{sqrt} ({\mathrm{Var}(\boldsymbol{\mu_{\mathrm{P}}})}h_{\mu}^{2})= {\mathrm{SD}(\boldsymbol{\mu_{\mathrm{P}}})}\mathrm{sqrt}(h_{\mu}^{2})\)</span> and <span class="math inline">\(\mathrm{sqrt} ({\mathrm{Var}(\boldsymbol{\beta_{\mathrm{P}}})}h_{\beta}^{2})= {\mathrm{SD}(\boldsymbol{\beta_{\mathrm{P}}})}\mathrm{sqrt}(h_{\beta}^{2})\)</span>, with the same approach taken for the proportion of environmental effects <span class="math inline">\(1- h_{\mu}^{2}\)</span> and <span class="math inline">\(1-h_{\beta}^{2}\)</span>. A weakly regularizing <span class="math inline">\(\mathrm{Beta}(1.2,1.2)\)</span> prior is placed on the reaction norm heritability parameters, which are constrained between 0 and 1. This and any other prior can be easily visualized in R by randomly sampling from the relevant distribution.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="using-stan-in-r.html#cb22-1"></a><span class="kw">hist</span>( <span class="kw">rbeta</span>(<span class="fl">1e5</span>, <span class="fl">1.2</span>, <span class="fl">1.2</span>), <span class="dt">prob =</span> <span class="ot">TRUE</span> )</span></code></pre></div>
-<p><img src="SAMs_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p><img src="SAMs_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <p>This prior is therefore relatively flat and uninformative over the range of plausible values, but provides very weak regularization by giving lower relative probability at the extreme ends approaching 0 (no genetic effect) and 1 (complete genetic effect). With more than two individual-level random effects, such as when specifying multiple matrices of individual autocorrelation <span class="citation">(Thomson et al. <a href="#ref-Thomson2018" role="doc-biblioref">2018</a>)</span>, SDs and variances can instead be parameterized as scaled <a href="https://mc-stan.org/docs/2_19/reference-manual/vector-and-matrix-data-types.html">simplexes</a>.</p>
 
 </div>
