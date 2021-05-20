@@ -24,7 +24,7 @@
 <meta name="author" content="Jordan S. Martin &amp; Adrian V. Jaeggi" />
 
 
-<meta name="date" content="2021-01-08" />
+<meta name="date" content="2021-05-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,6 +33,7 @@
   
 <link rel="prev" href="extending-sams.html"/>
 
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -50,24 +51,20 @@
 
 
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -87,7 +84,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -134,20 +131,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <ul class="summary">
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
-<li class="chapter" data-level="1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html"><i class="fa fa-check"></i><b>1</b> Using Stan in R</a><ul>
+<li class="chapter" data-level="1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html"><i class="fa fa-check"></i><b>1</b> Using Stan in R</a>
+<ul>
 <li class="chapter" data-level="1.1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#why-stan"><i class="fa fa-check"></i><b>1.1</b> Why Stan?</a></li>
 <li class="chapter" data-level="1.2" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#getting-started"><i class="fa fa-check"></i><b>1.2</b> Getting Started</a></li>
 <li class="chapter" data-level="1.3" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#bayesian-inference"><i class="fa fa-check"></i><b>1.3</b> Bayesian inference</a></li>
-<li class="chapter" data-level="1.4" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#basic-coding-tutorial"><i class="fa fa-check"></i><b>1.4</b> Basic coding tutorial</a><ul>
+<li class="chapter" data-level="1.4" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#basic-coding-tutorial"><i class="fa fa-check"></i><b>1.4</b> Basic coding tutorial</a>
+<ul>
 <li class="chapter" data-level="1.4.1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#cholesky-decompositions"><i class="fa fa-check"></i><b>1.4.1</b> Cholesky decompositions</a></li>
 <li class="chapter" data-level="1.4.2" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#non-centered-random-effects"><i class="fa fa-check"></i><b>1.4.2</b> Non-centered random effects</a></li>
 </ul></li>
-<li class="chapter" data-level="1.5" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#animal-models"><i class="fa fa-check"></i><b>1.5</b> Animal models</a><ul>
+<li class="chapter" data-level="1.5" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#animal-models"><i class="fa fa-check"></i><b>1.5</b> Animal models</a>
+<ul>
 <li class="chapter" data-level="1.5.1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#kronecker-products"><i class="fa fa-check"></i><b>1.5.1</b> Kronecker products</a></li>
 <li class="chapter" data-level="1.5.2" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#identifying-genetic-effects"><i class="fa fa-check"></i><b>1.5.2</b> Identifying genetic effects</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="sam-coding-tutorial.html"><a href="sam-coding-tutorial.html"><i class="fa fa-check"></i><b>2</b> SAM coding tutorial</a><ul>
+<li class="chapter" data-level="2" data-path="sam-coding-tutorial.html"><a href="sam-coding-tutorial.html"><i class="fa fa-check"></i><b>2</b> SAM coding tutorial</a>
+<ul>
 <li class="chapter" data-level="2.1" data-path="sam-coding-tutorial.html"><a href="sam-coding-tutorial.html#coding-the-model"><i class="fa fa-check"></i><b>2.1</b> Coding the model</a></li>
 <li class="chapter" data-level="2.2" data-path="sam-coding-tutorial.html"><a href="sam-coding-tutorial.html#quantifying-assortment"><i class="fa fa-check"></i><b>2.2</b> Quantifying assortment</a></li>
 <li class="chapter" data-level="2.3" data-path="sam-coding-tutorial.html"><a href="sam-coding-tutorial.html#selection-differentials"><i class="fa fa-check"></i><b>2.3</b> Selection differentials</a></li>
@@ -175,42 +176,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="resources" class="section level1 unnumbered">
 <h1>Resources</h1>
 
-<div id="refs" class="references">
-<div>
-<p>Butler, D. G., B. R. Cullis, A. R. Gilmour, B. J. Gogel, and R. Thompson. 2018. <em>ASReml-R Reference Manual</em> (version 4). Hemel Hempstead, UK: VSN International Ltd. <a href="https://asreml.kb.vsni.co.uk/wp-content/uploads/sites/3/2018/02/ASReml-R-Reference-Manual-4.pdf">https://asreml.kb.vsni.co.uk/wp-content/uploads/sites/3/2018/02/ASReml-R-Reference-Manual-4.pdf</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-ASREML" class="csl-entry">
+Butler, D. G., B. R. Cullis, A. R. Gilmour, B. J. Gogel, and R. Thompson. 2018. <em>ASReml-r Reference Manual</em> (version 4). Hemel Hempstead, UK: VSN International Ltd. <a href="https://asreml.kb.vsni.co.uk/wp-content/uploads/sites/3/2018/02/ASReml-R-Reference-Manual-4.pdf">https://asreml.kb.vsni.co.uk/wp-content/uploads/sites/3/2018/02/ASReml-R-Reference-Manual-4.pdf</a>.
 </div>
-<div>
-<p>Carpenter, B., A. Gelman, M. D. Hoffman, D. Lee, B. Goodrich, M. Betancourt, and... A. Riddell. 2017. “Stan: A Probabilistic Programming Language.” <em>Journal of Statistical Software</em> 74. <a href="https://www.jstatsoft.org/article/view/v076i01">https://www.jstatsoft.org/article/view/v076i01</a>.</p>
+<div id="ref-Stan" class="csl-entry">
+Carpenter, B., A. Gelman, M. D. Hoffman, D. Lee, B. Goodrich, M. Betancourt, and... A. Riddell. 2017. <span>“Stan: A Probabilistic Programming Language.”</span> <em>Journal of Statistical Software</em> 74. <a href="https://www.jstatsoft.org/article/view/v076i01">https://www.jstatsoft.org/article/view/v076i01</a>.
 </div>
-<div>
-<p>Gelman, A., A. Vehtari, D. Simpson, C. C. Margossian, B. Carpenter, Y. Yao, and... M. Modrák. 2020. “Bayesian Workflow.” <em>arXiv Preprint</em> arXiv:2011.01808. <a href="https://arxiv.org/abs/2011.01808">https://arxiv.org/abs/2011.01808</a>.</p>
+<div id="ref-Gelman2020" class="csl-entry">
+Gelman, A., A. Vehtari, D. Simpson, C. C. Margossian, B. Carpenter, Y. Yao, and... M. Modrák. 2020. <span>“Bayesian Workflow.”</span> <em>arXiv Preprint</em> arXiv:2011.01808. <a href="https://arxiv.org/abs/2011.01808">https://arxiv.org/abs/2011.01808</a>.
 </div>
-<div>
-<p>Gupta, A. K., and D. K. Nagar. 2018. <em>Matrix Variate Distributions</em>. CRC Press. <a href="https://www.routledge.com/Matrix-Variate-Distributions/Gupta-Nagar/p/book/9781584880462">https://www.routledge.com/Matrix-Variate-Distributions/Gupta-Nagar/p/book/9781584880462</a>.</p>
+<div id="ref-Gupta2018" class="csl-entry">
+Gupta, A. K., and D. K. Nagar. 2018. <em>Matrix Variate Distributions</em>. CRC Press. <a href="https://www.routledge.com/Matrix-Variate-Distributions/Gupta-Nagar/p/book/9781584880462">https://www.routledge.com/Matrix-Variate-Distributions/Gupta-Nagar/p/book/9781584880462</a>.
 </div>
-<div>
-<p>Hadfield, J. D. 2010. “MCMC Methods for Multi-Response Generalized Linear Mixed Models: The Mcmcglmm R Package.” <em>Journal of Statistical Software</em> 33. <a href="https://mran.microsoft.com/snapshot/2016-10-12/web/packages/MCMCglmm/vignettes/Overview.pdf">https://mran.microsoft.com/snapshot/2016-10-12/web/packages/MCMCglmm/vignettes/Overview.pdf</a>.</p>
+<div id="ref-MCMCglmm" class="csl-entry">
+Hadfield, J. D. 2010. <span>“MCMC Methods for Multi-Response Generalized Linear Mixed Models: The MCMCglmm r Package.”</span> <em>Journal of Statistical Software</em> 33. <a href="https://mran.microsoft.com/snapshot/2016-10-12/web/packages/MCMCglmm/vignettes/Overview.pdf">https://mran.microsoft.com/snapshot/2016-10-12/web/packages/MCMCglmm/vignettes/Overview.pdf</a>.
 </div>
-<div>
-<p>Lemoine, N. P. 2019. “Moving Beyond Noninformative Priors: Why and How to Choose Weakly Informative Priors in Bayesian Analyses.” <em>Oikos</em> 128. <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/oik.05985">https://onlinelibrary.wiley.com/doi/full/10.1111/oik.05985</a>.</p>
+<div id="ref-Lemoine2019" class="csl-entry">
+Lemoine, N. P. 2019. <span>“Moving Beyond Noninformative Priors: Why and How to Choose Weakly Informative Priors in Bayesian Analyses.”</span> <em>Oikos</em> 128. <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/oik.05985">https://onlinelibrary.wiley.com/doi/full/10.1111/oik.05985</a>.
 </div>
-<div>
-<p>Martin, J. S., and A. V. Jaeggi. 2021. “Social Animal Models for Quantifying Plasticity, Assortment, and Selection on Interacting Phenotypes.” <em>Under Review</em> XX. <a href="XX">XX</a>.</p>
+<div id="ref-SAM" class="csl-entry">
+Martin, J. S., and A. V. Jaeggi. 2021. <span>“Social Animal Models for Quantifying Plasticity, Assortment, and Selection on Interacting Phenotypes.”</span> <em>Under Review</em> XX. <a href="https://XX">XX</a>.
 </div>
-<div>
-<p>McElreath, R. 2020. <em>Statistical Rethinking: A Bayesian Course with Examples in R and Stan</em>. 2nd ed. CRC Press. <a href="https://xcelab.net/rm/statistical-rethinking/">https://xcelab.net/rm/statistical-rethinking/</a>.</p>
+<div id="ref-Rethinking" class="csl-entry">
+McElreath, R. 2020. <em>Statistical Rethinking: A Bayesian Course with Examples in r and Stan</em>. 2nd ed. CRC Press. <a href="https://xcelab.net/rm/statistical-rethinking/">https://xcelab.net/rm/statistical-rethinking/</a>.
 </div>
-<div>
-<p>Nishio, M., and A. Arakawa. 2019. “Performance of Hamiltonian Monte Carlo and No-U-Turn Sampler for Estimating Genetic Parameters and Breeding Values.” <em>Genetics Selection Evolution</em> 51. <a href="https://gsejournal.biomedcentral.com/articles/10.1186/s12711-019-0515-1">https://gsejournal.biomedcentral.com/articles/10.1186/s12711-019-0515-1</a>.</p>
+<div id="ref-MCMCperf" class="csl-entry">
+Nishio, M., and A. Arakawa. 2019. <span>“Performance of Hamiltonian Monte Carlo and No-u-Turn Sampler for Estimating Genetic Parameters and Breeding Values.”</span> <em>Genetics Selection Evolution</em> 51. <a href="https://gsejournal.biomedcentral.com/articles/10.1186/s12711-019-0515-1">https://gsejournal.biomedcentral.com/articles/10.1186/s12711-019-0515-1</a>.
 </div>
-<div>
-<p>R Core Team. 2020. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org">https://www.R-project.org</a>.</p>
+<div id="ref-Rbase" class="csl-entry">
+R Core Team. 2020. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org">https://www.R-project.org</a>.
 </div>
-<div>
-<p>Stinchcombe, J. R., A. K. Simonsen, and M. W. Blows. 2014. “Estimating Uncertainty in Multivariate Responses to Selection.” <em>Evolution</em> 68. <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/evo.12321">https://onlinelibrary.wiley.com/doi/full/10.1111/evo.12321</a>.</p>
+<div id="ref-Stinchcombe2014" class="csl-entry">
+Stinchcombe, J. R., A. K. Simonsen, and M. W. Blows. 2014. <span>“Estimating Uncertainty in Multivariate Responses to Selection.”</span> <em>Evolution</em> 68. <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/evo.12321">https://onlinelibrary.wiley.com/doi/full/10.1111/evo.12321</a>.
 </div>
-<div>
-<p>Thomson, C. E., I. S. Winney, O. C. Salles, and B. Pujol. 2018. “A Guide to Using a Multiple-Matrix Animal Model to Disentangle Genetic and Nongenetic Causes of Phenotypic Variance.” <em>PloS One</em> 13. <a href="https://journals.plos.org/plosone/article/comments?id=10.1371/journal.pone.0197720">https://journals.plos.org/plosone/article/comments?id=10.1371/journal.pone.0197720</a>.</p>
+<div id="ref-Thomson2018" class="csl-entry">
+Thomson, C. E., I. S. Winney, O. C. Salles, and B. Pujol. 2018. <span>“A Guide to Using a Multiple-Matrix Animal Model to Disentangle Genetic and Nongenetic Causes of Phenotypic Variance.”</span> <em>PloS One</em> 13. <a href="https://journals.plos.org/plosone/article/comments?id=10.1371/journal.pone.0197720">https://journals.plos.org/plosone/article/comments?id=10.1371/journal.pone.0197720</a>.
 </div>
 </div>
 </div>

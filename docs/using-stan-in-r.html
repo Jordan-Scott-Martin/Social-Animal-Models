@@ -24,7 +24,7 @@
 <meta name="author" content="Jordan S. Martin &amp; Adrian V. Jaeggi" />
 
 
-<meta name="date" content="2021-01-08" />
+<meta name="date" content="2021-05-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,6 +33,7 @@
   
 <link rel="prev" href="introduction.html"/>
 <link rel="next" href="sam-coding-tutorial.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -50,24 +51,20 @@
 
 
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -87,7 +84,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -134,20 +131,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <ul class="summary">
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
-<li class="chapter" data-level="1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html"><i class="fa fa-check"></i><b>1</b> Using Stan in R</a><ul>
+<li class="chapter" data-level="1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html"><i class="fa fa-check"></i><b>1</b> Using Stan in R</a>
+<ul>
 <li class="chapter" data-level="1.1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#why-stan"><i class="fa fa-check"></i><b>1.1</b> Why Stan?</a></li>
 <li class="chapter" data-level="1.2" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#getting-started"><i class="fa fa-check"></i><b>1.2</b> Getting Started</a></li>
 <li class="chapter" data-level="1.3" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#bayesian-inference"><i class="fa fa-check"></i><b>1.3</b> Bayesian inference</a></li>
-<li class="chapter" data-level="1.4" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#basic-coding-tutorial"><i class="fa fa-check"></i><b>1.4</b> Basic coding tutorial</a><ul>
+<li class="chapter" data-level="1.4" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#basic-coding-tutorial"><i class="fa fa-check"></i><b>1.4</b> Basic coding tutorial</a>
+<ul>
 <li class="chapter" data-level="1.4.1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#cholesky-decompositions"><i class="fa fa-check"></i><b>1.4.1</b> Cholesky decompositions</a></li>
 <li class="chapter" data-level="1.4.2" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#non-centered-random-effects"><i class="fa fa-check"></i><b>1.4.2</b> Non-centered random effects</a></li>
 </ul></li>
-<li class="chapter" data-level="1.5" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#animal-models"><i class="fa fa-check"></i><b>1.5</b> Animal models</a><ul>
+<li class="chapter" data-level="1.5" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#animal-models"><i class="fa fa-check"></i><b>1.5</b> Animal models</a>
+<ul>
 <li class="chapter" data-level="1.5.1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#kronecker-products"><i class="fa fa-check"></i><b>1.5.1</b> Kronecker products</a></li>
 <li class="chapter" data-level="1.5.2" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#identifying-genetic-effects"><i class="fa fa-check"></i><b>1.5.2</b> Identifying genetic effects</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="sam-coding-tutorial.html"><a href="sam-coding-tutorial.html"><i class="fa fa-check"></i><b>2</b> SAM coding tutorial</a><ul>
+<li class="chapter" data-level="2" data-path="sam-coding-tutorial.html"><a href="sam-coding-tutorial.html"><i class="fa fa-check"></i><b>2</b> SAM coding tutorial</a>
+<ul>
 <li class="chapter" data-level="2.1" data-path="sam-coding-tutorial.html"><a href="sam-coding-tutorial.html#coding-the-model"><i class="fa fa-check"></i><b>2.1</b> Coding the model</a></li>
 <li class="chapter" data-level="2.2" data-path="sam-coding-tutorial.html"><a href="sam-coding-tutorial.html#quantifying-assortment"><i class="fa fa-check"></i><b>2.2</b> Quantifying assortment</a></li>
 <li class="chapter" data-level="2.3" data-path="sam-coding-tutorial.html"><a href="sam-coding-tutorial.html#selection-differentials"><i class="fa fa-check"></i><b>2.3</b> Selection differentials</a></li>
@@ -172,36 +173,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="using-stan-in-r" class="section level1">
+<div id="using-stan-in-r" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Using Stan in R</h1>
 <style>
 body {
 text-align: justify}
 </style>
-<div id="why-stan" class="section level2">
+<div id="why-stan" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> Why Stan?</h2>
-<p>SAMs cannot be straightforwardly implemented with currently available software for quantitative genetic analysis, such as the frequentist ASREML program <span class="citation">(Butler et al. <a href="#ref-ASREML" role="doc-biblioref">2018</a>)</span> or the Bayesian open-source R package MCMCglmm <span class="citation">(Hadfield <a href="#ref-MCMCglmm" role="doc-biblioref">2010</a>)</span>. The classical animal models estimated by these programs can be used to describe reaction norms defined over non-social environments, with reaction norm slopes estimated on directly measured environmental gradients. However, social environments defined by partner phenotypes present novel challenges for animal models, such as accounting for temporal feedback between social partners’ phenotypes, differentiating the effects of assortment and social plasticity between partners, and avoiding bias due to correlated residual effects on measurements taken within and among social interactions <span class="citation">(Martin and Jaeggi <a href="#ref-SAM" role="doc-biblioref">2021</a>)</span>. SAMs address these challenges by estimating plasticity, assortment, and selection directly on the latent social reaction norms (SRNs) governing repeatable individual variation. A highly flexible modeling framework is required to estimate these latent (i.e. indirectly measured) interactions with raw empirical data, as well as to use them for predicting social evolutionary change.</p>
-<p>Stan <span class="citation">(Carpenter et al. <a href="#ref-Stan" role="doc-biblioref">2017</a>)</span> is an open-source programming language for estimating probabilistic models of arbitrary complexity, which can interface with multiple statistical environments such as R <span class="citation">(R Core Team <a href="#ref-Rbase" role="doc-biblioref">2020</a>)</span>. Stan also facilitates fully Bayesian inference using state-of-the-art Markov Chain Monte Carlo (MCMC) sampling techniques. In particular, the No U-Turn Sampler (NUTS) implimented in Stan has been found to perform particularly well for quantitative genetic analysis <span class="citation">(Nishio and Arakawa <a href="#ref-MCMCperf" role="doc-biblioref">2019</a>)</span>. Stan is thus an ideal platform for flexibly estimating SAMs in any empirical system, as is further discussed in the main text <span class="citation">(Martin and Jaeggi <a href="#ref-SAM" role="doc-biblioref">2021</a>)</span>. Using Bayesian posteriors rather than point estimates will also promote more robust biological inferences with SAMs, as statistical uncertainty can be easily carried forward across multiple stages of analysis <span class="citation">(Stinchcombe, Simonsen, and Blows <a href="#ref-Stinchcombe2014" role="doc-biblioref">2014</a>)</span>. This provides a crucial means of quantifying uncertainty in the predicted direction and magnitude of social evolution.</p>
+<p>SAMs cannot be straightforwardly implemented with currently available software for quantitative genetic analysis, such as the frequentist ASREML program <span class="citation">(<a href="resources.html#ref-ASREML" role="doc-biblioref">Butler et al. 2018</a>)</span> or the Bayesian open-source R package MCMCglmm <span class="citation">(<a href="resources.html#ref-MCMCglmm" role="doc-biblioref">Hadfield 2010</a>)</span>. The classical animal models estimated by these programs can be used to describe reaction norms defined over non-social environments, with reaction norm slopes estimated on directly measured environmental gradients. However, social environments defined by partner phenotypes present novel challenges for animal models, such as accounting for temporal feedback between social partners’ phenotypes, differentiating the effects of assortment and social plasticity between partners, and avoiding bias due to correlated residual effects on measurements taken within and among social interactions <span class="citation">(<a href="resources.html#ref-SAM" role="doc-biblioref">Martin and Jaeggi 2021</a>)</span>. SAMs address these challenges by estimating plasticity, assortment, and selection directly on the latent social reaction norms (SRNs) governing repeatable individual variation. A highly flexible modeling framework is required to estimate these latent (i.e. indirectly measured) interactions with raw empirical data, as well as to use them for predicting social evolutionary change.</p>
+<p>Stan <span class="citation">(<a href="resources.html#ref-Stan" role="doc-biblioref">Carpenter et al. 2017</a>)</span> is an open-source programming language for estimating probabilistic models of arbitrary complexity, which can interface with multiple statistical environments such as R <span class="citation">(<a href="resources.html#ref-Rbase" role="doc-biblioref">R Core Team 2020</a>)</span>. Stan also facilitates fully Bayesian inference using state-of-the-art Markov Chain Monte Carlo (MCMC) sampling techniques. In particular, the No U-Turn Sampler (NUTS) implimented in Stan has been found to perform particularly well for quantitative genetic analysis <span class="citation">(<a href="resources.html#ref-MCMCperf" role="doc-biblioref">Nishio and Arakawa 2019</a>)</span>. Stan is thus an ideal platform for flexibly estimating SAMs in any empirical system, as is further discussed in the main text <span class="citation">(<a href="resources.html#ref-SAM" role="doc-biblioref">Martin and Jaeggi 2021</a>)</span>. Using Bayesian posteriors rather than point estimates will also promote more robust biological inferences with SAMs, as statistical uncertainty can be easily carried forward across multiple stages of analysis <span class="citation">(<a href="resources.html#ref-Stinchcombe2014" role="doc-biblioref">Stinchcombe, Simonsen, and Blows 2014</a>)</span>. This provides a crucial means of quantifying uncertainty in the predicted direction and magnitude of social evolution.</p>
 </div>
-<div id="getting-started" class="section level2">
+<div id="getting-started" class="section level2" number="1.2">
 <h2><span class="header-section-number">1.2</span> Getting Started</h2>
-<p>Stan interfaces with R through the RStan package <span class="citation">(Carpenter et al. <a href="#ref-Stan" role="doc-biblioref">2017</a>)</span>, providing an efficient means of integrating SAMs into pre-existing data analysis pipelines. However, you will first need to install Stan on your computer and ensure that it is appropriately configured with your C++ toolchain. This can be accomplished by following the instructions for your operating system on the <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">RStan Getting Started</a> page. Once you are able to effectively use RStan, you can begin creating the <code>.stan</code> files necessary for estimating SAMs. These files can be composed using RStudio or any text editor, as explained below. Once an appropriate <code>.stan</code> file is prepared, it can be compiled with R for the C++ toolchain using the <code>stan_model()</code> function and subsequently estimated with an appropriate list of empirical data using the <code>sampling()</code> function. The resulting posteriors of a model can then be accessed with the <code>extract()</code> function and manipulated for any further quantities or analyses of interest.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="using-stan-in-r.html#cb1-1"></a><span class="kw">library</span>(rstan)</span>
-<span id="cb1-2"><a href="using-stan-in-r.html#cb1-2"></a></span>
-<span id="cb1-3"><a href="using-stan-in-r.html#cb1-3"></a><span class="co">#compiles the model in C++ for MCMC estimation</span></span>
-<span id="cb1-4"><a href="using-stan-in-r.html#cb1-4"></a>model =<span class="st"> </span><span class="kw">stan_model</span>(<span class="st">&quot;model.stan&quot;</span>)</span>
-<span id="cb1-5"><a href="using-stan-in-r.html#cb1-5"></a></span>
-<span id="cb1-6"><a href="using-stan-in-r.html#cb1-6"></a><span class="co">#estimates and saves the posterior MCMC samples of the model (estimated with default settings)</span></span>
-<span id="cb1-7"><a href="using-stan-in-r.html#cb1-7"></a>results =<span class="st"> </span><span class="kw">sampling</span>(<span class="dt">object =</span> SAM_file, <span class="dt">data =</span> data)</span>
-<span id="cb1-8"><a href="using-stan-in-r.html#cb1-8"></a></span>
-<span id="cb1-9"><a href="using-stan-in-r.html#cb1-9"></a><span class="co">#extracts posterior estimates</span></span>
-<span id="cb1-10"><a href="using-stan-in-r.html#cb1-10"></a>MCMCsamples =<span class="st">  </span><span class="kw">extract</span>(results)</span></code></pre></div>
+<p>Stan interfaces with R through the RStan package <span class="citation">(<a href="resources.html#ref-Stan" role="doc-biblioref">Carpenter et al. 2017</a>)</span>, providing an efficient means of integrating SAMs into pre-existing data analysis pipelines. However, you will first need to install Stan on your computer and ensure that it is appropriately configured with your C++ toolchain. This can be accomplished by following the instructions for your operating system on the <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">RStan Getting Started</a> page. Once you are able to effectively use RStan, you can begin creating the <code>.stan</code> files necessary for estimating SAMs. These files can be composed using RStudio or any text editor, as explained below. Once an appropriate <code>.stan</code> file is prepared, it can be compiled with R for the C++ toolchain using the <code>stan_model()</code> function and subsequently estimated with an appropriate list of empirical data using the <code>sampling()</code> function. The resulting posteriors of a model can then be accessed with the <code>extract()</code> function and manipulated for any further quantities or analyses of interest.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="using-stan-in-r.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
+<span id="cb1-2"><a href="using-stan-in-r.html#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="using-stan-in-r.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#compiles the model in C++ for MCMC estimation</span></span>
+<span id="cb1-4"><a href="using-stan-in-r.html#cb1-4" aria-hidden="true" tabindex="-1"></a>model <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="st">&quot;model.stan&quot;</span>)</span>
+<span id="cb1-5"><a href="using-stan-in-r.html#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="using-stan-in-r.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#estimates and saves the posterior MCMC samples of the model (estimated with default settings)</span></span>
+<span id="cb1-7"><a href="using-stan-in-r.html#cb1-7" aria-hidden="true" tabindex="-1"></a>results <span class="ot">=</span> <span class="fu">sampling</span>(<span class="at">object =</span> SAM_file, <span class="at">data =</span> data)</span>
+<span id="cb1-8"><a href="using-stan-in-r.html#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="using-stan-in-r.html#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#extracts posterior estimates</span></span>
+<span id="cb1-10"><a href="using-stan-in-r.html#cb1-10" aria-hidden="true" tabindex="-1"></a>MCMCsamples <span class="ot">=</span>  <span class="fu">extract</span>(results)</span></code></pre></div>
 </div>
-<div id="bayesian-inference" class="section level2">
+<div id="bayesian-inference" class="section level2" number="1.3">
 <h2><span class="header-section-number">1.3</span> Bayesian inference</h2>
-<p>A detailed overview of the benefits of Bayesian inference is beyond the scope of this guidebook, as attention is placed on coding and computational concerns rather than interpretation. We encourage researchers unfamiliar with fully Bayesian inference to see <span class="citation">McElreath (<a href="#ref-Rethinking" role="doc-biblioref">2020</a>)</span> for further discussion. <span class="citation">Lemoine (<a href="#ref-Lemoine2019" role="doc-biblioref">2019</a>)</span> also demonstrates why weakly regularizing (or “weakly informative”) priors are often preferable to the flat or diffuse priors more commonly used in evolutionary ecology. In general, we encourage researchers to utilize the benefits of fully Bayesian inference while working in Stan, rather than attempting to mimic classical inference and null-hypothesis testing approaches. <span class="citation">Gelman et al. (<a href="#ref-Gelman2020" role="doc-biblioref">2020</a>)</span> provide a very useful general discussion of Bayesian workflow from initial estimation to model comparison and selection. A basic understanding of MCMC and prior and posterior distributions is necessary to fully understand model estimation in Stan. MCMC provides a means of approximating any continous probability distribution, with a finite set of samples taken in proportion to the underlying target probability density. As a consequence, Stan models return objects with many MCMC samples for each model parameter, rather than single point estimates. These samples can then be summarized to approximate the shape of the truly continous target posterior distribution, as is shown throughout the coding tutorials.</p>
+<p>A detailed overview of the benefits of Bayesian inference is beyond the scope of this guidebook, as attention is placed on coding and computational concerns rather than interpretation. We encourage researchers unfamiliar with fully Bayesian inference to see <span class="citation"><a href="resources.html#ref-Rethinking" role="doc-biblioref">McElreath</a> (<a href="resources.html#ref-Rethinking" role="doc-biblioref">2020</a>)</span> for further discussion. <span class="citation"><a href="resources.html#ref-Lemoine2019" role="doc-biblioref">Lemoine</a> (<a href="resources.html#ref-Lemoine2019" role="doc-biblioref">2019</a>)</span> also demonstrates why weakly regularizing (or “weakly informative”) priors are often preferable to the flat or diffuse priors more commonly used in evolutionary ecology. In general, we encourage researchers to utilize the benefits of fully Bayesian inference while working in Stan, rather than attempting to mimic classical inference and null-hypothesis testing approaches. <span class="citation"><a href="resources.html#ref-Gelman2020" role="doc-biblioref">Gelman et al.</a> (<a href="resources.html#ref-Gelman2020" role="doc-biblioref">2020</a>)</span> provide a very useful general discussion of Bayesian workflow from initial estimation to model comparison and selection. A basic understanding of MCMC and prior and posterior distributions is necessary to fully understand model estimation in Stan. MCMC provides a means of approximating any continous probability distribution, with a finite set of samples taken in proportion to the underlying target probability density. As a consequence, Stan models return objects with many MCMC samples for each model parameter, rather than single point estimates. These samples can then be summarized to approximate the shape of the truly continous target posterior distribution, as is shown throughout the coding tutorials.</p>
 </div>
-<div id="basic-coding-tutorial" class="section level2">
+<div id="basic-coding-tutorial" class="section level2" number="1.4">
 <h2><span class="header-section-number">1.4</span> Basic coding tutorial</h2>
 <p>Stan uses its own language for writing probabilistic models, including a variety of built-in functions designed to aid in efficient computation. The biggest conceptual hurdle for new users of Stan is likely to be the absence of an intuitive R-like syntax for specifying model formulas, such as formulas like <code>y ~ x + (1|z)</code> that can be used to quickly specify complex generalized linear mixed-effects models. These formulas facilitate highly efficient statistical modeling, but do so at the cost of limiting users’ ability to specify atypical model structures. Instead, Stan provides the benefit of nearly unlimited flexibility in model specification, with the added cost of a steeper learning curve. In particular, models must be formally specified with mathematically appropriate likelihood functions, rather than this process being handled on the back-end through textual inputs from the user such as <code>family= poisson(link = "log")</code>. This may at first seem like a cumbersome task, but it provides a degree of independence and creativity for data analysis that is otherwise unavailable. It is this autonomy that makes it possible to unbiasedly estimate SAMs in Stan, which to the best of our knowledge cannot be accomplished with any other mainstream statistical software. Nonetheless, it is important to recognize that some practice and trial-and-error will be required to gain competency and comfortability with Stan. We therefore encourage those interested in SAMs to review the <a href="https://mc-stan.org/docs/2_25/reference-manual/index.html">Stan Reference Manual</a>, as well the extensive collection of <a href="https://mc-stan.org/users/documentation/case-studies">Stan Case Studies</a>, which will provide a more robust foundation for estimating any model of interest in Stan.</p>
 <p>Here we review some basics of Stan that will be necessary for following the coding tutorials in the rest of the guidebook. To make this introduction more concrete, we simulate a simple data structure appropriately described by a Gaussian random regression model, with 50 subjects and 2 repeated measures per subject across an environmental gradient <span class="math inline">\(x\)</span>. Formally, the model for observation <em>i</em> of individual <em>j</em> is given by</p>
@@ -233,43 +234,43 @@ It is often easier to specify model likelihoods and priors over standard deviati
 \mathrm{Cor}( \boldsymbol{\beta_{\mathrm{P}}} , \boldsymbol{\mu_{\mathrm{P}}} )      &amp;    1
 \end{bmatrix} \]</span></p>
 <p>We can simulate a random dataset from this model in R, along with an index variable <code>id</code> that tracks which individual (I = 1 - 50) is being measured at each observation (N = 1-100).</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="using-stan-in-r.html#cb2-1"></a><span class="kw">library</span>(mvtnorm)</span>
-<span id="cb2-2"><a href="using-stan-in-r.html#cb2-2"></a></span>
-<span id="cb2-3"><a href="using-stan-in-r.html#cb2-3"></a>N =<span class="st"> </span><span class="dv">100</span> <span class="co">#total observations</span></span>
-<span id="cb2-4"><a href="using-stan-in-r.html#cb2-4"></a>I =<span class="st"> </span><span class="dv">50</span> <span class="co">#total individuals</span></span>
-<span id="cb2-5"><a href="using-stan-in-r.html#cb2-5"></a></span>
-<span id="cb2-6"><a href="using-stan-in-r.html#cb2-6"></a>intercept =<span class="st"> </span><span class="dv">1</span> <span class="co">#global intercept</span></span>
-<span id="cb2-7"><a href="using-stan-in-r.html#cb2-7"></a>beta1 =<span class="st"> </span><span class="fl">0.3</span> <span class="co">#fixed effect regression coefficient</span></span>
-<span id="cb2-8"><a href="using-stan-in-r.html#cb2-8"></a>SD_intercept =<span class="st"> </span><span class="fl">0.3</span> <span class="co">#standard deviation of random intercepts</span></span>
-<span id="cb2-9"><a href="using-stan-in-r.html#cb2-9"></a>SD_slope =<span class="st"> </span><span class="fl">0.3</span></span>
-<span id="cb2-10"><a href="using-stan-in-r.html#cb2-10"></a>SD_residual =<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb2-11"><a href="using-stan-in-r.html#cb2-11"></a>cor_RE =<span class="st"> </span><span class="fl">0.3</span> <span class="co">#correlation of random intercepts and slopes</span></span>
-<span id="cb2-12"><a href="using-stan-in-r.html#cb2-12"></a></span>
-<span id="cb2-13"><a href="using-stan-in-r.html#cb2-13"></a><span class="co">#individual-level index</span></span>
-<span id="cb2-14"><a href="using-stan-in-r.html#cb2-14"></a>id =<span class="st"> </span><span class="kw">rep</span>(<span class="kw">seq</span>(<span class="dv">1</span>, I), <span class="dt">each =</span> N<span class="op">/</span>I) <span class="co">#i.e. two observations per individual</span></span>
-<span id="cb2-15"><a href="using-stan-in-r.html#cb2-15"></a></span>
-<span id="cb2-16"><a href="using-stan-in-r.html#cb2-16"></a><span class="co">#simulate fixed effect covariate</span></span>
-<span id="cb2-17"><a href="using-stan-in-r.html#cb2-17"></a>x =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>,<span class="dv">0</span>,<span class="dv">1</span>) <span class="co">#fixed effect covariate</span></span>
-<span id="cb2-18"><a href="using-stan-in-r.html#cb2-18"></a></span>
-<span id="cb2-19"><a href="using-stan-in-r.html#cb2-19"></a><span class="co">#simulate random individual deviations</span></span>
-<span id="cb2-20"><a href="using-stan-in-r.html#cb2-20"></a>P_cor =<span class="st"> </span><span class="kw">matrix</span>( <span class="kw">c</span>(<span class="dv">1</span>, cor_RE, cor_RE, <span class="dv">1</span>), <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">ncol =</span> <span class="dv">2</span> )</span>
-<span id="cb2-21"><a href="using-stan-in-r.html#cb2-21"></a>P_SD =<span class="st"> </span><span class="kw">matrix</span>( <span class="kw">c</span>(SD_intercept, <span class="dv">0</span>, <span class="dv">0</span>, SD_slope), <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">ncol =</span> <span class="dv">2</span> )</span>
-<span id="cb2-22"><a href="using-stan-in-r.html#cb2-22"></a>P_cov =<span class="st"> </span>P_SD <span class="op">%*%</span><span class="st"> </span>P_cor <span class="op">%*%</span><span class="st"> </span>P_SD</span>
-<span id="cb2-23"><a href="using-stan-in-r.html#cb2-23"></a>re_P =<span class="st"> </span><span class="kw">rmvnorm</span>(I, <span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">sigma =</span> P_cov) <span class="co">#rows = I, cols = intercepts and slopes</span></span>
-<span id="cb2-24"><a href="using-stan-in-r.html#cb2-24"></a></span>
-<span id="cb2-25"><a href="using-stan-in-r.html#cb2-25"></a><span class="co">#individual-level parameters</span></span>
-<span id="cb2-26"><a href="using-stan-in-r.html#cb2-26"></a>mu =<span class="st"> </span>intercept <span class="op">+</span><span class="st"> </span>re_P[,<span class="dv">1</span>]</span>
-<span id="cb2-27"><a href="using-stan-in-r.html#cb2-27"></a>beta =<span class="st"> </span>beta1 <span class="op">+</span><span class="st"> </span>re_P[,<span class="dv">2</span>]</span>
-<span id="cb2-28"><a href="using-stan-in-r.html#cb2-28"></a></span>
-<span id="cb2-29"><a href="using-stan-in-r.html#cb2-29"></a><span class="co">#residual effects</span></span>
-<span id="cb2-30"><a href="using-stan-in-r.html#cb2-30"></a>epsilon =<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, SD_residual )</span>
-<span id="cb2-31"><a href="using-stan-in-r.html#cb2-31"></a></span>
-<span id="cb2-32"><a href="using-stan-in-r.html#cb2-32"></a><span class="co">#measured response (100 response values for 50 subjects)</span></span>
-<span id="cb2-33"><a href="using-stan-in-r.html#cb2-33"></a>y =<span class="st"> </span>mu[id] <span class="op">+</span><span class="st"> </span>beta[id]<span class="op">*</span>x <span class="op">+</span><span class="st"> </span>epsilon</span>
-<span id="cb2-34"><a href="using-stan-in-r.html#cb2-34"></a></span>
-<span id="cb2-35"><a href="using-stan-in-r.html#cb2-35"></a><span class="co">#combine into list for Stan</span></span>
-<span id="cb2-36"><a href="using-stan-in-r.html#cb2-36"></a><span class="co">#other values are empirically unobserved and will be model parameters</span></span>
-<span id="cb2-37"><a href="using-stan-in-r.html#cb2-37"></a>stan_data =<span class="st"> </span><span class="kw">list</span>(<span class="dt">y =</span> y, <span class="dt">x =</span> x, <span class="dt">id =</span> id, <span class="dt">N =</span> N, <span class="dt">I =</span> I)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="using-stan-in-r.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
+<span id="cb2-2"><a href="using-stan-in-r.html#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="using-stan-in-r.html#cb2-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">=</span> <span class="dv">100</span> <span class="co">#total observations</span></span>
+<span id="cb2-4"><a href="using-stan-in-r.html#cb2-4" aria-hidden="true" tabindex="-1"></a>I <span class="ot">=</span> <span class="dv">50</span> <span class="co">#total individuals</span></span>
+<span id="cb2-5"><a href="using-stan-in-r.html#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="using-stan-in-r.html#cb2-6" aria-hidden="true" tabindex="-1"></a>intercept <span class="ot">=</span> <span class="dv">1</span> <span class="co">#global intercept</span></span>
+<span id="cb2-7"><a href="using-stan-in-r.html#cb2-7" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#fixed effect regression coefficient</span></span>
+<span id="cb2-8"><a href="using-stan-in-r.html#cb2-8" aria-hidden="true" tabindex="-1"></a>SD_intercept <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#standard deviation of random intercepts</span></span>
+<span id="cb2-9"><a href="using-stan-in-r.html#cb2-9" aria-hidden="true" tabindex="-1"></a>SD_slope <span class="ot">=</span> <span class="fl">0.3</span></span>
+<span id="cb2-10"><a href="using-stan-in-r.html#cb2-10" aria-hidden="true" tabindex="-1"></a>SD_residual <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb2-11"><a href="using-stan-in-r.html#cb2-11" aria-hidden="true" tabindex="-1"></a>cor_RE <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#correlation of random intercepts and slopes</span></span>
+<span id="cb2-12"><a href="using-stan-in-r.html#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="using-stan-in-r.html#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#individual-level index</span></span>
+<span id="cb2-14"><a href="using-stan-in-r.html#cb2-14" aria-hidden="true" tabindex="-1"></a>id <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="dv">1</span>, I), <span class="at">each =</span> N<span class="sc">/</span>I) <span class="co">#i.e. two observations per individual</span></span>
+<span id="cb2-15"><a href="using-stan-in-r.html#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="using-stan-in-r.html#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#simulate fixed effect covariate</span></span>
+<span id="cb2-17"><a href="using-stan-in-r.html#cb2-17" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">0</span>,<span class="dv">1</span>) <span class="co">#fixed effect covariate</span></span>
+<span id="cb2-18"><a href="using-stan-in-r.html#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="using-stan-in-r.html#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#simulate random individual deviations</span></span>
+<span id="cb2-20"><a href="using-stan-in-r.html#cb2-20" aria-hidden="true" tabindex="-1"></a>P_cor <span class="ot">=</span> <span class="fu">matrix</span>( <span class="fu">c</span>(<span class="dv">1</span>, cor_RE, cor_RE, <span class="dv">1</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span> )</span>
+<span id="cb2-21"><a href="using-stan-in-r.html#cb2-21" aria-hidden="true" tabindex="-1"></a>P_SD <span class="ot">=</span> <span class="fu">matrix</span>( <span class="fu">c</span>(SD_intercept, <span class="dv">0</span>, <span class="dv">0</span>, SD_slope), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span> )</span>
+<span id="cb2-22"><a href="using-stan-in-r.html#cb2-22" aria-hidden="true" tabindex="-1"></a>P_cov <span class="ot">=</span> P_SD <span class="sc">%*%</span> P_cor <span class="sc">%*%</span> P_SD</span>
+<span id="cb2-23"><a href="using-stan-in-r.html#cb2-23" aria-hidden="true" tabindex="-1"></a>re_P <span class="ot">=</span> <span class="fu">rmvnorm</span>(I, <span class="at">mean =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">sigma =</span> P_cov) <span class="co">#rows = I, cols = intercepts and slopes</span></span>
+<span id="cb2-24"><a href="using-stan-in-r.html#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="using-stan-in-r.html#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#individual-level parameters</span></span>
+<span id="cb2-26"><a href="using-stan-in-r.html#cb2-26" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">=</span> intercept <span class="sc">+</span> re_P[,<span class="dv">1</span>]</span>
+<span id="cb2-27"><a href="using-stan-in-r.html#cb2-27" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">=</span> beta1 <span class="sc">+</span> re_P[,<span class="dv">2</span>]</span>
+<span id="cb2-28"><a href="using-stan-in-r.html#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="using-stan-in-r.html#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co">#residual effects</span></span>
+<span id="cb2-30"><a href="using-stan-in-r.html#cb2-30" aria-hidden="true" tabindex="-1"></a>epsilon <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, SD_residual )</span>
+<span id="cb2-31"><a href="using-stan-in-r.html#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="using-stan-in-r.html#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co">#measured response (100 response values for 50 subjects)</span></span>
+<span id="cb2-33"><a href="using-stan-in-r.html#cb2-33" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> mu[id] <span class="sc">+</span> beta[id]<span class="sc">*</span>x <span class="sc">+</span> epsilon</span>
+<span id="cb2-34"><a href="using-stan-in-r.html#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="using-stan-in-r.html#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co">#combine into list for Stan</span></span>
+<span id="cb2-36"><a href="using-stan-in-r.html#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co">#other values are empirically unobserved and will be model parameters</span></span>
+<span id="cb2-37"><a href="using-stan-in-r.html#cb2-37" aria-hidden="true" tabindex="-1"></a>stan_data <span class="ot">=</span> <span class="fu">list</span>(<span class="at">y =</span> y, <span class="at">x =</span> x, <span class="at">id =</span> id, <span class="at">N =</span> N, <span class="at">I =</span> I)</span></code></pre></div>
 <p>We can now program a Stan model to infer the data-generating process with these empirical observations. For any <code>.stan</code> file composed with a text editor, the following programming blocks will be recognized and all model code inside each block will be processed sequentially.</p>
 <pre class="stan"><code>functions {
 }
@@ -336,7 +337,7 @@ generated quantities {
   sd_R ~ cauchy(0,1);
 }
 </code></pre>
-<p>Model priors are set for all parameters declared in the original programming block, while transformed parameters do not receive priors. We use general purpose, weakly regularizing priors to reduce the risk of inferential bias and enhance model identification, which will be crucial for SAMs relying on interactions among many latent variables. Interested readers should see <span class="citation">Lemoine (<a href="#ref-Lemoine2019" role="doc-biblioref">2019</a>)</span> and <span class="citation">McElreath (<a href="#ref-Rethinking" role="doc-biblioref">2020</a>)</span> for further discussion on the choice of model priors, as well as the clear limitations of using highly diffuse, flat, and/or improper priors that are more commonly utilized. Finally, rather than post-processing the posterior SDs ourselves to derive variances, we can instead use the <code>generated quantities</code> block to calculate the variances during model estimation.</p>
+<p>Model priors are set for all parameters declared in the original programming block, while transformed parameters do not receive priors. We use general purpose, weakly regularizing priors to reduce the risk of inferential bias and enhance model identification, which will be crucial for SAMs relying on interactions among many latent variables. Interested readers should see <span class="citation"><a href="resources.html#ref-Lemoine2019" role="doc-biblioref">Lemoine</a> (<a href="resources.html#ref-Lemoine2019" role="doc-biblioref">2019</a>)</span> and <span class="citation"><a href="resources.html#ref-Rethinking" role="doc-biblioref">McElreath</a> (<a href="resources.html#ref-Rethinking" role="doc-biblioref">2020</a>)</span> for further discussion on the choice of model priors, as well as the clear limitations of using highly diffuse, flat, and/or improper priors that are more commonly utilized. Finally, rather than post-processing the posterior SDs ourselves to derive variances, we can instead use the <code>generated quantities</code> block to calculate the variances during model estimation.</p>
 <pre class="stan"><code>generated quantities {
   vector[2] V_P = sd_P .* sd_P;
   real V_R = sd_R * sd_R;
@@ -392,18 +393,18 @@ generated quantities {
 }
 </code></pre>
 <p>The model is now ready for estimation. We manually specify that the MCMC sampler should use 1000 iterations per chain to converge on the target joint posterior distribution <code>warmup=1000</code>, with the subsequent 1000 iterations used as posterior samples <code>iter = 2000</code> (i.e. <code>iter</code> - <code>warmup</code> = number of MCMC samples per chain). <code>init = 0</code> initializes the samplers near null values. Four MCMC chains are used to assess model convergence across independent random samplers <code>chains=4</code>, with one core assigned to each chain for parallel processing <code>cores=4</code>. The <code>adapt_delta=0.90</code> argument reduces the risk of divergent transitions during sampling.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="using-stan-in-r.html#cb10-1"></a><span class="kw">library</span>(rstan)</span>
-<span id="cb10-2"><a href="using-stan-in-r.html#cb10-2"></a></span>
-<span id="cb10-3"><a href="using-stan-in-r.html#cb10-3"></a>stan_mod =<span class="st"> </span><span class="kw">stan_model</span>(<span class="dt">model_code =</span> <span class="st">&quot;model1.stan&quot;</span>)</span>
-<span id="cb10-4"><a href="using-stan-in-r.html#cb10-4"></a></span>
-<span id="cb10-5"><a href="using-stan-in-r.html#cb10-5"></a>stan_results &lt;-<span class="st"> </span><span class="kw">sampling</span>(stan_mod, <span class="dt">data=</span>stan_data, <span class="dt">init =</span> <span class="dv">0</span>, <span class="dt">warmup=</span><span class="dv">1500</span>, <span class="dt">iter =</span> <span class="dv">2500</span>,</span>
-<span id="cb10-6"><a href="using-stan-in-r.html#cb10-6"></a>                         <span class="dt">chains=</span><span class="dv">4</span>, <span class="dt">cores=</span><span class="dv">4</span>, <span class="dt">control=</span><span class="kw">list</span>(<span class="dt">adapt_delta=</span><span class="fl">0.90</span>) )</span></code></pre></div>
-<p>Stan flags a few potential issues with the MCMC sampler. Further description of these and other warnings can be found in the <a href="https://mc-stan.org/misc/warnings.html">Stan Warning Guide</a>. One warning is that “The largest R-hat is NA, indicating chains have not mixed”. Stan does not know whether some parameter values are fixed (causing Rhat = NA) because the sampler is stuck, or because the model has been intentionally specified with fixed parameter values (e.g. diagonals fixed to 1 in a correlation matrix or an intercept forced to 0). For the specified model, this is a harmless warning that can be safely ignored. However, we can also check for issues by looking at the Rhat values of all model parameters using <code>summary()</code> on the saved results. If an expected parameter is missing from the table or shows NA, this likely indicates an unintentional error in the model code.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="using-stan-in-r.html#cb11-1"></a><span class="kw">summary</span>(stan_results)<span class="op">$</span>summary[,<span class="st">&quot;Rhat&quot;</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="using-stan-in-r.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
+<span id="cb10-2"><a href="using-stan-in-r.html#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="using-stan-in-r.html#cb10-3" aria-hidden="true" tabindex="-1"></a>stan_mod <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="at">model_code =</span> <span class="st">&quot;model1.stan&quot;</span>)</span>
+<span id="cb10-4"><a href="using-stan-in-r.html#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="using-stan-in-r.html#cb10-5" aria-hidden="true" tabindex="-1"></a>stan_results <span class="ot">&lt;-</span> <span class="fu">sampling</span>(stan_mod, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">2500</span>,</span>
+<span id="cb10-6"><a href="using-stan-in-r.html#cb10-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span></code></pre></div>
+<p>Stan flags a few potential issues with the MCMC sampler. Further description of these and other warnings can be found in the <a href="https://mc-stan.org/misc/warnings.html">Stan Warning Guide</a>. One warning is that “The largest R-hat is NA, indicating chains have not mixed.” Stan does not know whether some parameter values are fixed (causing Rhat = NA) because the sampler is stuck, or because the model has been intentionally specified with fixed parameter values (e.g. diagonals fixed to 1 in a correlation matrix or an intercept forced to 0). For the specified model, this is a harmless warning that can be safely ignored. However, we can also check for issues by looking at the Rhat values of all model parameters using <code>summary()</code> on the saved results. If an expected parameter is missing from the table or shows NA, this likely indicates an unintentional error in the model code.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="using-stan-in-r.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stan_results)<span class="sc">$</span>summary[,<span class="st">&quot;Rhat&quot;</span>]</span></code></pre></div>
 <p>In addition to the Rhat warning, the effective sample sizes of some model parameters are too low to ensure accurate inferences. It is helpful to see which parameters are causing these warnings by sorting on the lowest <code>n_eff</code> values in the summary table.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="using-stan-in-r.html#cb12-1"></a><span class="kw">sort</span>(<span class="kw">summary</span>(stan_results)<span class="op">$</span>summary[,<span class="st">&quot;n_eff&quot;</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="using-stan-in-r.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">summary</span>(stan_results)<span class="sc">$</span>summary[,<span class="st">&quot;n_eff&quot;</span>])</span></code></pre></div>
 <p>It is typical that individual-specific trait values have relatively lower effective sample sizes than the population-level parameters of primary interest (e.g. the intercept deviation of individual 9 <code>re_P[9,1]</code> and their total intercept <code>mu[9]</code> compared to the global intercept <code>mu_0</code>). More damningly, however, we also see an extremely low effective sample for <code>lp__</code>, which is the joint log density of the model (up to a constant internally defined <a href="https://www.jax.org/news-and-insights/jax-blog/2015/october/lp-in-stan-output#">scale factor</a>. This provides further evidence that the model, as currently defined, is poorly identified. The key random effect SDs <code>sd_P</code> and variances <code>V_P</code> are also very poorly sampled, along with the residual SD <code>sd_R</code> and variance <code>V_R</code>. We could run the MCMC sampler for more iterations, increase the warm-up period, and change various other manual control settings. However, the deeper issue with the estimation procedure is not that the model is poorly defined or that the data provide insufficient information; rather, we have inefficiently parameterized the model.</p>
-<div id="cholesky-decompositions" class="section level3">
+<div id="cholesky-decompositions" class="section level3" number="1.4.1">
 <h3><span class="header-section-number">1.4.1</span> Cholesky decompositions</h3>
 <p>Although the <code>.stan</code> file appropriately represents the formal model, it is programmed in such a way that the MCMC sampler has troubling sampling from the joint posterior distribution of the model. One of the first things we can do to increase efficiency is to reduce redundant computation over matrices in our model. This can be done with Cholesky decompositions. For any positive definite matrix <span class="math inline">\(\boldsymbol{\Omega}\)</span>, a Cholesky decomposition can be defined such that</p>
 <p><span class="math display">\[\boldsymbol{\Omega} = \boldsymbol{\mathrm{L}_{\Omega}} \boldsymbol{\mathrm{L}_{\Omega}}^{\mathrm{T}}\]</span>
@@ -460,7 +461,7 @@ generated quantities {
 </code></pre>
 <p>The full covariance and correlation matrices are now specified in the <code>generated quantities</code> block.</p>
 </div>
-<div id="non-centered-random-effects" class="section level3">
+<div id="non-centered-random-effects" class="section level3" number="1.4.2">
 <h3><span class="header-section-number">1.4.2</span> Non-centered random effects</h3>
 <p>In addition to Cholesky decompositions, we can also re-parameterize the random effects to further enhance efficiency. Currently, we express the unobserved random effects in <code>re_P</code> as being generated from a distribution with unobserved (lower Cholesky) covariance matrix <code>LP</code>. While mathematically appropriate, this specification can make it difficult for the model to identify the scale of the random effects. An alternative but mathematically equivalent parameterization can be used to separating out the scale of the random effect deviations from the population-level (co)variances, which often will enhance model identification. Note that any normally distributed random variable <span class="math inline">\(\boldsymbol{z}\)</span> where</p>
 <p><span class="math display">\[\boldsymbol{z} \sim \mathrm{Normal}(0,\sigma_z)\]</span>
@@ -521,29 +522,29 @@ generated quantities {
 }
 </code></pre>
 <p>Note that the specification of the random effects has been greatly simplified with the non-centered parameterization. By separating out the scale of the deviations and the population-level (co)variances, it becomes unnecessary to directly specify the generative distribution of the full random effects as above. Instead, the full distribution is partitioned into three independent priors over the random effect standard normal deviations, SDs, and correlations. This should make the model much easier to sample from.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="using-stan-in-r.html#cb15-1"></a><span class="kw">library</span>(rstan)</span>
-<span id="cb15-2"><a href="using-stan-in-r.html#cb15-2"></a></span>
-<span id="cb15-3"><a href="using-stan-in-r.html#cb15-3"></a><span class="co">#non-centered Cholesky parameterization</span></span>
-<span id="cb15-4"><a href="using-stan-in-r.html#cb15-4"></a>stan_mod =<span class="st"> </span><span class="kw">stan_model</span>(<span class="dt">model_code =</span> <span class="st">&quot;model2.stan&quot;</span>)</span>
-<span id="cb15-5"><a href="using-stan-in-r.html#cb15-5"></a></span>
-<span id="cb15-6"><a href="using-stan-in-r.html#cb15-6"></a><span class="co">#estimate model</span></span>
-<span id="cb15-7"><a href="using-stan-in-r.html#cb15-7"></a>stan_results &lt;-<span class="st"> </span><span class="kw">sampling</span>(stan_mod, <span class="dt">data=</span>stan_data, <span class="dt">init =</span> <span class="dv">0</span>, <span class="dt">warmup=</span><span class="dv">1500</span>, <span class="dt">iter =</span> <span class="dv">2500</span>,</span>
-<span id="cb15-8"><a href="using-stan-in-r.html#cb15-8"></a>                         <span class="dt">chains=</span><span class="dv">4</span>, <span class="dt">cores=</span><span class="dv">4</span>, <span class="dt">control=</span><span class="kw">list</span>(<span class="dt">adapt_delta=</span><span class="fl">0.90</span>) )</span>
-<span id="cb15-9"><a href="using-stan-in-r.html#cb15-9"></a></span>
-<span id="cb15-10"><a href="using-stan-in-r.html#cb15-10"></a><span class="co">#extracts posterior estimates</span></span>
-<span id="cb15-11"><a href="using-stan-in-r.html#cb15-11"></a>MCMCsamples =<span class="st">  </span><span class="kw">extract</span>(stan_results)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="using-stan-in-r.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
+<span id="cb15-2"><a href="using-stan-in-r.html#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="using-stan-in-r.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#non-centered Cholesky parameterization</span></span>
+<span id="cb15-4"><a href="using-stan-in-r.html#cb15-4" aria-hidden="true" tabindex="-1"></a>stan_mod <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="at">model_code =</span> <span class="st">&quot;model2.stan&quot;</span>)</span>
+<span id="cb15-5"><a href="using-stan-in-r.html#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="using-stan-in-r.html#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#estimate model</span></span>
+<span id="cb15-7"><a href="using-stan-in-r.html#cb15-7" aria-hidden="true" tabindex="-1"></a>stan_results <span class="ot">&lt;-</span> <span class="fu">sampling</span>(stan_mod, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">2500</span>,</span>
+<span id="cb15-8"><a href="using-stan-in-r.html#cb15-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span>
+<span id="cb15-9"><a href="using-stan-in-r.html#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="using-stan-in-r.html#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">#extracts posterior estimates</span></span>
+<span id="cb15-11"><a href="using-stan-in-r.html#cb15-11" aria-hidden="true" tabindex="-1"></a>MCMCsamples <span class="ot">=</span>  <span class="fu">extract</span>(stan_results)</span></code></pre></div>
 <p>The absence of warning messages indicates that our mathematically equivalent re-parameterizations have enhanced the efficiency of the MCMC sampler. The posterior samples of the model in <code>MCMCsamples</code> can subsequently be extracted, summarized, visualized, and manipulated. E.g.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="using-stan-in-r.html#cb16-1"></a>post_beta_<span class="dv">1</span> =<span class="st"> </span>MCMCsamples<span class="op">$</span>beta_<span class="dv">1</span> <span class="co">#extract population-level slope</span></span>
-<span id="cb16-2"><a href="using-stan-in-r.html#cb16-2"></a></span>
-<span id="cb16-3"><a href="using-stan-in-r.html#cb16-3"></a><span class="kw">median</span>(post_beta_<span class="dv">1</span>) <span class="co">#central tendency of posterior</span></span>
-<span id="cb16-4"><a href="using-stan-in-r.html#cb16-4"></a><span class="kw">mad</span>(post_beta_<span class="dv">1</span>) <span class="co">#dispersion around central tendency</span></span>
-<span id="cb16-5"><a href="using-stan-in-r.html#cb16-5"></a><span class="kw">quantile</span>(post_beta_<span class="dv">1</span>, <span class="kw">c</span>(<span class="fl">0.05</span>,<span class="fl">0.95</span>)) <span class="co">#90% credible interval</span></span>
-<span id="cb16-6"><a href="using-stan-in-r.html#cb16-6"></a><span class="kw">sum</span>(post_beta_<span class="dv">1</span> <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)<span class="op">/</span><span class="kw">length</span>(post_beta_<span class="dv">1</span>) <span class="co">#posterior probability of + effect</span></span>
-<span id="cb16-7"><a href="using-stan-in-r.html#cb16-7"></a><span class="kw">hist</span>(post_beta_<span class="dv">1</span>) <span class="co">#MCMC approximation of posterior distribution</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="using-stan-in-r.html#cb16-1" aria-hidden="true" tabindex="-1"></a>post_beta_1 <span class="ot">=</span> MCMCsamples<span class="sc">$</span>beta_1 <span class="co">#extract population-level slope</span></span>
+<span id="cb16-2"><a href="using-stan-in-r.html#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="using-stan-in-r.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post_beta_1) <span class="co">#central tendency of posterior</span></span>
+<span id="cb16-4"><a href="using-stan-in-r.html#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mad</span>(post_beta_1) <span class="co">#dispersion around central tendency</span></span>
+<span id="cb16-5"><a href="using-stan-in-r.html#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(post_beta_1, <span class="fu">c</span>(<span class="fl">0.05</span>,<span class="fl">0.95</span>)) <span class="co">#90% credible interval</span></span>
+<span id="cb16-6"><a href="using-stan-in-r.html#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(post_beta_1 <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="fu">length</span>(post_beta_1) <span class="co">#posterior probability of + effect</span></span>
+<span id="cb16-7"><a href="using-stan-in-r.html#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(post_beta_1) <span class="co">#MCMC approximation of posterior distribution</span></span></code></pre></div>
 <p>We encourage the use of the <code>shinystan</code> R package for deeper inspection of model convergence with a GUI prior to extraction of posterior results. In general, researchers should be skeptical of reporting results accompanied with sampler warnings and should seek to remove any diagnostic concerns prior to biological interpretation of the estimates.</p>
 </div>
 </div>
-<div id="animal-models" class="section level2">
+<div id="animal-models" class="section level2" number="1.5">
 <h2><span class="header-section-number">1.5</span> Animal models</h2>
 <p>The model presented above assumes a single set of individual-specific intercepts and slopes, as defined by the <code>mu</code> and <code>beta</code> vectors in the <code>.stan</code> file. For quantitative genetic analysis with an animal model, these phenotypic effects can be further decomposed into distinct genetic and permanent environmental trait values. In particular, we expand the random phenotypic deviations so that</p>
 <p><span class="math display">\[ \boldsymbol{\mu_{\mathrm{P}}} =  \boldsymbol{\mu_{\mathrm{A}}} + \boldsymbol{\mu_{\mathrm{E}}}, \quad 
@@ -571,10 +572,10 @@ generated quantities {
 \mathrm{Var}( \boldsymbol{\beta_{\mathrm{E}}} )
 \end{bmatrix} \]</span></p>
 <p>where <span class="math inline">\(\boldsymbol{\mathrm{A}}\)</span> is a positive-definite relatedness matrix derived from pedigree or molecular data. Two challenges arise when estimating such a model in Stan related to the computation of Kronecker products and the identification of genetic effects.</p>
-<div id="kronecker-products" class="section level3">
+<div id="kronecker-products" class="section level3" number="1.5.1">
 <h3><span class="header-section-number">1.5.1</span> Kronecker products</h3>
 <p>There are no in-built Stan functions for computing Kronecker products <span class="math inline">\(\otimes\)</span>. This could be overcome by manually specifying the Kronecker product function in the optional <code>functions</code> block of the model. Regardless, Kronecker products can be incredibly costly to compute, particularly for large matrices. It’s thus desirable to find another alternative but mathematically equivalent parameterization to return random effects appropriately scaled by <span class="math inline">\(\boldsymbol{\mathrm{G}} \otimes \boldsymbol{\mathrm{A}}\)</span> without directly computing this term.</p>
-<p>Fortunately, this can be easily accomplished by exploiting the properties of the matrix normal distribution, which generalizes the multivariate normal distribution to random variables described by matrices <span class="citation">(Gupta and Nagar <a href="#ref-Gupta2018" role="doc-biblioref">2018</a>)</span>. In particular, the matrix normal distribution for some <em>n</em> x <em>p</em> matrix <span class="math inline">\(\boldsymbol{\mathrm{Y}}\)</span> of <em>p</em> phenotypes is given by</p>
+<p>Fortunately, this can be easily accomplished by exploiting the properties of the matrix normal distribution, which generalizes the multivariate normal distribution to random variables described by matrices <span class="citation">(<a href="resources.html#ref-Gupta2018" role="doc-biblioref">Gupta and Nagar 2018</a>)</span>. In particular, the matrix normal distribution for some <em>n</em> x <em>p</em> matrix <span class="math inline">\(\boldsymbol{\mathrm{Y}}\)</span> of <em>p</em> phenotypes is given by</p>
 <p><span class="math display">\[ \boldsymbol{\mathrm{Y}} \sim \mathrm{Matrix\ Normal_{n \ x \ p}}(\boldsymbol{\mathrm{M}}, \boldsymbol{\mathrm{U}}, \boldsymbol{\mathrm{V}}) \]</span></p>
 <p>where <span class="math inline">\(\boldsymbol{\mathrm{M}}\)</span> is a matrix of expected values and <span class="math inline">\(\boldsymbol{\mathrm{U}}\)</span> and <span class="math inline">\(\boldsymbol{\mathrm{V}}\)</span> are scaling matrices describing the among-row and among-column (co)variance respectively. This lesser known distribution generalizes from the multivariate normal distribution such that any matrix <span class="math inline">\(\boldsymbol{\mathrm{Y}}\)</span> will be matrix normally distributed if and only if
 <span class="math display">\[ \mathrm{vec}(\boldsymbol{\mathrm{Y}}) \sim \mathrm{MVNormal_{np}}(\mathrm{vec}(\boldsymbol{\mathrm{M}}),  \boldsymbol{\mathrm{V}} \otimes \boldsymbol{\mathrm{U}} ) \]</span>
@@ -612,7 +613,7 @@ where
 )
 \sim \mathrm{MVNormal_{np}}(\mathrm{vec}(\boldsymbol{\mathrm{0}}),  \boldsymbol{\mathrm{G}} \otimes \boldsymbol{\mathrm{A}} )\]</span></p>
 <p>through the multiplication of the <span class="math inline">\(\boldsymbol{\mathrm{Z_{std}}}\)</span>, <span class="math inline">\(\boldsymbol{\mathrm{L_A}}\)</span>, and <span class="math inline">\(\boldsymbol{\mathrm{L_G}}^{\mathrm{T}}\)</span> matrices.</p>
-<p>This useful sampling property is straightforward to implement in Stan with appropriate data and can be used to account for any form of random effect covariation among individuals, which may extend beyond <span class="math inline">\(\boldsymbol{\mathrm{A}}\)</span> alone. <span class="citation">Thomson et al. (<a href="#ref-Thomson2018" role="doc-biblioref">2018</a>)</span> provide an extensive review of various additional sources of autocorrelation that should be considered in quantitative genetic analyses.</p>
+<p>This useful sampling property is straightforward to implement in Stan with appropriate data and can be used to account for any form of random effect covariation among individuals, which may extend beyond <span class="math inline">\(\boldsymbol{\mathrm{A}}\)</span> alone. <span class="citation"><a href="resources.html#ref-Thomson2018" role="doc-biblioref">Thomson et al.</a> (<a href="resources.html#ref-Thomson2018" role="doc-biblioref">2018</a>)</span> provide an extensive review of various additional sources of autocorrelation that should be considered in quantitative genetic analyses.</p>
 <p>This matrix normal approach is demonstrated in the SAM tutorial with simulated data. Here we review the relevant code in Stan to highlight how any relevant Kronecker product could be implemented. We build on the data simulation above by assuming that an additional relatedness matrix <span class="math inline">\(\boldsymbol{{\mathrm{A}}}\)</span> is now available for partitioning the previously modelled phenotypic effects. The code of <code>model2.stan</code> can be modified accordingly, so that the mixed-effects model becomes an animal model for quantitative genetic analysis. The relatedness matrix <span class="math inline">\(\boldsymbol{{\mathrm{A}}}\)</span> is declared in the <code>data</code> block, while the lower triangle Cholesky decomposition matrix <span class="math inline">\(\boldsymbol{\mathrm{L_A}}\)</span> is generated in the <code>transformed data</code> block.</p>
 <pre class="stan"><code>data {
   int&lt;lower=0&gt; N; 
@@ -657,7 +658,7 @@ transformed data{
   to_vector(sd_E) ~ cauchy(0,1);</code></pre>
 <p>the model will be well defined and equivalent to the simpler formal model defined with Kronecker products of covariance matrices. Note that the permanent environmental effects are defined as they were for the purely phenotypic effects above, without consideration of the Kronecker product <span class="math inline">\(\boldsymbol{\mathrm{E}}\otimes\boldsymbol{\mathrm{I}}\)</span>. This product indicates that individuals’ trait values are independent and identically distributed, so that ignoring the Kronecker product in Stan with <code>re_E = std_E * diag_pre_multiply(sd_E,LE_cor)</code> is equivalent to specifying the matrix normal parameterization with additional Cholesky identity matrix <span class="math inline">\(\boldsymbol{\mathrm{L_{I}}}\)</span>, i.e. <code>re_E = LI * std_E * diag_pre_multiply(sd_E,LE_cor)'</code>.</p>
 </div>
-<div id="identifying-genetic-effects" class="section level3">
+<div id="identifying-genetic-effects" class="section level3" number="1.5.2">
 <h3><span class="header-section-number">1.5.2</span> Identifying genetic effects</h3>
 <p>This matrix normal approach makes the animal model computationally efficient, but a more fundamental issue remains for identifying the scales of the distinct <span class="math inline">\(\boldsymbol{\mathrm{G}}\)</span> and <span class="math inline">\(\boldsymbol{\mathrm{E}}\)</span> effects during model estimation. Given that <span class="math inline">\(\boldsymbol{\mathrm{P}}=\boldsymbol{\mathrm{G}} + \boldsymbol{\mathrm{E}}\)</span> under the assumption of independent additive effects, it can be difficult to uniquely identify the scale of the distinct genetic and environmental trait values, as any increase/decrease in genetic trait values can be compensated by an equivalent decrease/increase in the environmental trait value to achieve equivalent phenotypic values. In principle, this issue is addressed by the fixed information in <span class="math inline">\(\boldsymbol{\mathrm{A}}\)</span> that is provided to the model prior to estimation. In reality, however, relatedness matrices in the wild are often quite sparse, with most elements at or near 0. As a consequence, when a single individual-level parameter is expressed as the sum of two distinct parameters, as differentiated by the scaling of <span class="math inline">\(\boldsymbol{\mathrm{A}}\)</span> and <span class="math inline">\(\boldsymbol{\mathrm{I}}\)</span>, it can be challenging to identify the proportion of variance attributable to each effect. Note that in the simplest case of completely unrelated individuals, i.e. <span class="math inline">\(\boldsymbol{\mathrm{A}} = \boldsymbol{\mathrm{I}}\)</span>, genetic and environmental effects are completely confounded and cannot be uniquely identified without introducing further assumptions, as any combination of genetic and environmental values summing to the same value will fit the data equally well.</p>
 <p>Fortunately, in spite of the empirical reality of sparse relatedness matrices, it is possible to parameterize an animal model in Stan so that even weakly identified genetic effects can be disentangled from environmental effects, using whatever information is provided by the fixed relatedness matrix and empirical data. This is accomplished by re-expressing the scale of the <span class="math inline">\(\boldsymbol{\mathrm{G}}\)</span> and <span class="math inline">\(\boldsymbol{\mathrm{E}}\)</span> effects not as independent parameters, but rather as dependent variances derived from their proportion of a common phenotypic variance parameter. In other words, the model only has to identify the scale of the total phenotypic trait values rather than attempting to identify two independent but potentially confounded random effect variances, i.e.</p>
@@ -769,50 +770,11 @@ vector&lt;lower=0&gt;[2] V_R = sd_R .* sd_R;
 }
 </code></pre>
 <p>Note that because we specify phenotypic SDs <code>sd_P</code>, the genetic SDs <code>sd_G</code> are calculated as <span class="math inline">\(\mathrm{sqrt} ({\mathrm{Var}(\boldsymbol{\mu_{\mathrm{P}}})}h_{\mu}^{2})= {\mathrm{SD}(\boldsymbol{\mu_{\mathrm{P}}})}\mathrm{sqrt}(h_{\mu}^{2})\)</span> and <span class="math inline">\(\mathrm{sqrt} ({\mathrm{Var}(\boldsymbol{\beta_{\mathrm{P}}})}h_{\beta}^{2})= {\mathrm{SD}(\boldsymbol{\beta_{\mathrm{P}}})}\mathrm{sqrt}(h_{\beta}^{2})\)</span>, with the same approach taken for the proportion of environmental effects <span class="math inline">\(1- h_{\mu}^{2}\)</span> and <span class="math inline">\(1-h_{\beta}^{2}\)</span>. A weakly regularizing <span class="math inline">\(\mathrm{Beta}(1.2,1.2)\)</span> prior is placed on the reaction norm heritability parameters, which are constrained between 0 and 1. This and any other prior can be easily visualized in R by randomly sampling from the relevant distribution.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="using-stan-in-r.html#cb22-1"></a><span class="kw">hist</span>( <span class="kw">rbeta</span>(<span class="fl">1e5</span>, <span class="fl">1.2</span>, <span class="fl">1.2</span>), <span class="dt">prob =</span> <span class="ot">TRUE</span> )</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="using-stan-in-r.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>( <span class="fu">rbeta</span>(<span class="fl">1e5</span>, <span class="fl">1.2</span>, <span class="fl">1.2</span>), <span class="at">prob =</span> <span class="cn">TRUE</span> )</span></code></pre></div>
 <p><img src="SAMs_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
-<p>This prior is therefore relatively flat and uninformative over the range of plausible values, but provides very weak regularization by giving lower relative probability at the extreme ends approaching 0 (no genetic effect) and 1 (complete genetic effect). With more than two individual-level random effects, such as when specifying multiple matrices of individual autocorrelation <span class="citation">(Thomson et al. <a href="#ref-Thomson2018" role="doc-biblioref">2018</a>)</span>, SDs and variances can instead be parameterized as scaled <a href="https://mc-stan.org/docs/2_19/reference-manual/vector-and-matrix-data-types.html">simplexes</a>.</p>
+<p>This prior is therefore relatively flat and uninformative over the range of plausible values, but provides very weak regularization by giving lower relative probability at the extreme ends approaching 0 (no genetic effect) and 1 (complete genetic effect). With more than two individual-level random effects, such as when specifying multiple matrices of individual autocorrelation <span class="citation">(<a href="resources.html#ref-Thomson2018" role="doc-biblioref">Thomson et al. 2018</a>)</span>, SDs and variances can instead be parameterized as scaled <a href="https://mc-stan.org/docs/2_19/reference-manual/vector-and-matrix-data-types.html">simplexes</a>.</p>
 
 </div>
-</div>
-</div>
-<h3>Resources</h3>
-<div id="refs" class="references">
-<div id="ref-ASREML">
-<p>Butler, D. G., B. R. Cullis, A. R. Gilmour, B. J. Gogel, and R. Thompson. 2018. <em>ASReml-R Reference Manual</em> (version 4). Hemel Hempstead, UK: VSN International Ltd. <a href="https://asreml.kb.vsni.co.uk/wp-content/uploads/sites/3/2018/02/ASReml-R-Reference-Manual-4.pdf">https://asreml.kb.vsni.co.uk/wp-content/uploads/sites/3/2018/02/ASReml-R-Reference-Manual-4.pdf</a>.</p>
-</div>
-<div id="ref-Stan">
-<p>Carpenter, B., A. Gelman, M. D. Hoffman, D. Lee, B. Goodrich, M. Betancourt, and... A. Riddell. 2017. “Stan: A Probabilistic Programming Language.” <em>Journal of Statistical Software</em> 74. <a href="https://www.jstatsoft.org/article/view/v076i01">https://www.jstatsoft.org/article/view/v076i01</a>.</p>
-</div>
-<div id="ref-Gelman2020">
-<p>Gelman, A., A. Vehtari, D. Simpson, C. C. Margossian, B. Carpenter, Y. Yao, and... M. Modrák. 2020. “Bayesian Workflow.” <em>arXiv Preprint</em> arXiv:2011.01808. <a href="https://arxiv.org/abs/2011.01808">https://arxiv.org/abs/2011.01808</a>.</p>
-</div>
-<div id="ref-Gupta2018">
-<p>Gupta, A. K., and D. K. Nagar. 2018. <em>Matrix Variate Distributions</em>. CRC Press. <a href="https://www.routledge.com/Matrix-Variate-Distributions/Gupta-Nagar/p/book/9781584880462">https://www.routledge.com/Matrix-Variate-Distributions/Gupta-Nagar/p/book/9781584880462</a>.</p>
-</div>
-<div id="ref-MCMCglmm">
-<p>Hadfield, J. D. 2010. “MCMC Methods for Multi-Response Generalized Linear Mixed Models: The Mcmcglmm R Package.” <em>Journal of Statistical Software</em> 33. <a href="https://mran.microsoft.com/snapshot/2016-10-12/web/packages/MCMCglmm/vignettes/Overview.pdf">https://mran.microsoft.com/snapshot/2016-10-12/web/packages/MCMCglmm/vignettes/Overview.pdf</a>.</p>
-</div>
-<div id="ref-Lemoine2019">
-<p>Lemoine, N. P. 2019. “Moving Beyond Noninformative Priors: Why and How to Choose Weakly Informative Priors in Bayesian Analyses.” <em>Oikos</em> 128. <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/oik.05985">https://onlinelibrary.wiley.com/doi/full/10.1111/oik.05985</a>.</p>
-</div>
-<div id="ref-SAM">
-<p>Martin, J. S., and A. V. Jaeggi. 2021. “Social Animal Models for Quantifying Plasticity, Assortment, and Selection on Interacting Phenotypes.” <em>Under Review</em> XX. <a href="XX">XX</a>.</p>
-</div>
-<div id="ref-Rethinking">
-<p>McElreath, R. 2020. <em>Statistical Rethinking: A Bayesian Course with Examples in R and Stan</em>. 2nd ed. CRC Press. <a href="https://xcelab.net/rm/statistical-rethinking/">https://xcelab.net/rm/statistical-rethinking/</a>.</p>
-</div>
-<div id="ref-MCMCperf">
-<p>Nishio, M., and A. Arakawa. 2019. “Performance of Hamiltonian Monte Carlo and No-U-Turn Sampler for Estimating Genetic Parameters and Breeding Values.” <em>Genetics Selection Evolution</em> 51. <a href="https://gsejournal.biomedcentral.com/articles/10.1186/s12711-019-0515-1">https://gsejournal.biomedcentral.com/articles/10.1186/s12711-019-0515-1</a>.</p>
-</div>
-<div id="ref-Rbase">
-<p>R Core Team. 2020. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org">https://www.R-project.org</a>.</p>
-</div>
-<div id="ref-Stinchcombe2014">
-<p>Stinchcombe, J. R., A. K. Simonsen, and M. W. Blows. 2014. “Estimating Uncertainty in Multivariate Responses to Selection.” <em>Evolution</em> 68. <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/evo.12321">https://onlinelibrary.wiley.com/doi/full/10.1111/evo.12321</a>.</p>
-</div>
-<div id="ref-Thomson2018">
-<p>Thomson, C. E., I. S. Winney, O. C. Salles, and B. Pujol. 2018. “A Guide to Using a Multiple-Matrix Animal Model to Disentangle Genetic and Nongenetic Causes of Phenotypic Variance.” <em>PloS One</em> 13. <a href="https://journals.plos.org/plosone/article/comments?id=10.1371/journal.pone.0197720">https://journals.plos.org/plosone/article/comments?id=10.1371/journal.pone.0197720</a>.</p>
 </div>
 </div>
             </section>
