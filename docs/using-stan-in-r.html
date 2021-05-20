@@ -186,17 +186,30 @@ text-align: justify}
 </div>
 <div id="getting-started" class="section level2" number="1.2">
 <h2><span class="header-section-number">1.2</span> Getting Started</h2>
-<p>Stan interfaces with R through the RStan package <span class="citation">(<a href="resources.html#ref-Stan" role="doc-biblioref">Carpenter et al. 2017</a>)</span>, providing an efficient means of integrating SAMs into pre-existing data analysis pipelines. However, you will first need to install Stan on your computer and ensure that it is appropriately configured with your C++ toolchain. This can be accomplished by following the instructions for your operating system on the <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">RStan Getting Started</a> page. Once you are able to effectively use RStan, you can begin creating the <code>.stan</code> files necessary for estimating SAMs. These files can be composed using RStudio or any text editor, as explained below. Once an appropriate <code>.stan</code> file is prepared, it can be compiled with R for the C++ toolchain using the <code>stan_model()</code> function and subsequently estimated with an appropriate list of empirical data using the <code>sampling()</code> function. The resulting posteriors of a model can then be accessed with the <code>extract()</code> function and manipulated for any further quantities or analyses of interest.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="using-stan-in-r.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
-<span id="cb1-2"><a href="using-stan-in-r.html#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="using-stan-in-r.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#compiles the model in C++ for MCMC estimation</span></span>
-<span id="cb1-4"><a href="using-stan-in-r.html#cb1-4" aria-hidden="true" tabindex="-1"></a>model <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="st">&quot;model.stan&quot;</span>)</span>
-<span id="cb1-5"><a href="using-stan-in-r.html#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="using-stan-in-r.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#estimates and saves the posterior MCMC samples of the model (estimated with default settings)</span></span>
-<span id="cb1-7"><a href="using-stan-in-r.html#cb1-7" aria-hidden="true" tabindex="-1"></a>results <span class="ot">=</span> <span class="fu">sampling</span>(<span class="at">object =</span> SAM_file, <span class="at">data =</span> data)</span>
-<span id="cb1-8"><a href="using-stan-in-r.html#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="using-stan-in-r.html#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#extracts posterior estimates</span></span>
-<span id="cb1-10"><a href="using-stan-in-r.html#cb1-10" aria-hidden="true" tabindex="-1"></a>MCMCsamples <span class="ot">=</span>  <span class="fu">extract</span>(results)</span></code></pre></div>
+<p>Stan interfaces with R through the RStan package <span class="citation">(<a href="resources.html#ref-Stan" role="doc-biblioref">Carpenter et al. 2017</a>)</span>, providing an efficient means of integrating SAMs into pre-existing data analysis pipelines. However, you will first need to install Stan on your computer and ensure that it is appropriately configured with your C++ toolchain. This can be accomplished by following the instructions for your operating system on the <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">RStan Getting Started</a> page. Once you are able to effectively use RStan, you can begin creating the <code>.stan</code> files necessary for estimating SAMs. These files can be composed using RStudio or any text editor, as well as directly in R with <code>write()</code>
+</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="using-stan-in-r.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(<span class="st">&quot;// for Stan comments</span></span>
+<span id="cb1-2"><a href="using-stan-in-r.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="st">    functions{...} // Stan models are composed of</span></span>
+<span id="cb1-3"><a href="using-stan-in-r.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="st">    data {...} // multiple programming blocks</span></span>
+<span id="cb1-4"><a href="using-stan-in-r.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="st">    transformed data {...} //only data, parameters, and model</span></span>
+<span id="cb1-5"><a href="using-stan-in-r.html#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="st">    parameters {...} //blocks are necessary</span></span>
+<span id="cb1-6"><a href="using-stan-in-r.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="st">    transformed parameters {...}</span></span>
+<span id="cb1-7"><a href="using-stan-in-r.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="st">    model {...}</span></span>
+<span id="cb1-8"><a href="using-stan-in-r.html#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="st">    generated quantities {...} &quot;</span>,</span>
+<span id="cb1-9"><a href="using-stan-in-r.html#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;mod1.stan&quot;</span>)</span></code></pre></div>
+<p>Once an appropriate <code>.stan</code> file is prepared, it can be compiled in R for the C++ toolchain using the <code>stan_model()</code> function and subsequently estimated with an appropriate list of empirical data using the <code>sampling()</code> function. The resulting posteriors of a model can then be accessed with the <code>extract()</code> function and manipulated for any further quantities or analyses of interest.
+</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="using-stan-in-r.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load package</span></span>
+<span id="cb2-2"><a href="using-stan-in-r.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
+<span id="cb2-3"><a href="using-stan-in-r.html#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="using-stan-in-r.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#compiles the model in C++ for MCMC estimation</span></span>
+<span id="cb2-5"><a href="using-stan-in-r.html#cb2-5" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="st">&quot;mod1.stan&quot;</span>)</span>
+<span id="cb2-6"><a href="using-stan-in-r.html#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="using-stan-in-r.html#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#samples posterior distribution of the model with default MCMC settings</span></span>
+<span id="cb2-8"><a href="using-stan-in-r.html#cb2-8" aria-hidden="true" tabindex="-1"></a>results <span class="ot">=</span> <span class="fu">sampling</span>(<span class="at">object =</span> mod1, <span class="at">data =</span> data)</span>
+<span id="cb2-9"><a href="using-stan-in-r.html#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="using-stan-in-r.html#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#extracts posterior estimates</span></span>
+<span id="cb2-11"><a href="using-stan-in-r.html#cb2-11" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">=</span>  <span class="fu">extract</span>(results)</span></code></pre></div>
 </div>
 <div id="bayesian-inference" class="section level2" number="1.3">
 <h2><span class="header-section-number">1.3</span> Bayesian inference</h2>
@@ -206,71 +219,70 @@ text-align: justify}
 <h2><span class="header-section-number">1.4</span> Basic coding tutorial</h2>
 <p>Stan uses its own language for writing probabilistic models, including a variety of built-in functions designed to aid in efficient computation. The biggest conceptual hurdle for new users of Stan is likely to be the absence of an intuitive R-like syntax for specifying model formulas, such as formulas like <code>y ~ x + (1|z)</code> that can be used to quickly specify complex generalized linear mixed-effects models. These formulas facilitate highly efficient statistical modeling, but do so at the cost of limiting users’ ability to specify atypical model structures. Instead, Stan provides the benefit of nearly unlimited flexibility in model specification, with the added cost of a steeper learning curve. In particular, models must be formally specified with mathematically appropriate likelihood functions, rather than this process being handled on the back-end through textual inputs from the user such as <code>family= poisson(link = "log")</code>. This may at first seem like a cumbersome task, but it provides a degree of independence and creativity for data analysis that is otherwise unavailable. It is this autonomy that makes it possible to unbiasedly estimate SAMs in Stan, which to the best of our knowledge cannot be accomplished with any other mainstream statistical software. Nonetheless, it is important to recognize that some practice and trial-and-error will be required to gain competency and comfortability with Stan. We therefore encourage those interested in SAMs to review the <a href="https://mc-stan.org/docs/2_25/reference-manual/index.html">Stan Reference Manual</a>, as well the extensive collection of <a href="https://mc-stan.org/users/documentation/case-studies">Stan Case Studies</a>, which will provide a more robust foundation for estimating any model of interest in Stan.</p>
 <p>Here we review some basics of Stan that will be necessary for following the coding tutorials in the rest of the guidebook. To make this introduction more concrete, we simulate a simple data structure appropriately described by a Gaussian random regression model, with 50 subjects and 2 repeated measures per subject across an environmental gradient <span class="math inline">\(x\)</span>. Formally, the model for observation <em>i</em> of individual <em>j</em> is given by</p>
-<p><span class="math display">\[y_{ij}=\mu_{j}+\beta_{j}x_{ij}+\epsilon_i\]</span>
-<span class="math display">\[\mu_j=\mu_0+\mu_{\mathrm{P}j},  \quad  \beta_j=\beta_1+\beta_{\mathrm{P}j}\]</span></p>
-<p><span class="math display">\[ \begin{bmatrix}
-\boldsymbol{\mu_{\mathrm{P}}} \\ 
-\boldsymbol{\beta_{\mathrm{P}}} 
+<p><span class="math display">\[z_{ij}=\mu_0+\mu_{j}+\left( \beta_0 + \beta_{j} \right) x_{ij}+\epsilon_i\]</span>
+<span class="math display">\[ \begin{bmatrix}
+\boldsymbol{\mu} \\ 
+\boldsymbol{\beta_{\mathrm{ }}} 
 \end{bmatrix} \sim \mathrm{MVNormal}(\boldsymbol{0}, \boldsymbol{\mathrm{P}} ) : 
-\boldsymbol{\mathrm{P}} =
+\boldsymbol{\mathrm{ }} =
 \begin{bmatrix}
-\mathrm{Var}( \boldsymbol{\mu_{\mathrm{P}}} ) &amp;  
-\mathrm{Cov}( \boldsymbol{\mu_{\mathrm{P}}},  \boldsymbol{\beta_{\mathrm{P}}})     \\ 
-\mathrm{Cov}(\boldsymbol{\beta_{\mathrm{P}}}, \boldsymbol{\mu_{\mathrm{P}}} ) &amp; 
-\mathrm{Var}( \boldsymbol{\beta_{\mathrm{P}}} )
+\mathrm{Var}( {\mu} ) &amp;  
+\mathrm{Cov}( {\mu},  \boldsymbol{\beta_{\mathrm{ }}})     \\ 
+\mathrm{Cov}(\boldsymbol{\beta_{\mathrm{ }}}, {\mu} ) &amp; 
+\mathrm{Var}( \boldsymbol{\beta_{\mathrm{ }}} )
 \end{bmatrix} \]</span></p>
-<p><span class="math display">\[ \boldsymbol{\epsilon} \sim \mathrm{Normal}(0, \boldsymbol{\mathrm{R}} ): 
-\boldsymbol{\mathrm{R}} =
+<p><span class="math display">\[ \boldsymbol{\epsilon} \sim \mathrm{Normal}(0, \boldsymbol{\Sigma} ): 
+\boldsymbol{\Sigma} =
 [\mathrm{Var}(\boldsymbol{\epsilon})]\]</span></p>
-<p>where <span class="math inline">\(\mu_0\)</span> and <span class="math inline">\(\beta_1\)</span> are fixed population-level intercepts and slopes respectively, with the vectors <span class="math inline">\(\boldsymbol{\mu_{\mathrm{P}}}\)</span> and <span class="math inline">\(\boldsymbol{\beta_{\mathrm{P}}}\)</span> containing individual-specific phenotypic deviations from the population values (i.e. random intercepts and slopes). The probability density function of this Gaussian variable can be equivalently written as</p>
-<p><span class="math display">\[y_{ij} \sim \mathrm{Normal}(\mu_{j}+\beta_{j}x_{ij},\mathrm{Var}(\boldsymbol{\epsilon}))\]</span>
+<p>where <span class="math inline">\(\mu_0\)</span> and <span class="math inline">\(\beta_1\)</span> are fixed population-level intercepts and slopes respectively, with the vectors <span class="math inline">\(\boldsymbol{\mu_{\mathrm{ }}}\)</span> and <span class="math inline">\(\boldsymbol{\beta_{\mathrm{ }}}\)</span> containing individual-specific phenotypic deviations from the population values (i.e. random intercepts and slopes). The probability density function of this Gaussian variable can be equivalently written as</p>
+<p><span class="math display">\[z_{ij} \sim \mathrm{Normal}(\mu_0 + \mu_{j}+ \left( \beta_1 + \beta_{j} \right) x_{ij}, \boldsymbol{\Sigma})\]</span>
 It is often easier to specify model likelihoods and priors over standard deviations and correlation matrices in Stan, rather than the variances and covariances represented in the formal model. These parameters can always be derived from one another with simple transformations. For variances and standard deviations</p>
-<p><span class="math display">\[\mathrm{SD}( \boldsymbol{\mu_{\mathrm{P}}}  ) = \mathrm{Sqrt(Var} (\boldsymbol{\boldsymbol{\mu_{\mathrm{P}}} }) ) , \quad \mathrm{SD}( \boldsymbol{\beta_{\mathrm{P}}}  ) = \mathrm{Sqrt(Var} (\boldsymbol{\boldsymbol{\beta_{\mathrm{P}}} }) )\]</span></p>
-<p>Similarly, the covariance matrix <span class="math inline">\(\boldsymbol{\mathrm{P}}\)</span> can be derived by pre- and post-multiplying the correlation matrix <span class="math inline">\(\boldsymbol{\mathrm{P_{Cor}}}\)</span> with diagonal matrices <span class="math inline">\(\boldsymbol{\mathrm{P_{SD}}}\)</span> of these standard deviations</p>
-<p><span class="math display">\[\boldsymbol{\mathrm{P}} =  \boldsymbol{\mathrm{P_{SD}}} \boldsymbol{\mathrm{P_{Cor}}} \boldsymbol{\mathrm{P_{SD}}}\]</span></p>
-<p><span class="math display">\[ \boldsymbol{\mathrm{P_{SD}}} = \begin{bmatrix} \mathrm{SD}( \boldsymbol{\mu_{\mathrm{P}}} )     &amp;  0    \\ 
-0     &amp;     \mathrm{SD}( \boldsymbol{\beta_{\mathrm{P}}} ) \end{bmatrix}, \quad 
- \boldsymbol{\mathrm{P_{Cor}}} = \begin{bmatrix} 1     &amp;  \mathrm{Cor}( \boldsymbol{\mu_{\mathrm{P}}}, \boldsymbol{\beta_{\mathrm{P}}} )    \\ 
-\mathrm{Cor}( \boldsymbol{\beta_{\mathrm{P}}} , \boldsymbol{\mu_{\mathrm{P}}} )      &amp;    1
-\end{bmatrix} \]</span></p>
-<p>We can simulate a random dataset from this model in R, along with an index variable <code>id</code> that tracks which individual (I = 1 - 50) is being measured at each observation (N = 1-100).</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="using-stan-in-r.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
-<span id="cb2-2"><a href="using-stan-in-r.html#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="using-stan-in-r.html#cb2-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">=</span> <span class="dv">100</span> <span class="co">#total observations</span></span>
-<span id="cb2-4"><a href="using-stan-in-r.html#cb2-4" aria-hidden="true" tabindex="-1"></a>I <span class="ot">=</span> <span class="dv">50</span> <span class="co">#total individuals</span></span>
-<span id="cb2-5"><a href="using-stan-in-r.html#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="using-stan-in-r.html#cb2-6" aria-hidden="true" tabindex="-1"></a>intercept <span class="ot">=</span> <span class="dv">1</span> <span class="co">#global intercept</span></span>
-<span id="cb2-7"><a href="using-stan-in-r.html#cb2-7" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#fixed effect regression coefficient</span></span>
-<span id="cb2-8"><a href="using-stan-in-r.html#cb2-8" aria-hidden="true" tabindex="-1"></a>SD_intercept <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#standard deviation of random intercepts</span></span>
-<span id="cb2-9"><a href="using-stan-in-r.html#cb2-9" aria-hidden="true" tabindex="-1"></a>SD_slope <span class="ot">=</span> <span class="fl">0.3</span></span>
-<span id="cb2-10"><a href="using-stan-in-r.html#cb2-10" aria-hidden="true" tabindex="-1"></a>SD_residual <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb2-11"><a href="using-stan-in-r.html#cb2-11" aria-hidden="true" tabindex="-1"></a>cor_RE <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#correlation of random intercepts and slopes</span></span>
-<span id="cb2-12"><a href="using-stan-in-r.html#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="using-stan-in-r.html#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#individual-level index</span></span>
-<span id="cb2-14"><a href="using-stan-in-r.html#cb2-14" aria-hidden="true" tabindex="-1"></a>id <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="dv">1</span>, I), <span class="at">each =</span> N<span class="sc">/</span>I) <span class="co">#i.e. two observations per individual</span></span>
-<span id="cb2-15"><a href="using-stan-in-r.html#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="using-stan-in-r.html#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#simulate fixed effect covariate</span></span>
-<span id="cb2-17"><a href="using-stan-in-r.html#cb2-17" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">0</span>,<span class="dv">1</span>) <span class="co">#fixed effect covariate</span></span>
-<span id="cb2-18"><a href="using-stan-in-r.html#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="using-stan-in-r.html#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#simulate random individual deviations</span></span>
-<span id="cb2-20"><a href="using-stan-in-r.html#cb2-20" aria-hidden="true" tabindex="-1"></a>P_cor <span class="ot">=</span> <span class="fu">matrix</span>( <span class="fu">c</span>(<span class="dv">1</span>, cor_RE, cor_RE, <span class="dv">1</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span> )</span>
-<span id="cb2-21"><a href="using-stan-in-r.html#cb2-21" aria-hidden="true" tabindex="-1"></a>P_SD <span class="ot">=</span> <span class="fu">matrix</span>( <span class="fu">c</span>(SD_intercept, <span class="dv">0</span>, <span class="dv">0</span>, SD_slope), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span> )</span>
-<span id="cb2-22"><a href="using-stan-in-r.html#cb2-22" aria-hidden="true" tabindex="-1"></a>P_cov <span class="ot">=</span> P_SD <span class="sc">%*%</span> P_cor <span class="sc">%*%</span> P_SD</span>
-<span id="cb2-23"><a href="using-stan-in-r.html#cb2-23" aria-hidden="true" tabindex="-1"></a>re_P <span class="ot">=</span> <span class="fu">rmvnorm</span>(I, <span class="at">mean =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">sigma =</span> P_cov) <span class="co">#rows = I, cols = intercepts and slopes</span></span>
-<span id="cb2-24"><a href="using-stan-in-r.html#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="using-stan-in-r.html#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#individual-level parameters</span></span>
-<span id="cb2-26"><a href="using-stan-in-r.html#cb2-26" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">=</span> intercept <span class="sc">+</span> re_P[,<span class="dv">1</span>]</span>
-<span id="cb2-27"><a href="using-stan-in-r.html#cb2-27" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">=</span> beta1 <span class="sc">+</span> re_P[,<span class="dv">2</span>]</span>
-<span id="cb2-28"><a href="using-stan-in-r.html#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-29"><a href="using-stan-in-r.html#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co">#residual effects</span></span>
-<span id="cb2-30"><a href="using-stan-in-r.html#cb2-30" aria-hidden="true" tabindex="-1"></a>epsilon <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, SD_residual )</span>
-<span id="cb2-31"><a href="using-stan-in-r.html#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-32"><a href="using-stan-in-r.html#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co">#measured response (100 response values for 50 subjects)</span></span>
-<span id="cb2-33"><a href="using-stan-in-r.html#cb2-33" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> mu[id] <span class="sc">+</span> beta[id]<span class="sc">*</span>x <span class="sc">+</span> epsilon</span>
-<span id="cb2-34"><a href="using-stan-in-r.html#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-35"><a href="using-stan-in-r.html#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co">#combine into list for Stan</span></span>
-<span id="cb2-36"><a href="using-stan-in-r.html#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co">#other values are empirically unobserved and will be model parameters</span></span>
-<span id="cb2-37"><a href="using-stan-in-r.html#cb2-37" aria-hidden="true" tabindex="-1"></a>stan_data <span class="ot">=</span> <span class="fu">list</span>(<span class="at">y =</span> y, <span class="at">x =</span> x, <span class="at">id =</span> id, <span class="at">N =</span> N, <span class="at">I =</span> I)</span></code></pre></div>
+<p><span class="math display">\[\mathrm{SD}( \boldsymbol{\mu_{\mathrm{ }}}  ) = \mathrm{Sqrt(Var} (\boldsymbol{\boldsymbol{\mu_{\mathrm{ }}} }) ) , \quad \mathrm{SD}( \boldsymbol{\beta_{\mathrm{ }}}  ) = \mathrm{Sqrt(Var} (\boldsymbol{\boldsymbol{\beta_{\mathrm{ }}} }) )\]</span></p>
+<p>Similarly, the covariance matrix <span class="math inline">\(\boldsymbol{\mathrm{P_{cov}}}\)</span> can be derived by pre- and post-multiplying the correlation matrix <span class="math inline">\(\boldsymbol{\mathrm{P_{cor}}}\)</span> with diagonal matrices <span class="math inline">\(\boldsymbol{\mathrm{P_{sd}}}\)</span> of these standard deviations</p>
+<p><span class="math display">\[\boldsymbol{\mathrm{P_{cov}}} =  \boldsymbol{\mathrm{P_{sd}}} \boldsymbol{\mathrm{P_{cor}}}\boldsymbol{\mathrm{P_{sd}}}\]</span></p>
+<p><span class="math display">\[\boldsymbol{\mathrm{P_{sd}}}= \begin{bmatrix} \mathrm{SD}( \boldsymbol{\mu_{\mathrm{ }}} )     &amp;  0    \\ 
+0     &amp;     \mathrm{SD}( \boldsymbol{\beta_{\mathrm{ }}} ) \end{bmatrix}, \quad 
+\boldsymbol{\mathrm{P_{cor}}} = \begin{bmatrix} 1     &amp;  \mathrm{Cor}( \boldsymbol{\mu_{\mathrm{ }}}, \boldsymbol{\beta_{\mathrm{ }}} )    \\ 
+\mathrm{Cor}( \boldsymbol{\beta_{\mathrm{ }}} , \boldsymbol{\mu_{\mathrm{ }}} )      &amp;    1
+\end{bmatrix} \]</span>
+We can simulate a random dataset from this model in R, along with an index variable <code>id</code> that tracks which individual (I = 1 - 50) is being measured at each observation (N = 1-100).</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="using-stan-in-r.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
+<span id="cb3-2"><a href="using-stan-in-r.html#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="using-stan-in-r.html#cb3-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">=</span> <span class="dv">100</span> <span class="co">#total observations</span></span>
+<span id="cb3-4"><a href="using-stan-in-r.html#cb3-4" aria-hidden="true" tabindex="-1"></a>I <span class="ot">=</span> <span class="dv">50</span> <span class="co">#total individuals</span></span>
+<span id="cb3-5"><a href="using-stan-in-r.html#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="using-stan-in-r.html#cb3-6" aria-hidden="true" tabindex="-1"></a>intercept <span class="ot">=</span> <span class="dv">1</span> <span class="co">#global intercept</span></span>
+<span id="cb3-7"><a href="using-stan-in-r.html#cb3-7" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#fixed effect regression coefficient</span></span>
+<span id="cb3-8"><a href="using-stan-in-r.html#cb3-8" aria-hidden="true" tabindex="-1"></a>SD_intercept <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#standard deviation of random intercepts</span></span>
+<span id="cb3-9"><a href="using-stan-in-r.html#cb3-9" aria-hidden="true" tabindex="-1"></a>SD_slope <span class="ot">=</span> <span class="fl">0.3</span></span>
+<span id="cb3-10"><a href="using-stan-in-r.html#cb3-10" aria-hidden="true" tabindex="-1"></a>SD_residual <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb3-11"><a href="using-stan-in-r.html#cb3-11" aria-hidden="true" tabindex="-1"></a>cor_RE <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#correlation of random intercepts and slopes</span></span>
+<span id="cb3-12"><a href="using-stan-in-r.html#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="using-stan-in-r.html#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#individual-level index</span></span>
+<span id="cb3-14"><a href="using-stan-in-r.html#cb3-14" aria-hidden="true" tabindex="-1"></a>id <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="dv">1</span>, I), <span class="at">each =</span> N<span class="sc">/</span>I) <span class="co">#i.e. two observations per individual</span></span>
+<span id="cb3-15"><a href="using-stan-in-r.html#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="using-stan-in-r.html#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#simulate fixed effect covariate</span></span>
+<span id="cb3-17"><a href="using-stan-in-r.html#cb3-17" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="dv">0</span>,<span class="dv">1</span>) </span>
+<span id="cb3-18"><a href="using-stan-in-r.html#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="using-stan-in-r.html#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#simulate random individual deviations</span></span>
+<span id="cb3-20"><a href="using-stan-in-r.html#cb3-20" aria-hidden="true" tabindex="-1"></a>Pcor <span class="ot">=</span> <span class="fu">matrix</span>( <span class="fu">c</span>(<span class="dv">1</span>, cor_RE, cor_RE, <span class="dv">1</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span> )</span>
+<span id="cb3-21"><a href="using-stan-in-r.html#cb3-21" aria-hidden="true" tabindex="-1"></a>Psd <span class="ot">=</span> <span class="fu">matrix</span>( <span class="fu">c</span>(SD_intercept, <span class="dv">0</span>, <span class="dv">0</span>, SD_slope), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">2</span> )</span>
+<span id="cb3-22"><a href="using-stan-in-r.html#cb3-22" aria-hidden="true" tabindex="-1"></a>Pcov <span class="ot">=</span> Psd <span class="sc">%*%</span> Pcor <span class="sc">%*%</span> Psd</span>
+<span id="cb3-23"><a href="using-stan-in-r.html#cb3-23" aria-hidden="true" tabindex="-1"></a>re_P <span class="ot">=</span> <span class="fu">rmvnorm</span>(I, <span class="at">mean =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">sigma =</span> Pcov) <span class="co">#rows = I, cols = intercepts and slopes</span></span>
+<span id="cb3-24"><a href="using-stan-in-r.html#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="using-stan-in-r.html#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#individual-level parameters</span></span>
+<span id="cb3-26"><a href="using-stan-in-r.html#cb3-26" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">=</span> re_P[,<span class="dv">1</span>]</span>
+<span id="cb3-27"><a href="using-stan-in-r.html#cb3-27" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">=</span> re_P[,<span class="dv">2</span>]</span>
+<span id="cb3-28"><a href="using-stan-in-r.html#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="using-stan-in-r.html#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">#residual effects</span></span>
+<span id="cb3-30"><a href="using-stan-in-r.html#cb3-30" aria-hidden="true" tabindex="-1"></a>epsilon <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, SD_residual )</span>
+<span id="cb3-31"><a href="using-stan-in-r.html#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="using-stan-in-r.html#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co">#measured response (100 response values for 50 subjects)</span></span>
+<span id="cb3-33"><a href="using-stan-in-r.html#cb3-33" aria-hidden="true" tabindex="-1"></a>z <span class="ot">=</span> intercept <span class="sc">+</span> mu[id] <span class="sc">+</span> (beta1 <span class="sc">+</span> beta[id])<span class="sc">*</span>x <span class="sc">+</span> epsilon</span>
+<span id="cb3-34"><a href="using-stan-in-r.html#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-35"><a href="using-stan-in-r.html#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co">#combine into list for Stan</span></span>
+<span id="cb3-36"><a href="using-stan-in-r.html#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co">#other values are empirically unobserved and will be model parameters</span></span>
+<span id="cb3-37"><a href="using-stan-in-r.html#cb3-37" aria-hidden="true" tabindex="-1"></a>stan_data <span class="ot">=</span> <span class="fu">list</span>(<span class="at">z =</span> z, <span class="at">x =</span> x, <span class="at">id =</span> id, <span class="at">N =</span> N, <span class="at">I =</span> I)</span></code></pre></div>
 <p>We can now program a Stan model to infer the data-generating process with these empirical observations. For any <code>.stan</code> file composed with a text editor, the following programming blocks will be recognized and all model code inside each block will be processed sequentially.</p>
 <pre class="stan"><code>functions {
 }
@@ -287,43 +299,44 @@ model {
 generated quantities {
 }
 </code></pre>
-<p>Only the <code>data</code>, <code>parameters</code>, and <code>model</code> blocks are necessary for model estimation, while the other blocks provide optional declarations and statements. In most statistical software, empirical data are input with a single matrix or dataframe. Rather than inputting a single dataframe or matix to RStan, a list can be provided with data for each scalar (real or integer), vector, or matrix declared in the <code>.stan</code> file. The names of these data objects are declared along with their expected dimensions, which ensures that inappropriate data structures or likelihood functions will throw errors. For the simulated data, we first declare all the measured variables and indices relevant to model estimation. We use <code>//</code> rather than <code>#</code> for comments in Stan.</p>
+<p>The <code>data</code>, <code>parameters</code>, and <code>model</code> blocks are specified for any model, while the other blocks provide optional declarations and statements. In most statistical software, empirical data are input with a single matrix or dataframe. Rather than inputting a single dataframe or matix to RStan, a list can be provided with data for each scalar (real or integer), vector, or matrix declared in the <code>.stan</code> file. The names of these data objects are declared along with their expected dimensions, which ensures that inappropriate data structures or likelihood functions will throw errors. For the simulated data, we first declare all the measured variables and indices relevant to model estimation. We use <code>//</code> rather than <code>#</code> for comments in Stan.</p>
 <pre class="stan"><code>data {
-  int&lt;lower=0&gt; N; //length of response vector/total observations; values less than 1 throw error
-  int&lt;lower=0&gt; I; //number of individuals
-  int&lt;lower=0&gt; id[N]; //N integer indices matching observations of y to the individual identity 
+  int&lt;lower=1&gt; N; //length of response vector/total observations
+  int&lt;lower=1&gt; I; //number of individuals
+  int&lt;lower=1&gt; id[N]; //N integer indices matching observations of z to the individual identity 
 
   vector[N] x; //vector of covariate values for fixed effect
-  vector[N] y; //vector of response values
+  vector[N] z; //vector of response values
 }</code></pre>
 <p>This declarative approach requires that particular attention is given to the order of data input to the model, as values will need to be appropriately aligned and indexed throughout the model specification. However, it also provides additional benefits such as facilitating multi-response models with heterogeneous dimensions, as well as allowing for arbitrarily complex forms of social interaction to be specified in the model likelihood using appropriate indices of the relevant vectors or matrices.</p>
-<p>We specify model parameters in accordance with the formal model used for the simulation, with standard deviations and correlation matrices replacing variances and covariance matrices.</p>
+<p>We specify model parameters in accordance with the formal model used for the simulation, with standard deviations and correlation matrices replacing variances and covariance matrices. For simplicity, we use <code>_P</code> to indicate phenotypic (co)variances and values in the Stan code, with <code>_R</code> used to indicate residual (co)variance terms.</p>
 <pre class="stan"><code>parameters {
   //fixed effects
   real mu_0; //global intercept
   real beta_1; //fixed effect coefficient for covariate x
 
   //random effects
-  corr_matrix[2] P_cor; //correlation matrix of random effects 
+  corr_matrix[2] Pcor; //correlation matrix of random effects 
   vector&lt;lower=0&gt;[2] sd_P; //standard deviations of random effects
   real&lt;lower=0&gt; sd_R; //standard deviation of residuals
   matrix[I,2] re_P; //individual-level phenotypic deviations (random intercepts and slopes)
 }</code></pre>
-<p>Note that rather than declaring the random effects as separate vectors, we instead declare a matrix for both individual intercept and slope values. It is necessary to specify <code>&lt;lower=0&gt;</code> so that the standard deviation parameters are lower bound at zero.</p>
-<p>The other parameters in the formal model are simply combinations of these fundamental parameters. In particular, the individual-level intercepts <span class="math inline">\(\mu_j\)</span> and slopes <span class="math inline">\(\beta_j\)</span> are determined by the sum of the population-level intercepts <span class="math inline">\(\mu_0\)</span> and slopes <span class="math inline">\(\beta_1\)</span> with the respective random individual deviations <span class="math inline">\(\mu_{\mathrm{P}j}\)</span> and <span class="math inline">\(\beta_{\mathrm{P}j}\)</span>, which are contained in the <code>re_P</code> matrix. Similarly, the covariance matrix <span class="math inline">\(\boldsymbol{\mathrm{P}}\)</span> can be derived with the standard deviations <code>sd_P</code> and the correlation matrix `<code>P_cor</code> as shown above. These parameters can be useful for increasing model clarity, as well for enhancing the efficiency of MCMC sampling as demonstrated further below. The <code>transformed parameters</code> block of a <code>.stan</code> file is intended for such purposes.</p>
+<p>Note that rather than declaring the random effects as separate vectors, we instead declare a matrix for both individual intercept and slope values, which we use in the model block for declaring the covariance between these parameters. It is necessary to specify <code>&lt;lower=0&gt;</code> so that the standard deviation parameters are lower bound at zero.</p>
+<p>The other parameters in the formal model are simply combinations of these fundamental parameters. The <code>transformed parameters</code> block of a <code>.stan</code> file is intended for such purposes. In particular, the covariance matrix <span class="math inline">\(\boldsymbol{\mathrm{P_{cov}}}\)</span> can be derived with the standard deviations <code>sd_P</code> and the correlation matrix <code>Pcor</code> as shown above. Separating these parameters is useful for increasing model clarity, as well for enhancing the efficiency of MCMC sampling as demonstrated further below.</p>
 <pre class="stan"><code>transformed parameters {
-  vector[I] mu = mu_0 + col(re_P, 1); //individual-level intercepts
-  vector[I] beta = beta_1 + col(re_P, 2); //individual-level intercepts
-  cov_matrix[2] P = diag_matrix(sd_P) * P_cor * diag_matrix(sd_P); //cov of random effects
+  cov_matrix[2] Pcov = diag_matrix(sd_P) * Pcor * diag_matrix(sd_P); //cov of random effects
 }</code></pre>
-<p>This code creates two new vectors <code>mu</code> and <code>beta</code> of length I containing the expected intercepts and slopes of each individual, as well as covariance matrix <code>P</code> derived from the standard deviations and correlation matrix. These quantities can now be used in the model block to more clearly express the likelihood function. Note that these new objects could also be declared in the <code>model</code> block prior to specifying the likelihood. However, any objects created in the <code>model</code> block are temporary and will not be saved along with the MCMC samples of objects declared in the <code>parameters</code> and <code>transformed parametrs</code> blocks. This can be useful for creating pragmatic objects that enable more efficient coding but do not need to be directly interpreted.</p>
-<p>Following the formal model above, we specify the response <span class="math inline">\(y_{ij}\)</span> as a function of the linear predictor containing individual intercepts <span class="math inline">\(\mu_j\)</span> and slopes in response to the environmental covariate <span class="math inline">\(\beta_jx_{ij}\)</span>, as well as stochastic effects with standard deviation <span class="math inline">\(\mathrm{SD(\boldsymbol{\epsilon})}=\mathrm{SD_R}\)</span>. The random effects are sampled from a zero-centered multivariate normal with covariance matrix <span class="math inline">\(\boldsymbol{\mathrm{P}}\)</span>.</p>
+<p>This new transformed parameter <code>P</code> can now be used in the model block to more clearly express the likelihood function. Note that new objects can also be declared inside the <code>model</code> block prior to specifying the likelihood. However, any objects created in the <code>model</code> block are temporary and will not be saved along with the MCMC samples of objects declared in the <code>parameters</code> and <code>transformed parametrs</code> blocks. This can be useful for creating pragmatic objects that enable more efficient coding but do not need to be directly interpreted. For instance, rather than subsetting the matrix of individual random effects <code>re_P</code> inside the model likelihood, we can instead create two temporary vectors <code>mu</code> and <code>beta</code> to more intuitively write the likelihood function. Following the formal model above, we specify the response <span class="math inline">\(z_{ij}\)</span> as a function of the linear predictor containing population parameters as well as individual intercepts <span class="math inline">\(\mu_j\)</span> and slopes in response to the environmental covariate <span class="math inline">\(\beta_j\)</span>, as well as stochastic effects with standard deviation <span class="math inline">\(\mathrm{SD(\boldsymbol{\epsilon})}=\)</span><code>sd_R</code>. The random effects are sampled from a zero-centered multivariate normal with covariance matrix <span class="math inline">\(\boldsymbol{\mathrm{P_{cov}}}\)</span>.</p>
 <pre class="stan"><code>model {
+  vector[I] mu = col(re_P, 1); //temporary individual-level intercepts
+  vector[I] beta = col(re_P, 2); //temporary individual-level slopes
+
   //model likelihood
-  y ~ normal(mu[id] + beta[id].*x, sd_R); //index by id to match response vector length
+  //use index id to match response vector length
+  z ~ normal(mu_0 + mu[id] + (beta_1 + beta[id]).*x, sd_R);
   
-  for(i in 1:I)
-  re_P[i] ~ multi_normal([0,0], P );
+  for(i in 1:I) //each individual&#39;s random effects ~ MVN(0,P_cov)
+  re_P[i] ~ multi_normal([0,0], Pcov);
   
   //priors
   
@@ -332,78 +345,139 @@ generated quantities {
   beta_1 ~ normal(0,1);
   
   //random effects
-  P_cor ~ lkj_corr(2);
+  Pcor ~ lkj_corr(2);
   to_vector(sd_P) ~ cauchy(0,1);
   sd_R ~ cauchy(0,1);
 }
 </code></pre>
 <p>Model priors are set for all parameters declared in the original programming block, while transformed parameters do not receive priors. We use general purpose, weakly regularizing priors to reduce the risk of inferential bias and enhance model identification, which will be crucial for SAMs relying on interactions among many latent variables. Interested readers should see <span class="citation"><a href="resources.html#ref-Lemoine2019" role="doc-biblioref">Lemoine</a> (<a href="resources.html#ref-Lemoine2019" role="doc-biblioref">2019</a>)</span> and <span class="citation"><a href="resources.html#ref-Rethinking" role="doc-biblioref">McElreath</a> (<a href="resources.html#ref-Rethinking" role="doc-biblioref">2020</a>)</span> for further discussion on the choice of model priors, as well as the clear limitations of using highly diffuse, flat, and/or improper priors that are more commonly utilized. Finally, rather than post-processing the posterior SDs ourselves to derive variances, we can instead use the <code>generated quantities</code> block to calculate the variances during model estimation.</p>
 <pre class="stan"><code>generated quantities {
-  vector[2] V_P = sd_P .* sd_P;
-  real V_R = sd_R * sd_R;
+  vector[2] V_P = sd_P .* sd_P; //RN intercept [1] and slope [2] variance
+  real V_R = sd_R * sd_R; //residual variance (=Sigma matrix)
 }</code></pre>
-<p>The posterior object returned from this model will now contain the random effects variances and covariance matrix, along with the SDs and correlation matrix. Each of these blocks can be saved together in a single <code>.stan</code> file with an empty line break left at the end of the file. This can be accomplished with a text editor or inside R.</p>
-<pre class="stan"><code>
-data {
-  int&lt;lower=0&gt; N; //length of response/total observations; values &lt; 1 throw error
-  int&lt;lower=0&gt; I; //number of individuals
-  int&lt;lower=0&gt; id[N]; //matches observations of y to the individual identity 
-
-  vector[N] x; //vector of covariate values for fixed effect
-  vector[N] y; //vector of response values
-}
-parameters {
-  //fixed effects
-  real mu_0; //global intercept
-  real beta_1; //fixed effect coefficient for covariate x
-
-  //random effects
-  corr_matrix[2] P_cor; //correlation matrix of random effects 
-  vector&lt;lower=0&gt;[2] sd_P; //standard deviations of random effects
-  real&lt;lower=0&gt; sd_R; //standard deviation of residuals
-  matrix[I,2] re_P; //individual-level phenotypic deviations (random intercepts and slopes)
-}
-transformed parameters {
-  vector[I] mu = mu_0 + col(re_P, 1); //individual-level intercepts
-  vector[I] beta = beta_1 + col(re_P, 2); //individual-level intercepts
-  cov_matrix[2] P = diag_matrix(sd_P) * P_cor * diag_matrix(sd_P); //cov of random effects
-}
-model {
-  //model likelihood
-  y ~ normal(mu[id] + beta[id].*x, sd_R); //index by id to match response vector length
-  
-  for(i in 1:I)
-  re_P[i] ~ multi_normal([0,0], P );
-  
-  //priors
-  
-  //fixed effects
-  mu_0 ~ normal(0,1);
-  beta_1 ~ normal(0,1);
-  
-  //random effects
-  P_cor ~ lkj_corr(2);
-  to_vector(sd_P) ~ cauchy(0,1);
-  sd_R ~ cauchy(0,1);
-}
-
-generated quantities {
-  vector[2] V_P = sd_P .* sd_P;
-  real V_R = sd_R * sd_R;
-}
-</code></pre>
-<p>The model is now ready for estimation. We manually specify that the MCMC sampler should use 1000 iterations per chain to converge on the target joint posterior distribution <code>warmup=1000</code>, with the subsequent 1000 iterations used as posterior samples <code>iter = 2000</code> (i.e. <code>iter</code> - <code>warmup</code> = number of MCMC samples per chain). <code>init = 0</code> initializes the samplers near null values. Four MCMC chains are used to assess model convergence across independent random samplers <code>chains=4</code>, with one core assigned to each chain for parallel processing <code>cores=4</code>. The <code>adapt_delta=0.90</code> argument reduces the risk of divergent transitions during sampling.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="using-stan-in-r.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
-<span id="cb10-2"><a href="using-stan-in-r.html#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="using-stan-in-r.html#cb10-3" aria-hidden="true" tabindex="-1"></a>stan_mod <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="at">model_code =</span> <span class="st">&quot;model1.stan&quot;</span>)</span>
-<span id="cb10-4"><a href="using-stan-in-r.html#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="using-stan-in-r.html#cb10-5" aria-hidden="true" tabindex="-1"></a>stan_results <span class="ot">&lt;-</span> <span class="fu">sampling</span>(stan_mod, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">2500</span>,</span>
-<span id="cb10-6"><a href="using-stan-in-r.html#cb10-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span></code></pre></div>
+<p>The posterior object returned from this model will now contain the random effects variances and covariance matrix, along with the SDs and correlation matrix. Each of the blocks can now be saved together in a single <code>.stan</code> file, which can be accomplished with a text editor or inside R.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="using-stan-in-r.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(<span class="st">&quot;</span></span>
+<span id="cb10-2"><a href="using-stan-in-r.html#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
+<span id="cb10-3"><a href="using-stan-in-r.html#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; N; //length of response vector/total observations</span></span>
+<span id="cb10-4"><a href="using-stan-in-r.html#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; I; //number of individuals</span></span>
+<span id="cb10-5"><a href="using-stan-in-r.html#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; id[N]; //N integer indices matching observations of z to the individual identity </span></span>
+<span id="cb10-6"><a href="using-stan-in-r.html#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb10-7"><a href="using-stan-in-r.html#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="st">    vector[N] x; //vector of covariate values for fixed effect</span></span>
+<span id="cb10-8"><a href="using-stan-in-r.html#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="st">    vector[N] z; //vector of response values</span></span>
+<span id="cb10-9"><a href="using-stan-in-r.html#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb10-10"><a href="using-stan-in-r.html#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
+<span id="cb10-11"><a href="using-stan-in-r.html#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="st">    //fixed effects</span></span>
+<span id="cb10-12"><a href="using-stan-in-r.html#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="st">    real mu_0; //global intercept</span></span>
+<span id="cb10-13"><a href="using-stan-in-r.html#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="st">    real beta_1; //fixed effect coefficient for covariate x</span></span>
+<span id="cb10-14"><a href="using-stan-in-r.html#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="st">   </span></span>
+<span id="cb10-15"><a href="using-stan-in-r.html#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="st">    //random effects</span></span>
+<span id="cb10-16"><a href="using-stan-in-r.html#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="st">    corr_matrix[2] Pcor; //correlation matrix of random effects </span></span>
+<span id="cb10-17"><a href="using-stan-in-r.html#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="st">    vector&lt;lower=0&gt;[2] sd_P; //standard deviations of random effects</span></span>
+<span id="cb10-18"><a href="using-stan-in-r.html#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="st">    real&lt;lower=0&gt; sd_R; //standard deviation of residuals</span></span>
+<span id="cb10-19"><a href="using-stan-in-r.html#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="st">    matrix[I,2] re_P; //individual-level phenotypic deviations (random intercepts and slopes)  </span></span>
+<span id="cb10-20"><a href="using-stan-in-r.html#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb10-21"><a href="using-stan-in-r.html#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="st">transformed parameters {</span></span>
+<span id="cb10-22"><a href="using-stan-in-r.html#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="st">    cov_matrix[2] Pcov = diag_matrix(sd_P) * Pcor * diag_matrix(sd_P); //cov of random effects</span></span>
+<span id="cb10-23"><a href="using-stan-in-r.html#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb10-24"><a href="using-stan-in-r.html#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb10-25"><a href="using-stan-in-r.html#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[I] mu = col(re_P, 1); //temporary individual-level intercepts</span></span>
+<span id="cb10-26"><a href="using-stan-in-r.html#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[I] beta = col(re_P, 2); //temporary individual-level slopes</span></span>
+<span id="cb10-27"><a href="using-stan-in-r.html#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb10-28"><a href="using-stan-in-r.html#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="st">  //model likelihood</span></span>
+<span id="cb10-29"><a href="using-stan-in-r.html#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="st">  //use index id to match response vector length</span></span>
+<span id="cb10-30"><a href="using-stan-in-r.html#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="st">  z ~ normal(mu_0 + mu[id] + (beta_1 + beta[id]).*x, sd_R);</span></span>
+<span id="cb10-31"><a href="using-stan-in-r.html#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb10-32"><a href="using-stan-in-r.html#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="st">  for(i in 1:I) //each individual&#39;s random effects ~ MVN(0,P_cov)</span></span>
+<span id="cb10-33"><a href="using-stan-in-r.html#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="st">  re_P[i] ~ multi_normal([0,0], Pcov);</span></span>
+<span id="cb10-34"><a href="using-stan-in-r.html#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb10-35"><a href="using-stan-in-r.html#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="st">  //priors</span></span>
+<span id="cb10-36"><a href="using-stan-in-r.html#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="st">  //fixed effects</span></span>
+<span id="cb10-37"><a href="using-stan-in-r.html#cb10-37" aria-hidden="true" tabindex="-1"></a><span class="st">  mu_0 ~ normal(0,1);</span></span>
+<span id="cb10-38"><a href="using-stan-in-r.html#cb10-38" aria-hidden="true" tabindex="-1"></a><span class="st">  beta_1 ~ normal(0,1);</span></span>
+<span id="cb10-39"><a href="using-stan-in-r.html#cb10-39" aria-hidden="true" tabindex="-1"></a><span class="st">  //random effects</span></span>
+<span id="cb10-40"><a href="using-stan-in-r.html#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="st">  Pcor ~ lkj_corr(2);</span></span>
+<span id="cb10-41"><a href="using-stan-in-r.html#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(sd_P) ~ cauchy(0,1);</span></span>
+<span id="cb10-42"><a href="using-stan-in-r.html#cb10-42" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_R ~ cauchy(0,1); </span></span>
+<span id="cb10-43"><a href="using-stan-in-r.html#cb10-43" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb10-44"><a href="using-stan-in-r.html#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="st">generated quantities {</span></span>
+<span id="cb10-45"><a href="using-stan-in-r.html#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[2] V_P = sd_P .* sd_P; //RN intercept [1] and slope [2] variance</span></span>
+<span id="cb10-46"><a href="using-stan-in-r.html#cb10-46" aria-hidden="true" tabindex="-1"></a><span class="st">  real V_R = sd_R * sd_R; //residual variance (=Sigma matrix)</span></span>
+<span id="cb10-47"><a href="using-stan-in-r.html#cb10-47" aria-hidden="true" tabindex="-1"></a><span class="st">}&quot;</span>, <span class="st">&quot;mod1.stan&quot;</span>)</span></code></pre></div>
+<p>The model is now ready for estimation. We manually specify that the MCMC sampler should use 1500 iterations per chain to converge on the target joint posterior distribution <code>warmup=1500</code>, with the subsequent 1000 iterations used as posterior samples <code>iter = 2500</code> (i.e. <code>iter</code> - <code>warmup</code> = number of MCMC samples per chain). <code>init = 0</code> initializes the samplers near null values. Four MCMC chains are used to assess model convergence across independent random samplers <code>chains=4</code>, with one core assigned to each chain for parallel processing <code>cores=4</code>. The <code>adapt_delta=0.90</code> argument reduces the risk of divergent transitions during sampling.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="using-stan-in-r.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span></code></pre></div>
+<pre><code>## Loading required package: StanHeaders</code></pre>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<pre><code>## rstan (Version 2.21.2, GitRev: 2e1f913d3ca3)</code></pre>
+<pre><code>## For execution on a local, multicore CPU with excess RAM we recommend calling
+## options(mc.cores = parallel::detectCores()).
+## To avoid recompilation of unchanged Stan programs, we recommend calling
+## rstan_options(auto_write = TRUE)</code></pre>
+<pre><code>## Do not specify &#39;-march=native&#39; in &#39;LOCAL_CPPFLAGS&#39; or a Makevars file</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="using-stan-in-r.html#cb17-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="st">&quot;mod1.stan&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning in system(paste(CXX, ARGS), ignore.stdout = TRUE, ignore.stderr = TRUE): &#39;C:/rtools40/usr/mingw_/bin/g++&#39; not found</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="using-stan-in-r.html#cb19-1" aria-hidden="true" tabindex="-1"></a>stan_results <span class="ot">&lt;-</span> <span class="fu">sampling</span>(mod1, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">2500</span>,</span>
+<span id="cb19-2"><a href="using-stan-in-r.html#cb19-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span></code></pre></div>
+<pre><code>## Warning: There were 1 divergent transitions after warmup. See
+## http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+## to find out why this is a problem and how to eliminate them.</code></pre>
+<pre><code>## Warning: There were 4 chains where the estimated Bayesian Fraction of Missing Information was low. See
+## http://mc-stan.org/misc/warnings.html#bfmi-low</code></pre>
+<pre><code>## Warning: Examine the pairs() plot to diagnose sampling problems</code></pre>
+<pre><code>## Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
+## Running the chains for more iterations may help. See
+## http://mc-stan.org/misc/warnings.html#bulk-ess</code></pre>
+<pre><code>## Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
+## Running the chains for more iterations may help. See
+## http://mc-stan.org/misc/warnings.html#tail-ess</code></pre>
 <p>Stan flags a few potential issues with the MCMC sampler. Further description of these and other warnings can be found in the <a href="https://mc-stan.org/misc/warnings.html">Stan Warning Guide</a>. One warning is that “The largest R-hat is NA, indicating chains have not mixed.” Stan does not know whether some parameter values are fixed (causing Rhat = NA) because the sampler is stuck, or because the model has been intentionally specified with fixed parameter values (e.g. diagonals fixed to 1 in a correlation matrix or an intercept forced to 0). For the specified model, this is a harmless warning that can be safely ignored. However, we can also check for issues by looking at the Rhat values of all model parameters using <code>summary()</code> on the saved results. If an expected parameter is missing from the table or shows NA, this likely indicates an unintentional error in the model code.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="using-stan-in-r.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stan_results)<span class="sc">$</span>summary[,<span class="st">&quot;Rhat&quot;</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="using-stan-in-r.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stan_results)<span class="sc">$</span>summary[,<span class="st">&quot;Rhat&quot;</span>]</span></code></pre></div>
+<pre><code>##       mu_0     beta_1  Pcor[1,1]  Pcor[1,2]  Pcor[2,1]  Pcor[2,2]    sd_P[1]    sd_P[2]       sd_R  re_P[1,1]  re_P[1,2] 
+##  1.0003944  1.0006851        NaN  1.0141064  1.0141064  0.9989995  1.0177573  1.0424244  1.0109744  1.0041571  1.0002847 
+##  re_P[2,1]  re_P[2,2]  re_P[3,1]  re_P[3,2]  re_P[4,1]  re_P[4,2]  re_P[5,1]  re_P[5,2]  re_P[6,1]  re_P[6,2]  re_P[7,1] 
+##  1.0058557  1.0016140  1.0022542  1.0017344  0.9995621  1.0025387  1.0003477  0.9999581  1.0097324  1.0124816  0.9999370 
+##  re_P[7,2]  re_P[8,1]  re_P[8,2]  re_P[9,1]  re_P[9,2] re_P[10,1] re_P[10,2] re_P[11,1] re_P[11,2] re_P[12,1] re_P[12,2] 
+##  1.0000727  1.0073713  1.0004544  1.0000326  1.0065516  1.0023706  1.0016780  1.0017993  1.0010226  0.9997299  0.9993976 
+## re_P[13,1] re_P[13,2] re_P[14,1] re_P[14,2] re_P[15,1] re_P[15,2] re_P[16,1] re_P[16,2] re_P[17,1] re_P[17,2] re_P[18,1] 
+##  1.0023033  1.0000060  1.0000876  1.0025292  0.9995913  1.0001792  1.0007264  1.0023730  0.9992582  1.0004599  1.0008386 
+## re_P[18,2] re_P[19,1] re_P[19,2] re_P[20,1] re_P[20,2] re_P[21,1] re_P[21,2] re_P[22,1] re_P[22,2] re_P[23,1] re_P[23,2] 
+##  1.0053619  0.9999154  0.9992746  1.0007372  1.0025066  1.0021674  1.0013578  1.0010731  1.0033323  1.0006994  1.0000298 
+## re_P[24,1] re_P[24,2] re_P[25,1] re_P[25,2] re_P[26,1] re_P[26,2] re_P[27,1] re_P[27,2] re_P[28,1] re_P[28,2] re_P[29,1] 
+##  1.0019832  1.0006112  1.0087068  1.0002070  0.9992819  1.0057374  0.9995943  1.0006215  1.0025492  1.0028372  1.0055189 
+## re_P[29,2] re_P[30,1] re_P[30,2] re_P[31,1] re_P[31,2] re_P[32,1] re_P[32,2] re_P[33,1] re_P[33,2] re_P[34,1] re_P[34,2] 
+##  1.0154790  0.9999114  0.9996277  0.9996079  1.0006225  1.0042091  1.0007842  1.0006443  1.0006664  1.0083500  1.0026313 
+## re_P[35,1] re_P[35,2] re_P[36,1] re_P[36,2] re_P[37,1] re_P[37,2] re_P[38,1] re_P[38,2] re_P[39,1] re_P[39,2] re_P[40,1] 
+##  0.9996952  1.0000541  1.0009877  0.9993376  1.0009012  1.0008638  1.0004051  1.0006771  1.0024101  1.0012585  1.0016053 
+## re_P[40,2] re_P[41,1] re_P[41,2] re_P[42,1] re_P[42,2] re_P[43,1] re_P[43,2] re_P[44,1] re_P[44,2] re_P[45,1] re_P[45,2] 
+##  1.0004976  1.0054094  1.0149395  1.0040776  1.0078862  1.0032678  1.0045617  0.9999716  1.0037378  1.0010156  1.0095982 
+## re_P[46,1] re_P[46,2] re_P[47,1] re_P[47,2] re_P[48,1] re_P[48,2] re_P[49,1] re_P[49,2] re_P[50,1] re_P[50,2]  Pcov[1,1] 
+##  1.0102610  1.0122673  1.0063146  1.0050424  0.9997009  0.9994074  1.0014003  1.0111565  1.0060525  1.0069194  1.0139722 
+##  Pcov[1,2]  Pcov[2,1]  Pcov[2,2]     V_P[1]     V_P[2]        V_R       lp__ 
+##  1.0057584  1.0057584  1.0298753  1.0139722  1.0298753  1.0106054  1.0394186</code></pre>
 <p>In addition to the Rhat warning, the effective sample sizes of some model parameters are too low to ensure accurate inferences. It is helpful to see which parameters are causing these warnings by sorting on the lowest <code>n_eff</code> values in the summary table.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="using-stan-in-r.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">summary</span>(stan_results)<span class="sc">$</span>summary[,<span class="st">&quot;n_eff&quot;</span>])</span></code></pre></div>
-<p>It is typical that individual-specific trait values have relatively lower effective sample sizes than the population-level parameters of primary interest (e.g. the intercept deviation of individual 9 <code>re_P[9,1]</code> and their total intercept <code>mu[9]</code> compared to the global intercept <code>mu_0</code>). More damningly, however, we also see an extremely low effective sample for <code>lp__</code>, which is the joint log density of the model (up to a constant internally defined <a href="https://www.jax.org/news-and-insights/jax-blog/2015/october/lp-in-stan-output#">scale factor</a>. This provides further evidence that the model, as currently defined, is poorly identified. The key random effect SDs <code>sd_P</code> and variances <code>V_P</code> are also very poorly sampled, along with the residual SD <code>sd_R</code> and variance <code>V_R</code>. We could run the MCMC sampler for more iterations, increase the warm-up period, and change various other manual control settings. However, the deeper issue with the estimation procedure is not that the model is poorly defined or that the data provide insufficient information; rather, we have inefficiently parameterized the model.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="using-stan-in-r.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">summary</span>(stan_results)<span class="sc">$</span>summary[,<span class="st">&quot;n_eff&quot;</span>])</span></code></pre></div>
+<pre><code>##       lp__    sd_P[2]    sd_P[1]     V_P[2]  Pcov[2,2]  Pcov[1,1]     V_P[1]  re_P[8,1]  re_P[6,2] re_P[46,2] re_P[29,2] 
+##   69.47988   97.56355  131.85262  161.32467  161.32467  168.82328  168.82328  273.71906  286.35834  289.10271  320.78189 
+## re_P[25,1]       sd_R        V_R re_P[46,1]  re_P[6,1] re_P[41,1] re_P[34,1] re_P[49,2] re_P[47,1] re_P[41,2] re_P[42,1] 
+##  332.33294  345.41841  346.82131  360.14769  371.62852  376.32202  386.74961  388.28896  401.75875  408.00683  504.91953 
+##  re_P[2,1] re_P[42,2]  Pcov[1,2]  Pcov[2,1] re_P[39,1] re_P[29,1] re_P[47,2]  re_P[9,2]  Pcor[1,2]  Pcor[2,1] re_P[50,2] 
+##  511.09670  535.39846  576.22058  576.22058  583.98147  605.01978  616.34213  661.54471  701.81028  701.81028  717.06125 
+## re_P[45,2] re_P[50,1] re_P[34,2]  re_P[1,1] re_P[24,1] re_P[32,1] re_P[43,2] re_P[26,2] re_P[43,1]  re_P[3,1] re_P[10,1] 
+##  760.95150  763.27384  809.69546  815.56959  818.02957  871.58073  965.91779 1019.19965 1115.99141 1157.94502 1176.95831 
+## re_P[28,1] re_P[21,1] re_P[11,1] re_P[44,2] re_P[20,2] re_P[22,1]  re_P[3,2] re_P[22,2] re_P[45,1] re_P[18,2] re_P[36,1] 
+## 1190.88432 1237.01120 1371.32611 1377.22141 1412.62445 1629.49527 1655.59497 1671.92399 1730.15626 1783.80240 1853.75558 
+## re_P[40,1]  re_P[8,2] re_P[38,1] re_P[28,2] re_P[33,1] re_P[39,2] re_P[16,2] re_P[18,1] re_P[20,1]  re_P[4,2]     beta_1 
+## 1884.41878 1885.52988 2030.20719 2052.26912 2078.21121 2114.26364 2117.99705 2144.14693 2194.71163 2260.41774 2288.52733 
+## re_P[25,2] re_P[13,1] re_P[11,2] re_P[49,1] re_P[10,2] re_P[17,2] re_P[37,2] re_P[37,1]  re_P[5,1]  re_P[2,2] re_P[17,1] 
+## 2338.52181 2539.50052 2596.78118 2669.06074 2759.19625 2796.44657 2948.39646 2983.17997 3031.63519 3167.18718 3193.57854 
+## re_P[48,1] re_P[23,1] re_P[13,2] re_P[27,1] re_P[32,2]  re_P[1,2] re_P[40,2] re_P[14,2] re_P[16,1] re_P[12,2] re_P[31,2] 
+## 3277.21540 3291.02174 3523.18200 3535.12620 3609.72977 3617.25671 3622.09933 3698.65368 3723.20301 3727.11838 3789.19763 
+## re_P[27,2]  re_P[4,1]  Pcor[2,2] re_P[15,1]       mu_0 re_P[44,1] re_P[19,2] re_P[33,2] re_P[24,2] re_P[21,2] re_P[14,1] 
+## 3857.85400 3867.17442 3874.96777 3895.98676 3952.47323 3996.97496 3998.48502 4062.17141 4169.08839 4271.44389 4277.13068 
+##  re_P[5,2] re_P[30,1] re_P[38,2] re_P[23,2] re_P[26,1]  re_P[7,1]  re_P[7,2]  re_P[9,1] re_P[48,2] re_P[12,1] re_P[19,1] 
+## 4402.75488 4500.52439 4588.74946 4618.91456 4652.28182 4686.45312 4733.61453 4786.89792 4804.77391 4846.93906 4900.22086 
+## re_P[35,2] re_P[30,2] re_P[31,1] re_P[36,2] re_P[15,2] re_P[35,1] 
+## 4902.81838 5039.23319 5164.52181 5173.41651 5191.92805 5715.34282</code></pre>
+<p>It is typical that individual-specific trait values in <code>re_P</code> have relatively lower effective sample sizes than the population-level parameters of primary interest. More damningly, however, we also see an extremely low effective sample for <code>lp__</code>, which is the joint log density of the model (up to a constant internally defined <a href="https://www.jax.org/news-and-insights/jax-blog/2015/october/lp-in-stan-output#">scale factor</a>. This provides further evidence that the model, as currently defined, is poorly identified. The key random effect SDs <code>sd_P</code> and variances <code>V_P</code> are also very poorly sampled, along with the residual SD <code>sd_R</code> and variance <code>V_R</code>. We could run the MCMC sampler for more iterations, increase the warm-up period, and change various other manual control settings. However, the deeper issue here is not that the model is formally mispecified but rather that we have inefficiently parametrized the model for sampling.</p>
 <div id="cholesky-decompositions" class="section level3" number="1.4.1">
 <h3><span class="header-section-number">1.4.1</span> Cholesky decompositions</h3>
 <p>Although the <code>.stan</code> file appropriately represents the formal model, it is programmed in such a way that the MCMC sampler has troubling sampling from the joint posterior distribution of the model. One of the first things we can do to increase efficiency is to reduce redundant computation over matrices in our model. This can be done with Cholesky decompositions. For any positive definite matrix <span class="math inline">\(\boldsymbol{\Omega}\)</span>, a Cholesky decomposition can be defined such that</p>
@@ -411,144 +485,134 @@ generated quantities {
 where <span class="math inline">\(\boldsymbol{\mathrm{L}_{\Omega}}\)</span> is a lower-triangular matrix and <span class="math inline">\(^{\mathrm{T}}\)</span> indicates matrix transposition. This property means that we can always do computations of reduced dimensionality on the lower-triangular matrix <span class="math inline">\(\boldsymbol{\mathrm{L}_{\Omega}}\)</span> and subsequently recover the full positive-definitive matrix <span class="math inline">\(\boldsymbol{\Omega}\)</span> by post-multiplying <span class="math inline">\(\boldsymbol{\mathrm{L}_{\Omega}}\)</span> with its transpose.</p>
 <p>Stan provides many built-in functions for easily defining and manipulating Cholesky decomposed matrices, which we can use to re-parameterize the <code>.stan</code> file. Comments are added below where Cholesky decompositions have been introduced.</p>
 <pre class="stan"><code>data {
-  int&lt;lower=0&gt; N; 
-  int&lt;lower=0&gt; I; 
-  int&lt;lower=0&gt; id[N]; 
-  vector[N] x; 
-  vector[N] y;
+    int&lt;lower=1&gt; N; 
+    int&lt;lower=1&gt; I; 
+    int&lt;lower=1&gt; id[N];  
+    
+    vector[N] x; 
+    vector[N] z; 
 }
 parameters {
-  //fixed effects
-  real mu_0;
-  real beta_1;
-  
-  //random effects
-  cholesky_factor_corr[2] LP_cor; //lower tri Cholesky of random effect cor matrix 
-  vector&lt;lower=0&gt;[2] sd_P;
-  real&lt;lower=0&gt; sd_R;
-  matrix[I,2] re_P;
+    real mu_0;
+    real beta_1; 
+    
+    cholesky_factor_corr[2] LPcor; //lower tri Cholesky of random effect cor matrix 
+    vector&lt;lower=0&gt;[2] sd_P; 
+    real&lt;lower=0&gt; sd_R;
+    matrix[I,2] re_P;
 }
-
 transformed parameters {
-  vector[I] mu = mu_0 + col(re_P, 1);
-  vector[I] beta = beta_1 + col(re_P, 2);
-  cholesky_factor_cov[2] LP = diag_pre_multiply(sd_P, LP_cor); //Cholesky of random effect cov
+    cholesky_factor_cov[2] LPcov = diag_pre_multiply(sd_P, LPcor); //Cholesky of random effect cov
 }
 model {
-  //model likelihood
-  y ~ normal(mu[id] + beta[id].*x, sd_R);
+  vector[I] mu = col(re_P, 1);
+  vector[I] beta = col(re_P, 2);
+  
+  z ~ normal(mu_0 + mu[id] + (beta_1 + beta[id]).*x, sd_R);
   
   for(i in 1:I)
-  re_P[i] ~ multi_normal_cholesky([0,0], LP); //likelihood expecting Cholesky cov
+  re_P[i] ~ multi_normal_cholesky([0,0], LPcov); //likelihood expecting Cholesky cov
   
-  //priors
-  
-  //fixed effects
   mu_0 ~ normal(0,1);
   beta_1 ~ normal(0,1);
-  
-  //random effects
-  LP_cor ~ lkj_corr_cholesky(2); //prior for Cholesky matrix
+  LPcor ~ lkj_corr_cholesky(2); //prior for Cholesky matrix
   to_vector(sd_P) ~ cauchy(0,1);
-  sd_R ~ cauchy(0,1);
+  sd_R ~ cauchy(0,1); 
 }
 generated quantities {
   vector[2] V_P = sd_P .* sd_P;
   real V_R = sd_R * sd_R;
-  corr_matrix[2] P_cor = LP_cor*LP_cor&#39; ; //multiply by transpose to get full cor matrix
-  cov_matrix[2] P = diag_matrix(V_P) * P_cor * diag_matrix(V_P); //full cov matrix
-}
+  
+  corr_matrix[2] Pcor = LPcor*LPcor&#39; ; //multiply by transpose to get full cor matrix
+  cov_matrix[2] Pcov = diag_matrix(V_P) * Pcor * diag_matrix(V_P); //full cov matrix
 </code></pre>
 <p>The full covariance and correlation matrices are now specified in the <code>generated quantities</code> block.</p>
 </div>
 <div id="non-centered-random-effects" class="section level3" number="1.4.2">
 <h3><span class="header-section-number">1.4.2</span> Non-centered random effects</h3>
-<p>In addition to Cholesky decompositions, we can also re-parameterize the random effects to further enhance efficiency. Currently, we express the unobserved random effects in <code>re_P</code> as being generated from a distribution with unobserved (lower Cholesky) covariance matrix <code>LP</code>. While mathematically appropriate, this specification can make it difficult for the model to identify the scale of the random effects. An alternative but mathematically equivalent parameterization can be used to separating out the scale of the random effect deviations from the population-level (co)variances, which often will enhance model identification. Note that any normally distributed random variable <span class="math inline">\(\boldsymbol{z}\)</span> where</p>
+<p>Before running this model, we can also reparametrize the random effects to further enhance efficiency. Currently, we express the unobserved random effects in <code>re_P</code> as being generated from a distribution with unobserved lower Cholesky covariance matrix <code>LPcov</code>. While mathematically appropriate, this specification can make it difficult for the model to identify the scale of the random effects. An alternative but mathematically equivalent parametrization can be used to separating out the scale of the random effect deviations from the population-level (co)variances, which often will enhance model identification. Note that any normally distributed random variable <span class="math inline">\(\boldsymbol{z}\)</span> where</p>
 <p><span class="math display">\[\boldsymbol{z} \sim \mathrm{Normal}(0,\sigma_z)\]</span>
 can also be expressed as a standard normal variable <span class="math inline">\(z_{std}\)</span> scaled by the original SD
 <span class="math display">\[\boldsymbol{z} \equiv \boldsymbol{z_{\mathrm{std}}}\sigma_z\]</span>
 <span class="math display">\[\boldsymbol{z_{\mathrm{std}}} \sim \mathrm{Normal}(0,1)\]</span>
-Similarly for a <em>n</em> x <em>p</em> matrix <span class="math inline">\(\boldsymbol{Z}\)</span> of <em>p</em> multivariate phenotypes with covariance matrix <span class="math inline">\(\boldsymbol{\Sigma}\)</span></p>
-<p><span class="math display">\[\boldsymbol{Z} \equiv   \boldsymbol{Z_{\mathrm{std}}} \boldsymbol{\mathrm{L}_{\Sigma}}\]</span>
+Similarly for a <em>n</em> x <em>p</em> matrix <span class="math inline">\(\boldsymbol{Z}\)</span> of <em>p</em> multivariate phenotypes with covariance matrix <span class="math inline">\(\boldsymbol{\mathrm{C}}\)</span></p>
+<p><span class="math display">\[\boldsymbol{Z} \equiv   \boldsymbol{Z_{\mathrm{std}}} \boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}}}}^{\mathrm{T}}\]</span>
 <span class="math display">\[\mathrm{vec}(\boldsymbol{Z_{\mathrm{std}}}) \sim \mathrm{MVNormal}(\boldsymbol{0},\boldsymbol{\mathrm{I}})\]</span>
-where <span class="math inline">\(\boldsymbol{\mathrm{L}_{\Sigma}}\)</span> is the lower-triangular Cholesky decomposition. Implementing this so-called “non-centered parameterization” is straightforward in Stan. Building on the Cholesky decompositions added in the previous subsection</p>
-<pre class="stan"><code>data {
-  int&lt;lower=0&gt; N; 
-  int&lt;lower=0&gt; I; 
-  int&lt;lower=0&gt; id[N]; 
-  vector[N] x; 
-  vector[N] y;
-}
-parameters {
-  //fixed effects
-  real mu_0;
-  real beta_1;
-  
-  //random effects
-  cholesky_factor_corr[2] LP_cor;
-  vector&lt;lower=0&gt;[2] sd_P;
-  real&lt;lower=0&gt; sd_R;
-  matrix[I,2] std_P; //now matrix of standard normals (see priors below)
-}
-
-transformed parameters {
-  matrix[I,2] re_P = std_P * diag_pre_multiply(sd_P,LP_cor); //non-centered parameterization
-  vector[I] mu = mu_0 + col(re_P, 1);
-  vector[I] beta = beta_1 + col(re_P, 2);
-
-}
-model {
-  //model likelihood
-  y ~ normal(mu[id] + beta[id].*x, sd_R);
-
-  //priors
-  
-  //fixed effects
-  mu_0 ~ normal(0,1);
-  beta_1 ~ normal(0,1);
-  
-  //random effects
-  to_vector(std_P) ~ std_normal(); //new prior distribution over standard normal deviations
-  LP_cor ~ lkj_corr_cholesky(2);
-  to_vector(sd_P) ~ cauchy(0,1);
-  sd_R ~ cauchy(0,1);
-  
-}
-generated quantities {
-  vector[2] V_P = sd_P .* sd_P;
-  real V_R = sd_R * sd_R;
-  corr_matrix[2] P_cor = LP_cor*LP_cor&#39; ; 
-  cov_matrix[2] P = diag_matrix(V_P) * P_cor * diag_matrix(V_P); 
-}
-</code></pre>
-<p>Note that the specification of the random effects has been greatly simplified with the non-centered parameterization. By separating out the scale of the deviations and the population-level (co)variances, it becomes unnecessary to directly specify the generative distribution of the full random effects as above. Instead, the full distribution is partitioned into three independent priors over the random effect standard normal deviations, SDs, and correlations. This should make the model much easier to sample from.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="using-stan-in-r.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
-<span id="cb15-2"><a href="using-stan-in-r.html#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="using-stan-in-r.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#non-centered Cholesky parameterization</span></span>
-<span id="cb15-4"><a href="using-stan-in-r.html#cb15-4" aria-hidden="true" tabindex="-1"></a>stan_mod <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="at">model_code =</span> <span class="st">&quot;model2.stan&quot;</span>)</span>
-<span id="cb15-5"><a href="using-stan-in-r.html#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="using-stan-in-r.html#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#estimate model</span></span>
-<span id="cb15-7"><a href="using-stan-in-r.html#cb15-7" aria-hidden="true" tabindex="-1"></a>stan_results <span class="ot">&lt;-</span> <span class="fu">sampling</span>(stan_mod, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">2500</span>,</span>
-<span id="cb15-8"><a href="using-stan-in-r.html#cb15-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span>
-<span id="cb15-9"><a href="using-stan-in-r.html#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-10"><a href="using-stan-in-r.html#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">#extracts posterior estimates</span></span>
-<span id="cb15-11"><a href="using-stan-in-r.html#cb15-11" aria-hidden="true" tabindex="-1"></a>MCMCsamples <span class="ot">=</span>  <span class="fu">extract</span>(stan_results)</span></code></pre></div>
-<p>The absence of warning messages indicates that our mathematically equivalent re-parameterizations have enhanced the efficiency of the MCMC sampler. The posterior samples of the model in <code>MCMCsamples</code> can subsequently be extracted, summarized, visualized, and manipulated. E.g.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="using-stan-in-r.html#cb16-1" aria-hidden="true" tabindex="-1"></a>post_beta_1 <span class="ot">=</span> MCMCsamples<span class="sc">$</span>beta_1 <span class="co">#extract population-level slope</span></span>
-<span id="cb16-2"><a href="using-stan-in-r.html#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="using-stan-in-r.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post_beta_1) <span class="co">#central tendency of posterior</span></span>
-<span id="cb16-4"><a href="using-stan-in-r.html#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mad</span>(post_beta_1) <span class="co">#dispersion around central tendency</span></span>
-<span id="cb16-5"><a href="using-stan-in-r.html#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(post_beta_1, <span class="fu">c</span>(<span class="fl">0.05</span>,<span class="fl">0.95</span>)) <span class="co">#90% credible interval</span></span>
-<span id="cb16-6"><a href="using-stan-in-r.html#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(post_beta_1 <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="fu">length</span>(post_beta_1) <span class="co">#posterior probability of + effect</span></span>
-<span id="cb16-7"><a href="using-stan-in-r.html#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(post_beta_1) <span class="co">#MCMC approximation of posterior distribution</span></span></code></pre></div>
-<p>We encourage the use of the <code>shinystan</code> R package for deeper inspection of model convergence with a GUI prior to extraction of posterior results. In general, researchers should be skeptical of reporting results accompanied with sampler warnings and should seek to remove any diagnostic concerns prior to biological interpretation of the estimates.</p>
+where <span class="math inline">\(\boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}}}}\)</span> is the lower-triangular Cholesky decomposition. This decomposition. Implementing this so-called “non-centered parametrization” is straightforward in Stan and can of course also be applied to correlation matrices. Building on the Cholesky decompositions added in the previous subsection, and using the <code>'</code> symbol for the transpose function</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="using-stan-in-r.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(<span class="st">&quot;</span></span>
+<span id="cb30-2"><a href="using-stan-in-r.html#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
+<span id="cb30-3"><a href="using-stan-in-r.html#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; N; </span></span>
+<span id="cb30-4"><a href="using-stan-in-r.html#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; I; </span></span>
+<span id="cb30-5"><a href="using-stan-in-r.html#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; id[N];  </span></span>
+<span id="cb30-6"><a href="using-stan-in-r.html#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb30-7"><a href="using-stan-in-r.html#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="st">    vector[N] x; </span></span>
+<span id="cb30-8"><a href="using-stan-in-r.html#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="st">    vector[N] z; </span></span>
+<span id="cb30-9"><a href="using-stan-in-r.html#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb30-10"><a href="using-stan-in-r.html#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
+<span id="cb30-11"><a href="using-stan-in-r.html#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="st">    real mu_0;</span></span>
+<span id="cb30-12"><a href="using-stan-in-r.html#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="st">    real beta_1; </span></span>
+<span id="cb30-13"><a href="using-stan-in-r.html#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb30-14"><a href="using-stan-in-r.html#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="st">    cholesky_factor_corr[2] LPcor; </span></span>
+<span id="cb30-15"><a href="using-stan-in-r.html#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="st">    vector&lt;lower=0&gt;[2] sd_P; </span></span>
+<span id="cb30-16"><a href="using-stan-in-r.html#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="st">    real&lt;lower=0&gt; sd_R;</span></span>
+<span id="cb30-17"><a href="using-stan-in-r.html#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="st">    matrix[I,2] std_P; //now matrix of standard normals (see priors below)</span></span>
+<span id="cb30-18"><a href="using-stan-in-r.html#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb30-19"><a href="using-stan-in-r.html#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="st">transformed parameters {</span></span>
+<span id="cb30-20"><a href="using-stan-in-r.html#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="st">    matrix[I,2] re_P = std_P * diag_pre_multiply(sd_P,LPcor)&#39;; //non-centered parameterization</span></span>
+<span id="cb30-21"><a href="using-stan-in-r.html#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb30-22"><a href="using-stan-in-r.html#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb30-23"><a href="using-stan-in-r.html#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[I] mu = col(re_P, 1);</span></span>
+<span id="cb30-24"><a href="using-stan-in-r.html#cb30-24" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[I] beta = col(re_P, 2);</span></span>
+<span id="cb30-25"><a href="using-stan-in-r.html#cb30-25" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb30-26"><a href="using-stan-in-r.html#cb30-26" aria-hidden="true" tabindex="-1"></a><span class="st">  z ~ normal(mu_0 + mu[id] + (beta_1 + beta[id]).*x, sd_R);</span></span>
+<span id="cb30-27"><a href="using-stan-in-r.html#cb30-27" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb30-28"><a href="using-stan-in-r.html#cb30-28" aria-hidden="true" tabindex="-1"></a><span class="st">  mu_0 ~ normal(0,1);</span></span>
+<span id="cb30-29"><a href="using-stan-in-r.html#cb30-29" aria-hidden="true" tabindex="-1"></a><span class="st">  beta_1 ~ normal(0,1);</span></span>
+<span id="cb30-30"><a href="using-stan-in-r.html#cb30-30" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(std_P) ~ std_normal(); //new prior distribution over standard normal deviations</span></span>
+<span id="cb30-31"><a href="using-stan-in-r.html#cb30-31" aria-hidden="true" tabindex="-1"></a><span class="st">  LPcor ~ lkj_corr_cholesky(2);</span></span>
+<span id="cb30-32"><a href="using-stan-in-r.html#cb30-32" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(sd_P) ~ cauchy(0,1);</span></span>
+<span id="cb30-33"><a href="using-stan-in-r.html#cb30-33" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_R ~ cauchy(0,1); </span></span>
+<span id="cb30-34"><a href="using-stan-in-r.html#cb30-34" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb30-35"><a href="using-stan-in-r.html#cb30-35" aria-hidden="true" tabindex="-1"></a><span class="st">generated quantities {</span></span>
+<span id="cb30-36"><a href="using-stan-in-r.html#cb30-36" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[2] V_P = sd_P .* sd_P;</span></span>
+<span id="cb30-37"><a href="using-stan-in-r.html#cb30-37" aria-hidden="true" tabindex="-1"></a><span class="st">  real V_R = sd_R * sd_R;</span></span>
+<span id="cb30-38"><a href="using-stan-in-r.html#cb30-38" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb30-39"><a href="using-stan-in-r.html#cb30-39" aria-hidden="true" tabindex="-1"></a><span class="st">  corr_matrix[2] Pcor = LPcor*LPcor&#39; ;</span></span>
+<span id="cb30-40"><a href="using-stan-in-r.html#cb30-40" aria-hidden="true" tabindex="-1"></a><span class="st">  cov_matrix[2] Pcov = diag_matrix(V_P) * Pcor * diag_matrix(V_P);</span></span>
+<span id="cb30-41"><a href="using-stan-in-r.html#cb30-41" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb30-42"><a href="using-stan-in-r.html#cb30-42" aria-hidden="true" tabindex="-1"></a><span class="st">}&quot;</span>, <span class="st">&quot;mod1.stan&quot;</span>)</span></code></pre></div>
+<p>Note that the specification of the random effects has been greatly simplified with the non-centered parameterization. By separating out the scale of the deviations and the population-level (co)variances, it becomes unnecessary to directly specify the generative distribution of the full random effects as above. Instead, the full distribution is partitioned into three independent priors over the random effect standard normal deviations, SDs, and correlations, and the generative distribution of these values is specified directly through the scaling of the standard normals, i.e. <code>re_P = std_P * diag_pre_multiply(sd_P,LP_cor)'</code>=<span class="math inline">\(\boldsymbol{Z} \equiv \boldsymbol{Z_{\mathrm{std}}} \boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}}}}^{\mathrm{T}}\)</span> above. This should make the model much easier to sample from.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="using-stan-in-r.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
+<span id="cb31-2"><a href="using-stan-in-r.html#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="using-stan-in-r.html#cb31-3" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="st">&quot;mod1.stan&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning in system(paste(CXX, ARGS), ignore.stdout = TRUE, ignore.stderr = TRUE): &#39;C:/rtools40/usr/mingw_/bin/g++&#39; not found</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="using-stan-in-r.html#cb33-1" aria-hidden="true" tabindex="-1"></a>stan_results2 <span class="ot">&lt;-</span> <span class="fu">sampling</span>(mod1, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">2500</span>,</span>
+<span id="cb33-2"><a href="using-stan-in-r.html#cb33-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span>
+<span id="cb33-3"><a href="using-stan-in-r.html#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="using-stan-in-r.html#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co">#extracts posterior estimates</span></span>
+<span id="cb33-5"><a href="using-stan-in-r.html#cb33-5" aria-hidden="true" tabindex="-1"></a>MCMCsamples <span class="ot">&lt;-</span>  <span class="fu">extract</span>(stan_results2)</span></code></pre></div>
+<p>The absence of warning messages indicates that our mathematically equivalent reparametrizations have enhanced the efficiency of the MCMC sampler. The posterior samples of the model can subsequently be extracted, summarized, visualized, and manipulated. E.g.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="using-stan-in-r.html#cb34-1" aria-hidden="true" tabindex="-1"></a>post_beta_1 <span class="ot">=</span> MCMCsamples<span class="sc">$</span>beta_1 <span class="co">#extract population-level slope</span></span>
+<span id="cb34-2"><a href="using-stan-in-r.html#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="using-stan-in-r.html#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post_beta_1) <span class="co">#central tendency of posterior</span></span></code></pre></div>
+<pre><code>## [1] 0.1122731</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="using-stan-in-r.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mad</span>(post_beta_1) <span class="co">#dispersion around central tendency</span></span></code></pre></div>
+<pre><code>## [1] 0.1349945</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="using-stan-in-r.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(post_beta_1, <span class="fu">c</span>(<span class="fl">0.05</span>,<span class="fl">0.95</span>)) <span class="co">#90% credible interval</span></span></code></pre></div>
+<pre><code>##         5%        95% 
+## -0.1210080  0.3402012</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="using-stan-in-r.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(post_beta_1 <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="fu">length</span>(post_beta_1) <span class="co">#posterior probability of + effect</span></span></code></pre></div>
+<pre><code>## [1] 0.784</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="using-stan-in-r.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(post_beta_1) <span class="co">#MCMC approximation of posterior distribution</span></span></code></pre></div>
+<p><img src="SAMs_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>We encourage the use of the <code>shinystan</code> R package for deeper inspection of model convergence and results with a GUI. In general, researchers should be skeptical of reporting results accompanied with sampler warnings and should seek to remove any diagnostic concerns prior to biological interpretation of the estimates.</p>
 </div>
 </div>
 <div id="animal-models" class="section level2" number="1.5">
 <h2><span class="header-section-number">1.5</span> Animal models</h2>
 <p>The model presented above assumes a single set of individual-specific intercepts and slopes, as defined by the <code>mu</code> and <code>beta</code> vectors in the <code>.stan</code> file. For quantitative genetic analysis with an animal model, these phenotypic effects can be further decomposed into distinct genetic and permanent environmental trait values. In particular, we expand the random phenotypic deviations so that</p>
-<p><span class="math display">\[ \boldsymbol{\mu_{\mathrm{P}}} =  \boldsymbol{\mu_{\mathrm{A}}} + \boldsymbol{\mu_{\mathrm{E}}}, \quad 
- \boldsymbol{\beta_{\mathrm{P}}} =  \boldsymbol{\beta_{\mathrm{A}}} + \boldsymbol{\beta_{\mathrm{E}}}\]</span>
+<p><span class="math display">\[ \boldsymbol{\mu_{\mathrm{ }}} =  \boldsymbol{\mu_{\mathrm{A}}} + \boldsymbol{\mu_{\mathrm{E}}}, \quad 
+ \boldsymbol{\beta_{\mathrm{ }}} =  \boldsymbol{\beta_{\mathrm{A}}} + \boldsymbol{\beta_{\mathrm{E}}}\]</span>
 <span class="math display">\[ \begin{bmatrix}
 \boldsymbol{\mu_{\mathrm{A}}} \\ 
 \boldsymbol{\beta_{\mathrm{A}}} 
@@ -571,15 +635,205 @@ generated quantities {
 \mathrm{Cov}(\boldsymbol{\beta_{\mathrm{E}}}, \boldsymbol{\mu_{\mathrm{E}}} ) &amp; 
 \mathrm{Var}( \boldsymbol{\beta_{\mathrm{E}}} )
 \end{bmatrix} \]</span></p>
-<p>where <span class="math inline">\(\boldsymbol{\mathrm{A}}\)</span> is a positive-definite relatedness matrix derived from pedigree or molecular data. Two challenges arise when estimating such a model in Stan related to the computation of Kronecker products and the identification of genetic effects.</p>
+<p>where <span class="math inline">\(\boldsymbol{\mathrm{A}}\)</span> is a positive-definite relatedness matrix derived from pedigree or molecular data. Two challenges arise when estimating such a model in Stan related to the computation of Kronecker products and the identification of genetic effects. We use a custom function <code>pedfun</code> to generate an appropriately sized, positive-definite matrix for data simulation, which has been modified from prior work by <span class="citation"><a href="resources.html#ref-Thomson2018" role="doc-biblioref">Thomson et al.</a> (<a href="resources.html#ref-Thomson2018" role="doc-biblioref">2018</a>)</span>. This function is also utilized in the simulation code provided on the Github page. We supply basic demographic settings and generate <span class="math inline">\(\boldsymbol{\mathrm{A}}\)</span>, and we increase the sample size to N=200 to aid parameter estimate.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="using-stan-in-r.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">#custom function</span></span>
+<span id="cb43-2"><a href="using-stan-in-r.html#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MCMCglmm)</span></code></pre></div>
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre><code>## Loading required package: coda</code></pre>
+<pre><code>## 
+## Attaching package: &#39;coda&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:rstan&#39;:
+## 
+##     traceplot</code></pre>
+<pre><code>## Loading required package: ape</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="using-stan-in-r.html#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Matrix)</span>
+<span id="cb49-2"><a href="using-stan-in-r.html#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="using-stan-in-r.html#cb49-3" aria-hidden="true" tabindex="-1"></a>pedfun <span class="ot">&lt;-</span> <span class="cf">function</span>(popmin, popmax, ngenerations,</span>
+<span id="cb49-4"><a href="using-stan-in-r.html#cb49-4" aria-hidden="true" tabindex="-1"></a>                 epm, nonb, nids, I, <span class="at">missing=</span><span class="cn">FALSE</span>){</span>
+<span id="cb49-5"><a href="using-stan-in-r.html#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get list of individuals and their generations</span></span>
+<span id="cb49-6"><a href="using-stan-in-r.html#cb49-6" aria-hidden="true" tabindex="-1"></a>  gener<span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">:</span>ngenerations</span>
+<span id="cb49-7"><a href="using-stan-in-r.html#cb49-7" aria-hidden="true" tabindex="-1"></a>  genern <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>ngenerations, <span class="at">times =</span> nids)</span>
+<span id="cb49-8"><a href="using-stan-in-r.html#cb49-8" aria-hidden="true" tabindex="-1"></a>  ID <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">sum</span>(nids)</span>
+<span id="cb49-9"><a href="using-stan-in-r.html#cb49-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb49-10"><a href="using-stan-in-r.html#cb49-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># runs on generation-by-generation basis</span></span>
+<span id="cb49-11"><a href="using-stan-in-r.html#cb49-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>ngenerations){</span>
+<span id="cb49-12"><a href="using-stan-in-r.html#cb49-12" aria-hidden="true" tabindex="-1"></a>    id<span class="ot">&lt;-</span>ID[<span class="fu">which</span>(genern<span class="sc">==</span>i)]</span>
+<span id="cb49-13"><a href="using-stan-in-r.html#cb49-13" aria-hidden="true" tabindex="-1"></a>    dam<span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="cn">NA</span>, nids[i])</span>
+<span id="cb49-14"><a href="using-stan-in-r.html#cb49-14" aria-hidden="true" tabindex="-1"></a>    sire<span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="cn">NA</span>, nids[i])</span>
+<span id="cb49-15"><a href="using-stan-in-r.html#cb49-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># randomly allocates sex (0 = male, 1 = female)</span></span>
+<span id="cb49-16"><a href="using-stan-in-r.html#cb49-16" aria-hidden="true" tabindex="-1"></a>    sex<span class="ot">&lt;-</span><span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">length</span>(id), <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb49-17"><a href="using-stan-in-r.html#cb49-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># for first generation, no dams or sires are known </span></span>
+<span id="cb49-18"><a href="using-stan-in-r.html#cb49-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># so remain NA</span></span>
+<span id="cb49-19"><a href="using-stan-in-r.html#cb49-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(i<span class="sc">==</span><span class="dv">1</span>){</span>
+<span id="cb49-20"><a href="using-stan-in-r.html#cb49-20" aria-hidden="true" tabindex="-1"></a>      <span class="co"># combine into single data frame</span></span>
+<span id="cb49-21"><a href="using-stan-in-r.html#cb49-21" aria-hidden="true" tabindex="-1"></a>      pedigree<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">id=</span>id, <span class="at">dam=</span>dam, <span class="at">sire=</span>sire, </span>
+<span id="cb49-22"><a href="using-stan-in-r.html#cb49-22" aria-hidden="true" tabindex="-1"></a>                           <span class="at">generation=</span>i, <span class="at">sex=</span>sex)</span>
+<span id="cb49-23"><a href="using-stan-in-r.html#cb49-23" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb49-24"><a href="using-stan-in-r.html#cb49-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span>(i<span class="sc">&gt;</span><span class="dv">1</span>){</span>
+<span id="cb49-25"><a href="using-stan-in-r.html#cb49-25" aria-hidden="true" tabindex="-1"></a>      <span class="co"># for all generations after first</span></span>
+<span id="cb49-26"><a href="using-stan-in-r.html#cb49-26" aria-hidden="true" tabindex="-1"></a>      <span class="co"># list of all possible dams and sires</span></span>
+<span id="cb49-27"><a href="using-stan-in-r.html#cb49-27" aria-hidden="true" tabindex="-1"></a>      <span class="co"># from previous generation</span></span>
+<span id="cb49-28"><a href="using-stan-in-r.html#cb49-28" aria-hidden="true" tabindex="-1"></a>      pdams<span class="ot">&lt;-</span>pedigree<span class="sc">$</span>id[<span class="fu">which</span>(pedigree<span class="sc">$</span>generation<span class="sc">==</span>(i<span class="dv">-1</span>) <span class="sc">&amp;</span></span>
+<span id="cb49-29"><a href="using-stan-in-r.html#cb49-29" aria-hidden="true" tabindex="-1"></a>                                 pedigree<span class="sc">$</span>sex<span class="sc">==</span><span class="dv">1</span>)]</span>
+<span id="cb49-30"><a href="using-stan-in-r.html#cb49-30" aria-hidden="true" tabindex="-1"></a>      psires<span class="ot">&lt;-</span>pedigree<span class="sc">$</span>id[<span class="fu">which</span>(pedigree<span class="sc">$</span>generation<span class="sc">==</span>(i<span class="dv">-1</span>) <span class="sc">&amp;</span></span>
+<span id="cb49-31"><a href="using-stan-in-r.html#cb49-31" aria-hidden="true" tabindex="-1"></a>                                  pedigree<span class="sc">$</span>sex<span class="sc">==</span><span class="dv">0</span>)]</span>
+<span id="cb49-32"><a href="using-stan-in-r.html#cb49-32" aria-hidden="true" tabindex="-1"></a>      <span class="co"># determine number of pairs</span></span>
+<span id="cb49-33"><a href="using-stan-in-r.html#cb49-33" aria-hidden="true" tabindex="-1"></a>      <span class="co"># depending on how many males and females</span></span>
+<span id="cb49-34"><a href="using-stan-in-r.html#cb49-34" aria-hidden="true" tabindex="-1"></a>      <span class="co"># and the proportion of the population that is non-breeding</span></span>
+<span id="cb49-35"><a href="using-stan-in-r.html#cb49-35" aria-hidden="true" tabindex="-1"></a>      npairs<span class="ot">&lt;-</span><span class="fu">min</span>(<span class="fu">length</span>(pdams), <span class="fu">length</span>(psires)) <span class="sc">-</span> </span>
+<span id="cb49-36"><a href="using-stan-in-r.html#cb49-36" aria-hidden="true" tabindex="-1"></a>        <span class="fu">round</span>(<span class="fu">min</span>(<span class="fu">length</span>(pdams), <span class="fu">length</span>(psires))<span class="sc">*</span>nonb)</span>
+<span id="cb49-37"><a href="using-stan-in-r.html#cb49-37" aria-hidden="true" tabindex="-1"></a>      <span class="co"># selects breeding males and females</span></span>
+<span id="cb49-38"><a href="using-stan-in-r.html#cb49-38" aria-hidden="true" tabindex="-1"></a>      pdams<span class="ot">&lt;-</span>pedigree<span class="sc">$</span>id[<span class="fu">which</span>(pedigree<span class="sc">$</span>generation<span class="sc">==</span>(i<span class="dv">-1</span>) <span class="sc">&amp;</span> </span>
+<span id="cb49-39"><a href="using-stan-in-r.html#cb49-39" aria-hidden="true" tabindex="-1"></a>                                 pedigree<span class="sc">$</span>sex<span class="sc">==</span><span class="dv">1</span>)]</span>
+<span id="cb49-40"><a href="using-stan-in-r.html#cb49-40" aria-hidden="true" tabindex="-1"></a>      psires<span class="ot">&lt;-</span>pedigree<span class="sc">$</span>id[<span class="fu">which</span>(pedigree<span class="sc">$</span>generation<span class="sc">==</span>(i<span class="dv">-1</span>) <span class="sc">&amp;</span> </span>
+<span id="cb49-41"><a href="using-stan-in-r.html#cb49-41" aria-hidden="true" tabindex="-1"></a>                                  pedigree<span class="sc">$</span>sex<span class="sc">==</span><span class="dv">0</span>)]</span>
+<span id="cb49-42"><a href="using-stan-in-r.html#cb49-42" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="fu">length</span>(pdams)<span class="sc">&lt;</span>npairs <span class="sc">|</span> <span class="fu">length</span>(psires)<span class="sc">&lt;</span>npairs){</span>
+<span id="cb49-43"><a href="using-stan-in-r.html#cb49-43" aria-hidden="true" tabindex="-1"></a>        npairs<span class="ot">&lt;-</span><span class="fu">min</span>(<span class="fu">length</span>(pdams), <span class="fu">length</span>(psires))</span>
+<span id="cb49-44"><a href="using-stan-in-r.html#cb49-44" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb49-45"><a href="using-stan-in-r.html#cb49-45" aria-hidden="true" tabindex="-1"></a>      <span class="co"># selects pairs from possible dams and sires</span></span>
+<span id="cb49-46"><a href="using-stan-in-r.html#cb49-46" aria-hidden="true" tabindex="-1"></a>      pairs<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">dam=</span><span class="fu">sample</span>(pdams, npairs, <span class="at">replace=</span><span class="cn">FALSE</span>),</span>
+<span id="cb49-47"><a href="using-stan-in-r.html#cb49-47" aria-hidden="true" tabindex="-1"></a>                        <span class="at">sire=</span><span class="fu">sample</span>(psires, npairs, <span class="at">replace=</span><span class="cn">FALSE</span>))</span>
+<span id="cb49-48"><a href="using-stan-in-r.html#cb49-48" aria-hidden="true" tabindex="-1"></a>      <span class="co"># gives each offspring their parental pair</span></span>
+<span id="cb49-49"><a href="using-stan-in-r.html#cb49-49" aria-hidden="true" tabindex="-1"></a>      pairid<span class="ot">&lt;-</span><span class="fu">as.numeric</span>(<span class="fu">sample</span>(<span class="fu">rownames</span>(pairs), </span>
+<span id="cb49-50"><a href="using-stan-in-r.html#cb49-50" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">length</span>(id), <span class="at">replace=</span><span class="cn">TRUE</span>))</span>
+<span id="cb49-51"><a href="using-stan-in-r.html#cb49-51" aria-hidden="true" tabindex="-1"></a>      <span class="co"># gives each offspring their sex</span></span>
+<span id="cb49-52"><a href="using-stan-in-r.html#cb49-52" aria-hidden="true" tabindex="-1"></a>      sex<span class="ot">&lt;-</span><span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">length</span>(id), <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb49-53"><a href="using-stan-in-r.html#cb49-53" aria-hidden="true" tabindex="-1"></a>      <span class="co"># put into dataframe format</span></span>
+<span id="cb49-54"><a href="using-stan-in-r.html#cb49-54" aria-hidden="true" tabindex="-1"></a>      addped<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">id=</span>id, </span>
+<span id="cb49-55"><a href="using-stan-in-r.html#cb49-55" aria-hidden="true" tabindex="-1"></a>                         <span class="at">dam=</span>pairs<span class="sc">$</span>dam[pairid], </span>
+<span id="cb49-56"><a href="using-stan-in-r.html#cb49-56" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sire=</span>pairs<span class="sc">$</span>sire[pairid],</span>
+<span id="cb49-57"><a href="using-stan-in-r.html#cb49-57" aria-hidden="true" tabindex="-1"></a>                         <span class="at">generation=</span>i, </span>
+<span id="cb49-58"><a href="using-stan-in-r.html#cb49-58" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sex=</span>sex)</span>
+<span id="cb49-59"><a href="using-stan-in-r.html#cb49-59" aria-hidden="true" tabindex="-1"></a>      <span class="co"># deals with extra-pair mating (if included)</span></span>
+<span id="cb49-60"><a href="using-stan-in-r.html#cb49-60" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(epm)){</span>
+<span id="cb49-61"><a href="using-stan-in-r.html#cb49-61" aria-hidden="true" tabindex="-1"></a>        <span class="co"># for each individual, sample if they are extra pair</span></span>
+<span id="cb49-62"><a href="using-stan-in-r.html#cb49-62" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if 0 not extra pair</span></span>
+<span id="cb49-63"><a href="using-stan-in-r.html#cb49-63" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if 1 sire resampled from breeding population</span></span>
+<span id="cb49-64"><a href="using-stan-in-r.html#cb49-64" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if 2 dam resampled</span></span>
+<span id="cb49-65"><a href="using-stan-in-r.html#cb49-65" aria-hidden="true" tabindex="-1"></a>        ext<span class="ot">&lt;-</span><span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="fu">nrow</span>(addped), </span>
+<span id="cb49-66"><a href="using-stan-in-r.html#cb49-66" aria-hidden="true" tabindex="-1"></a>                    <span class="at">replace=</span><span class="cn">TRUE</span>, </span>
+<span id="cb49-67"><a href="using-stan-in-r.html#cb49-67" aria-hidden="true" tabindex="-1"></a>                    <span class="at">prob =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">-</span>epm, epm<span class="sc">/</span><span class="dv">2</span>, epm<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb49-68"><a href="using-stan-in-r.html#cb49-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(addped)){</span>
+<span id="cb49-69"><a href="using-stan-in-r.html#cb49-69" aria-hidden="true" tabindex="-1"></a>          <span class="cf">if</span>(ext[j]<span class="sc">&gt;</span><span class="dv">0</span>){</span>
+<span id="cb49-70"><a href="using-stan-in-r.html#cb49-70" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span>(ext[j]<span class="sc">==</span><span class="dv">1</span>){</span>
+<span id="cb49-71"><a href="using-stan-in-r.html#cb49-71" aria-hidden="true" tabindex="-1"></a>              addped<span class="sc">$</span>sire[j]<span class="ot">&lt;-</span><span class="fu">sample</span>(psires,<span class="dv">1</span>,<span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb49-72"><a href="using-stan-in-r.html#cb49-72" aria-hidden="true" tabindex="-1"></a>            }<span class="cf">else</span> <span class="cf">if</span> (ext[j]<span class="sc">==</span><span class="dv">2</span>){</span>
+<span id="cb49-73"><a href="using-stan-in-r.html#cb49-73" aria-hidden="true" tabindex="-1"></a>              addped<span class="sc">$</span>dam[j]<span class="ot">&lt;-</span><span class="fu">sample</span>(pdams,<span class="dv">1</span>,<span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb49-74"><a href="using-stan-in-r.html#cb49-74" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb49-75"><a href="using-stan-in-r.html#cb49-75" aria-hidden="true" tabindex="-1"></a>          }</span>
+<span id="cb49-76"><a href="using-stan-in-r.html#cb49-76" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb49-77"><a href="using-stan-in-r.html#cb49-77" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb49-78"><a href="using-stan-in-r.html#cb49-78" aria-hidden="true" tabindex="-1"></a>      <span class="co"># add new generation to the whole pedigree</span></span>
+<span id="cb49-79"><a href="using-stan-in-r.html#cb49-79" aria-hidden="true" tabindex="-1"></a>      pedigree<span class="ot">&lt;-</span><span class="fu">rbind</span>(pedigree, addped)</span>
+<span id="cb49-80"><a href="using-stan-in-r.html#cb49-80" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb49-81"><a href="using-stan-in-r.html#cb49-81" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb49-82"><a href="using-stan-in-r.html#cb49-82" aria-hidden="true" tabindex="-1"></a>  ped <span class="ot">&lt;-</span> pedigree</span>
+<span id="cb49-83"><a href="using-stan-in-r.html#cb49-83" aria-hidden="true" tabindex="-1"></a>  <span class="co"># make id&#39;s non-numeric</span></span>
+<span id="cb49-84"><a href="using-stan-in-r.html#cb49-84" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>id<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">&quot;ID&quot;</span>,ped<span class="sc">$</span>id, <span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb49-85"><a href="using-stan-in-r.html#cb49-85" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>dam[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(ped<span class="sc">$</span>dam))]<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">&quot;ID&quot;</span>,ped<span class="sc">$</span>dam[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(ped<span class="sc">$</span>dam))], <span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb49-86"><a href="using-stan-in-r.html#cb49-86" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>sire[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(ped<span class="sc">$</span>sire))]<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">&quot;ID&quot;</span>,ped<span class="sc">$</span>sire[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(ped<span class="sc">$</span>sire))], <span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb49-87"><a href="using-stan-in-r.html#cb49-87" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>id<span class="ot">&lt;-</span><span class="fu">as.character</span>(ped<span class="sc">$</span>id)</span>
+<span id="cb49-88"><a href="using-stan-in-r.html#cb49-88" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>dam<span class="ot">&lt;-</span><span class="fu">as.character</span>(ped<span class="sc">$</span>dam)</span>
+<span id="cb49-89"><a href="using-stan-in-r.html#cb49-89" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>sire<span class="ot">&lt;-</span><span class="fu">as.character</span>(ped<span class="sc">$</span>sire)</span>
+<span id="cb49-90"><a href="using-stan-in-r.html#cb49-90" aria-hidden="true" tabindex="-1"></a>  IDs <span class="ot">&lt;-</span> <span class="fu">sample</span>(ped[ped<span class="sc">$</span>generation<span class="sc">==</span>ngenerations, <span class="st">&quot;id&quot;</span>], I, <span class="at">replace=</span><span class="cn">FALSE</span>)</span>
+<span id="cb49-91"><a href="using-stan-in-r.html#cb49-91" aria-hidden="true" tabindex="-1"></a>  ped <span class="ot">&lt;-</span> <span class="fu">prunePed</span>(ped, <span class="at">keep =</span> IDs, <span class="at">make.base=</span><span class="cn">TRUE</span>)</span>
+<span id="cb49-92"><a href="using-stan-in-r.html#cb49-92" aria-hidden="true" tabindex="-1"></a>  inv.phylo <span class="ot">&lt;-</span> <span class="fu">inverseA</span>(ped[,<span class="fu">c</span>(<span class="st">&quot;id&quot;</span>,<span class="st">&quot;dam&quot;</span>,<span class="st">&quot;sire&quot;</span>)])</span>
+<span id="cb49-93"><a href="using-stan-in-r.html#cb49-93" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">&lt;-</span> <span class="fu">solve</span>(inv.phylo<span class="sc">$</span>Ainv)</span>
+<span id="cb49-94"><a href="using-stan-in-r.html#cb49-94" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">&lt;-</span> <span class="fu">cov2cor</span>(A)</span>
+<span id="cb49-95"><a href="using-stan-in-r.html#cb49-95" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">=</span> (A <span class="sc">+</span> <span class="fu">t</span>(A))<span class="sc">/</span><span class="dv">2</span> <span class="co"># Not always symmetric after inversion</span></span>
+<span id="cb49-96"><a href="using-stan-in-r.html#cb49-96" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(A)</span>
+<span id="cb49-97"><a href="using-stan-in-r.html#cb49-97" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(A) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(inv.phylo<span class="sc">$</span>Ainv)</span>
+<span id="cb49-98"><a href="using-stan-in-r.html#cb49-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(A) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(inv.phylo<span class="sc">$</span>Ainv)</span>
+<span id="cb49-99"><a href="using-stan-in-r.html#cb49-99" aria-hidden="true" tabindex="-1"></a>  <span class="co">#subset to final generation</span></span>
+<span id="cb49-100"><a href="using-stan-in-r.html#cb49-100" aria-hidden="true" tabindex="-1"></a>  A_sub<span class="ot">&lt;-</span>A[IDs,IDs]</span>
+<span id="cb49-101"><a href="using-stan-in-r.html#cb49-101" aria-hidden="true" tabindex="-1"></a>  A_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">nearPD</span>(A_sub)<span class="sc">$</span>mat)</span>
+<span id="cb49-102"><a href="using-stan-in-r.html#cb49-102" aria-hidden="true" tabindex="-1"></a>  A_mat <span class="ot">&lt;-</span> <span class="fu">cov2cor</span>(A_mat)</span>
+<span id="cb49-103"><a href="using-stan-in-r.html#cb49-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(A_mat)</span>
+<span id="cb49-104"><a href="using-stan-in-r.html#cb49-104" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb49-105"><a href="using-stan-in-r.html#cb49-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-106"><a href="using-stan-in-r.html#cb49-106" aria-hidden="true" tabindex="-1"></a> <span class="co">#population properties</span></span>
+<span id="cb49-107"><a href="using-stan-in-r.html#cb49-107" aria-hidden="true" tabindex="-1"></a> I<span class="ot">=</span><span class="dv">200</span> <span class="co">#total individuals for simulation</span></span>
+<span id="cb49-108"><a href="using-stan-in-r.html#cb49-108" aria-hidden="true" tabindex="-1"></a> popmin<span class="ot">=</span><span class="dv">400</span></span>
+<span id="cb49-109"><a href="using-stan-in-r.html#cb49-109" aria-hidden="true" tabindex="-1"></a> popmax<span class="ot">=</span><span class="dv">600</span></span>
+<span id="cb49-110"><a href="using-stan-in-r.html#cb49-110" aria-hidden="true" tabindex="-1"></a> ngenerations <span class="ot">=</span> <span class="dv">10</span></span>
+<span id="cb49-111"><a href="using-stan-in-r.html#cb49-111" aria-hidden="true" tabindex="-1"></a> nids<span class="ot">&lt;-</span><span class="fu">sample</span>(popmin<span class="sc">:</span>popmax, ngenerations, <span class="at">replace=</span><span class="cn">TRUE</span>) <span class="co">#N / generation</span></span>
+<span id="cb49-112"><a href="using-stan-in-r.html#cb49-112" aria-hidden="true" tabindex="-1"></a> epm <span class="ot">=</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="fl">0.15</span>, <span class="fl">0.25</span>,<span class="at">by=</span><span class="fl">0.05</span>),<span class="dv">1</span>) <span class="co">#extra-pair mating</span></span>
+<span id="cb49-113"><a href="using-stan-in-r.html#cb49-113" aria-hidden="true" tabindex="-1"></a> nonb <span class="ot">=</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="fl">0.4</span>,<span class="fl">0.6</span>,<span class="at">by=</span><span class="fl">0.05</span>),<span class="dv">1</span>) <span class="co">#proportion of non-breeding / generation</span></span>
+<span id="cb49-114"><a href="using-stan-in-r.html#cb49-114" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb49-115"><a href="using-stan-in-r.html#cb49-115" aria-hidden="true" tabindex="-1"></a> <span class="co">#relatedness matrix</span></span>
+<span id="cb49-116"><a href="using-stan-in-r.html#cb49-116" aria-hidden="true" tabindex="-1"></a> A_mat <span class="ot">&lt;-</span> <span class="fu">pedfun</span>(<span class="at">popmin=</span>popmin, <span class="at">popmax=</span>popmax, <span class="at">ngenerations=</span>ngenerations,</span>
+<span id="cb49-117"><a href="using-stan-in-r.html#cb49-117" aria-hidden="true" tabindex="-1"></a>                  <span class="at">epm=</span>epm, <span class="at">nonb=</span>nonb, <span class="at">nids=</span>nids, <span class="at">I=</span>I, <span class="at">missing=</span><span class="cn">FALSE</span>)</span></code></pre></div>
+<p>We can now simulate a new dataset using the code from above, partitioning the distinct additive genetic and permanent environmental trait values.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="using-stan-in-r.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
+<span id="cb50-2"><a href="using-stan-in-r.html#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="using-stan-in-r.html#cb50-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">=</span> <span class="dv">400</span> <span class="co">#total observations</span></span>
+<span id="cb50-4"><a href="using-stan-in-r.html#cb50-4" aria-hidden="true" tabindex="-1"></a>I <span class="ot">=</span> <span class="dv">200</span> <span class="co">#total individuals</span></span>
+<span id="cb50-5"><a href="using-stan-in-r.html#cb50-5" aria-hidden="true" tabindex="-1"></a>intercept <span class="ot">=</span> <span class="dv">1</span> <span class="co">#global intercept</span></span>
+<span id="cb50-6"><a href="using-stan-in-r.html#cb50-6" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#fixed effect regression coefficient</span></span>
+<span id="cb50-7"><a href="using-stan-in-r.html#cb50-7" aria-hidden="true" tabindex="-1"></a>SD_intercept <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#standard deviation of random intercepts</span></span>
+<span id="cb50-8"><a href="using-stan-in-r.html#cb50-8" aria-hidden="true" tabindex="-1"></a>SD_slope <span class="ot">=</span> <span class="fl">0.3</span></span>
+<span id="cb50-9"><a href="using-stan-in-r.html#cb50-9" aria-hidden="true" tabindex="-1"></a>SD_residual <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb50-10"><a href="using-stan-in-r.html#cb50-10" aria-hidden="true" tabindex="-1"></a>r_G <span class="ot">=</span> <span class="fl">0.5</span> <span class="co">#genetic correlation of random intercepts and slopes</span></span>
+<span id="cb50-11"><a href="using-stan-in-r.html#cb50-11" aria-hidden="true" tabindex="-1"></a>r_E <span class="ot">=</span> <span class="sc">-</span><span class="fl">0.5</span> <span class="co">#environmental correlation</span></span>
+<span id="cb50-12"><a href="using-stan-in-r.html#cb50-12" aria-hidden="true" tabindex="-1"></a>V_G <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#genetic variance of REs</span></span>
+<span id="cb50-13"><a href="using-stan-in-r.html#cb50-13" aria-hidden="true" tabindex="-1"></a>V_E <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#genetic variance of REs</span></span>
+<span id="cb50-14"><a href="using-stan-in-r.html#cb50-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-15"><a href="using-stan-in-r.html#cb50-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Random effect correlations</span></span>
+<span id="cb50-16"><a href="using-stan-in-r.html#cb50-16" aria-hidden="true" tabindex="-1"></a>G_cor <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,r_G,r_G,<span class="dv">1</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>) <span class="co">#mu_A, beta_A</span></span>
+<span id="cb50-17"><a href="using-stan-in-r.html#cb50-17" aria-hidden="true" tabindex="-1"></a>G_sd  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">sqrt</span>(V_G),<span class="fu">sqrt</span>(V_G)) <span class="co">#G effect sds</span></span>
+<span id="cb50-18"><a href="using-stan-in-r.html#cb50-18" aria-hidden="true" tabindex="-1"></a>G_cov <span class="ot">&lt;-</span> <span class="fu">diag</span>(G_sd) <span class="sc">%*%</span> G_cor <span class="sc">%*%</span> <span class="fu">diag</span>(G_sd)</span>
+<span id="cb50-19"><a href="using-stan-in-r.html#cb50-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb50-20"><a href="using-stan-in-r.html#cb50-20" aria-hidden="true" tabindex="-1"></a>E_cor <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,r_E,r_E,<span class="dv">1</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>) <span class="co">#mu_E, beta_E</span></span>
+<span id="cb50-21"><a href="using-stan-in-r.html#cb50-21" aria-hidden="true" tabindex="-1"></a>E_sd  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">sqrt</span>(V_E),<span class="fu">sqrt</span>(V_E)) <span class="co">#E effect sds</span></span>
+<span id="cb50-22"><a href="using-stan-in-r.html#cb50-22" aria-hidden="true" tabindex="-1"></a>E_cov <span class="ot">&lt;-</span> <span class="fu">diag</span>(E_sd) <span class="sc">%*%</span> E_cor <span class="sc">%*%</span> <span class="fu">diag</span>(E_sd)</span>
+<span id="cb50-23"><a href="using-stan-in-r.html#cb50-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb50-24"><a href="using-stan-in-r.html#cb50-24" aria-hidden="true" tabindex="-1"></a><span class="co">#matrices</span></span>
+<span id="cb50-25"><a href="using-stan-in-r.html#cb50-25" aria-hidden="true" tabindex="-1"></a>G_block <span class="ot">&lt;-</span> G_cov <span class="sc">%x%</span> A_mat</span>
+<span id="cb50-26"><a href="using-stan-in-r.html#cb50-26" aria-hidden="true" tabindex="-1"></a>E_block <span class="ot">&lt;-</span> E_cov <span class="sc">%x%</span> <span class="fu">diag</span>(<span class="dv">1</span>,I)</span>
+<span id="cb50-27"><a href="using-stan-in-r.html#cb50-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb50-28"><a href="using-stan-in-r.html#cb50-28" aria-hidden="true" tabindex="-1"></a><span class="co">#generate correlated REs</span></span>
+<span id="cb50-29"><a href="using-stan-in-r.html#cb50-29" aria-hidden="true" tabindex="-1"></a>Gvalues <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="fu">rep</span>(<span class="dv">0</span>,I<span class="sc">*</span><span class="dv">2</span>), <span class="at">sigma=</span>G_block)</span>
+<span id="cb50-30"><a href="using-stan-in-r.html#cb50-30" aria-hidden="true" tabindex="-1"></a>G_val <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(Gvalues, <span class="at">nrow=</span>I, <span class="at">ncol=</span><span class="dv">2</span>))</span>
+<span id="cb50-31"><a href="using-stan-in-r.html#cb50-31" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(G_val)</span></code></pre></div>
+<pre><code>##           X1        X2
+## X1 1.0000000 0.4540576
+## X2 0.4540576 1.0000000</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="using-stan-in-r.html#cb52-1" aria-hidden="true" tabindex="-1"></a>Evalues <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="fu">rep</span>(<span class="dv">0</span>,I<span class="sc">*</span><span class="dv">2</span>), <span class="at">sigma=</span>E_block)</span>
+<span id="cb52-2"><a href="using-stan-in-r.html#cb52-2" aria-hidden="true" tabindex="-1"></a>E_val <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(Evalues, <span class="at">nrow=</span>I, <span class="at">ncol=</span><span class="dv">2</span>))</span>
+<span id="cb52-3"><a href="using-stan-in-r.html#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(E_val)</span></code></pre></div>
+<pre><code>##            X1         X2
+## X1  1.0000000 -0.5306592
+## X2 -0.5306592  1.0000000</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="using-stan-in-r.html#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co">#combine</span></span>
+<span id="cb54-2"><a href="using-stan-in-r.html#cb54-2" aria-hidden="true" tabindex="-1"></a>re_P <span class="ot">=</span> <span class="fu">cbind</span>(G_val,E_val)</span>
+<span id="cb54-3"><a href="using-stan-in-r.html#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(re_P) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;mu_A&quot;</span>, <span class="st">&quot;beta_A&quot;</span>, <span class="st">&quot;mu_E&quot;</span>, <span class="st">&quot;beta_E&quot;</span>)</span>
+<span id="cb54-4"><a href="using-stan-in-r.html#cb54-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-5"><a href="using-stan-in-r.html#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="co">#individual-level index</span></span>
+<span id="cb54-6"><a href="using-stan-in-r.html#cb54-6" aria-hidden="true" tabindex="-1"></a>id <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="dv">1</span>, I), <span class="at">each =</span> N<span class="sc">/</span>I) <span class="co">#i.e. two observations per individual</span></span>
+<span id="cb54-7"><a href="using-stan-in-r.html#cb54-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-8"><a href="using-stan-in-r.html#cb54-8" aria-hidden="true" tabindex="-1"></a><span class="co">#simulate fixed effect covariate</span></span>
+<span id="cb54-9"><a href="using-stan-in-r.html#cb54-9" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">rnorm</span>(N,<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb54-10"><a href="using-stan-in-r.html#cb54-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-11"><a href="using-stan-in-r.html#cb54-11" aria-hidden="true" tabindex="-1"></a><span class="co">#individual phenotypic REs</span></span>
+<span id="cb54-12"><a href="using-stan-in-r.html#cb54-12" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">=</span> re_P<span class="sc">$</span>mu_A <span class="sc">+</span> re_P<span class="sc">$</span>mu_E</span>
+<span id="cb54-13"><a href="using-stan-in-r.html#cb54-13" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">=</span> re_P<span class="sc">$</span>beta_A <span class="sc">+</span> re_P<span class="sc">$</span>beta_E</span>
+<span id="cb54-14"><a href="using-stan-in-r.html#cb54-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-15"><a href="using-stan-in-r.html#cb54-15" aria-hidden="true" tabindex="-1"></a><span class="co">#residual effects</span></span>
+<span id="cb54-16"><a href="using-stan-in-r.html#cb54-16" aria-hidden="true" tabindex="-1"></a>epsilon <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, SD_residual )</span>
+<span id="cb54-17"><a href="using-stan-in-r.html#cb54-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-18"><a href="using-stan-in-r.html#cb54-18" aria-hidden="true" tabindex="-1"></a><span class="co">#measured response (100 response values for 50 subjects)</span></span>
+<span id="cb54-19"><a href="using-stan-in-r.html#cb54-19" aria-hidden="true" tabindex="-1"></a>z <span class="ot">=</span> intercept <span class="sc">+</span> mu[id] <span class="sc">+</span> (beta1 <span class="sc">+</span> beta[id])<span class="sc">*</span>x <span class="sc">+</span> epsilon</span>
+<span id="cb54-20"><a href="using-stan-in-r.html#cb54-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-21"><a href="using-stan-in-r.html#cb54-21" aria-hidden="true" tabindex="-1"></a><span class="co">#combine into list for Stan</span></span>
+<span id="cb54-22"><a href="using-stan-in-r.html#cb54-22" aria-hidden="true" tabindex="-1"></a>stan_data <span class="ot">=</span> <span class="fu">list</span>(<span class="at">z =</span> z, <span class="at">x =</span> x, <span class="at">id =</span> id, <span class="at">N =</span> N, <span class="at">I =</span> I, <span class="at">A =</span> A_mat)</span></code></pre></div>
 <div id="kronecker-products" class="section level3" number="1.5.1">
 <h3><span class="header-section-number">1.5.1</span> Kronecker products</h3>
-<p>There are no in-built Stan functions for computing Kronecker products <span class="math inline">\(\otimes\)</span>. This could be overcome by manually specifying the Kronecker product function in the optional <code>functions</code> block of the model. Regardless, Kronecker products can be incredibly costly to compute, particularly for large matrices. It’s thus desirable to find another alternative but mathematically equivalent parameterization to return random effects appropriately scaled by <span class="math inline">\(\boldsymbol{\mathrm{G}} \otimes \boldsymbol{\mathrm{A}}\)</span> without directly computing this term.</p>
-<p>Fortunately, this can be easily accomplished by exploiting the properties of the matrix normal distribution, which generalizes the multivariate normal distribution to random variables described by matrices <span class="citation">(<a href="resources.html#ref-Gupta2018" role="doc-biblioref">Gupta and Nagar 2018</a>)</span>. In particular, the matrix normal distribution for some <em>n</em> x <em>p</em> matrix <span class="math inline">\(\boldsymbol{\mathrm{Y}}\)</span> of <em>p</em> phenotypes is given by</p>
-<p><span class="math display">\[ \boldsymbol{\mathrm{Y}} \sim \mathrm{Matrix\ Normal_{n \ x \ p}}(\boldsymbol{\mathrm{M}}, \boldsymbol{\mathrm{U}}, \boldsymbol{\mathrm{V}}) \]</span></p>
-<p>where <span class="math inline">\(\boldsymbol{\mathrm{M}}\)</span> is a matrix of expected values and <span class="math inline">\(\boldsymbol{\mathrm{U}}\)</span> and <span class="math inline">\(\boldsymbol{\mathrm{V}}\)</span> are scaling matrices describing the among-row and among-column (co)variance respectively. This lesser known distribution generalizes from the multivariate normal distribution such that any matrix <span class="math inline">\(\boldsymbol{\mathrm{Y}}\)</span> will be matrix normally distributed if and only if
-<span class="math display">\[ \mathrm{vec}(\boldsymbol{\mathrm{Y}}) \sim \mathrm{MVNormal_{np}}(\mathrm{vec}(\boldsymbol{\mathrm{M}}),  \boldsymbol{\mathrm{V}} \otimes \boldsymbol{\mathrm{U}} ) \]</span>
-where <span class="math inline">\(\mathrm{vec}()\)</span> is the vector operator, as used above in the <code>model2.stan</code> file. Given that we are interested in generating random effects with covariance <span class="math inline">\(\boldsymbol{\mathrm{G}} \otimes \boldsymbol{\mathrm{A}}\)</span>, direct computation of the Kronecker product can be avoided by instead sampling the random effects from a matrix normal distribution with the appropriate scaling matrices, i.e. for the for the <em>I</em> x 2 matrix of additive genetic intercepts and slope deviations for <em>I</em> individuals</p>
+<p>We now need to edit the Stan file to partition the genetic and environmental values. Unfortunately, there are no in-built Stan functions for efficiently computing Kronecker products <span class="math inline">\(\otimes\)</span>. This could be overcome by manually specifying the Kronecker product function in the optional <code>functions</code> block of the model. However, Kronecker products can be incredibly costly to compute, particularly for large matrices. It’s thus desirable to find another alternative but mathematically equivalent parametrization to return random effects appropriately scaled by <span class="math inline">\(\boldsymbol{\mathrm{G}} \otimes \boldsymbol{\mathrm{A}}\)</span> without directly computing this term, as we did above with the Cholesky decomposition and non-centered random effects.</p>
+<p>Fortunately, this can be easily accomplished by exploiting the properties of the matrix normal distribution, which generalizes the multivariate normal distribution to random variables described by matrices <span class="citation">(<a href="resources.html#ref-Gupta2018" role="doc-biblioref">Gupta and Nagar 2018</a>)</span>. In particular, the matrix normal distribution for some <em>n</em> x <em>p</em> matrix <span class="math inline">\(\boldsymbol{\mathrm{Z}}\)</span> of <em>p</em> phenotypes is given by</p>
+<p><span class="math display">\[ \boldsymbol{\mathrm{Z}} \sim \mathrm{Matrix\ Normal_{n \ x \ p}}(\boldsymbol{\mathrm{M}}, \boldsymbol{\mathrm{U}}, \boldsymbol{\mathrm{V}}) \]</span></p>
+<p>where <span class="math inline">\(\boldsymbol{\mathrm{M}}\)</span> is a matrix of expected values and <span class="math inline">\(\boldsymbol{\mathrm{U}}\)</span> and <span class="math inline">\(\boldsymbol{\mathrm{V}}\)</span> are scaling matrices describing the among-row and among-column (co)variance respectively. This lesser known distribution generalizes from the multivariate normal distribution such that any matrix <span class="math inline">\(\boldsymbol{\mathrm{Z}}\)</span> will be matrix normally distributed if and only if
+<span class="math display">\[ \mathrm{vec}(\boldsymbol{\mathrm{Z}}) \sim \mathrm{MVNormal_{np}}(\mathrm{vec}(\boldsymbol{\mathrm{M}}),  \boldsymbol{\mathrm{V}} \otimes \boldsymbol{\mathrm{U}} ) \]</span>
+where <span class="math inline">\(\mathrm{vec}()\)</span> is the vector operator, as used above in the <code>mod1.stan</code> file. Given that we are interested in generating random effects with covariance <span class="math inline">\(\boldsymbol{\mathrm{G}} \otimes \boldsymbol{\mathrm{A}}\)</span>, direct computation of the Kronecker product can be avoided by instead sampling the random effects from a matrix normal distribution with the appropriate scaling matrices, i.e. for the for the <em>I</em> x 2 matrix of additive genetic intercepts and slope deviations for <em>I</em> individuals</p>
 <p><span class="math display">\[ \begin{bmatrix}
 \boldsymbol{\mu_{\mathrm{A}}} &amp;
 \boldsymbol{\beta_{\mathrm{A}}} 
@@ -614,165 +868,188 @@ where
 \sim \mathrm{MVNormal_{np}}(\mathrm{vec}(\boldsymbol{\mathrm{0}}),  \boldsymbol{\mathrm{G}} \otimes \boldsymbol{\mathrm{A}} )\]</span></p>
 <p>through the multiplication of the <span class="math inline">\(\boldsymbol{\mathrm{Z_{std}}}\)</span>, <span class="math inline">\(\boldsymbol{\mathrm{L_A}}\)</span>, and <span class="math inline">\(\boldsymbol{\mathrm{L_G}}^{\mathrm{T}}\)</span> matrices.</p>
 <p>This useful sampling property is straightforward to implement in Stan with appropriate data and can be used to account for any form of random effect covariation among individuals, which may extend beyond <span class="math inline">\(\boldsymbol{\mathrm{A}}\)</span> alone. <span class="citation"><a href="resources.html#ref-Thomson2018" role="doc-biblioref">Thomson et al.</a> (<a href="resources.html#ref-Thomson2018" role="doc-biblioref">2018</a>)</span> provide an extensive review of various additional sources of autocorrelation that should be considered in quantitative genetic analyses.</p>
-<p>This matrix normal approach is demonstrated in the SAM tutorial with simulated data. Here we review the relevant code in Stan to highlight how any relevant Kronecker product could be implemented. We build on the data simulation above by assuming that an additional relatedness matrix <span class="math inline">\(\boldsymbol{{\mathrm{A}}}\)</span> is now available for partitioning the previously modelled phenotypic effects. The code of <code>model2.stan</code> can be modified accordingly, so that the mixed-effects model becomes an animal model for quantitative genetic analysis. The relatedness matrix <span class="math inline">\(\boldsymbol{{\mathrm{A}}}\)</span> is declared in the <code>data</code> block, while the lower triangle Cholesky decomposition matrix <span class="math inline">\(\boldsymbol{\mathrm{L_A}}\)</span> is generated in the <code>transformed data</code> block.</p>
+<p>Note that this matrix normal approach is key to efficient estimation of the SAM as well, as demonstrated in the subsequent tutorials. Here we review the relevant code in Stan to highlight how any Kronecker product could be implemented more generally. The code of <code>mod1.stan</code> can be modified accordingly, so that the basic linear mixed-effects model for phenotypic analysis becomes a linear animal model for quantitative genetic analysis. The relatedness matrix <span class="math inline">\(\boldsymbol{{\mathrm{A}}}\)</span> is now declared in the <code>data</code> block, while the lower triangle Cholesky decomposition matrix <span class="math inline">\(\boldsymbol{\mathrm{L_A}}\)</span> is generated in the <code>transformed data</code> block.</p>
 <pre class="stan"><code>data {
   int&lt;lower=0&gt; N; 
   int&lt;lower=0&gt; I; 
   int&lt;lower=0&gt; id[N]; 
   vector[N] x; 
-  vector[N] y;
-  matrix[I] A; //new relatedness matrix
+  vector[N] z;
+  matrix[I,I] A; //new relatedness matrix
 }
 transformed data{
   matrix[I,I] LA = cholesky_decompose(A); //lower triangle relatedness matrix 
 }</code></pre>
-<p>New parameters are declared for the separate genetic (G) and permanent environmental (E) effects.</p>
+<p>New parameters are also declared for the separate genetic (G) and permanent environmental (E) effects.</p>
 <pre class="stan"><code>parameters {
   //fixed effects
   real mu_0;
   real beta_1;
   
   //random effects
-  cholesky_factor_corr[2] LG_cor; //additive genetic cor matrix
-  cholesky_factor_corr[2] LE_cor; //permanent environmental cor matrix
+  cholesky_factor_corr[2] LGcor; //LC genetic correlation matrix
+  cholesky_factor_corr[2] LEcor; //LC permanent environmental correlation matrix
   vector&lt;lower=0&gt;[2] sd_G; //SD of genetic effects
   vector&lt;lower=0&gt;[2] sd_E;  //SD of environmental effects
   real&lt;lower=0&gt; sd_R;
   matrix[I,2] std_G; //matrix of standard normals for G effects
   matrix[I,2] std_E; //matrix of standard normals for E effects
 }</code></pre>
-<p>The appropriately scaled random deviations can then be specified in the <code>transformed parameters</code> block. The matrix normal parameterization is required for the additive genetic random effects, while the simpler non-centered approach may instead be used for the permanent environmental effects that are independently distributed among individuals. The <code>'</code> function can also be used to return the transpose of the Cholesky decomposed covariance matrix <span class="math inline">\(\boldsymbol{\mathrm{L_G}}=\boldsymbol{\mathrm{G_{SD}}}\boldsymbol{\mathrm{L_{G_{Cor}}}}\)</span> in Stan.</p>
+<p>The appropriately scaled random deviations can then be specified in the <code>transformed parameters</code> block. The matrix normal parametrization, i.e. <span class="math inline">\(\left[ \boldsymbol{\mu_A}, \boldsymbol{\beta_A}\right] =0+\mathrm{L_A}\mathrm{Z_{std_G}}(\mathrm{G_{sd}}\mathrm{L}_{G_{cor}})^{\mathrm{T}}\)</span> where <span class="math inline">\(\mathrm{G_{sd}}\mathrm{L}_{G_{cor}}=\mathrm{L}_{G_{}}\)</span> is the lower Cholesky covariance matrix, is required for the additive genetic random effects, while the simpler non-centered approach may instead be used for the permanent environmental effects that are independently distributed among individuals. The <code>'</code> function can again be used to return the transpose of the Cholesky decomposed covariance matrices in Stan.</p>
 <pre class="stan"><code>transformed parameters {
-  matrix[I,2] re_G = LA * std_G * diag_pre_multiply(sd_G,LG_cor)&#39; ; //matrix normal
-  matrix[I,2] re_E = std_E * diag_pre_multiply(sd_E,LE_cor); //non-centered
+  matrix[I,2] re_G = LA * std_G * diag_pre_multiply(sd_G,LGcor)&#39; ; //matrix normal
+  matrix[I,2] re_E = std_E * diag_pre_multiply(sd_E,LEcor)&#39;; //non-centered
   
-  vector[I] mu = mu_0 + col(re_G, 1) + col(re_E, 1); //P = G + E
-  vector[I] beta = beta_1 + col(re_G, 2) + col(re_E, 2); //P = G + E
+  vector[I] mu = col(re_G, 1) + col(re_E, 1); //P = G + E
+  vector[I] beta = col(re_G, 2) + col(re_E, 2); //P = G + E
 }</code></pre>
 <p>With the addition of new priors in the <code>model</code> block</p>
 <pre class="stan"><code>  to_vector(std_devG) ~ std_normal(); //standard normal deviates
   to_vector(std_devE) ~ std_normal();
-  LG_cor ~ lkj_corr_cholesky(2);
-  LE_cor ~ lkj_corr_cholesky(2);
+  LGcor ~ lkj_corr_cholesky(2);
+  LEcor ~ lkj_corr_cholesky(2);
   to_vector(sd_G) ~ cauchy(0,1);
   to_vector(sd_E) ~ cauchy(0,1);</code></pre>
-<p>the model will be well defined and equivalent to the simpler formal model defined with Kronecker products of covariance matrices. Note that the permanent environmental effects are defined as they were for the purely phenotypic effects above, without consideration of the Kronecker product <span class="math inline">\(\boldsymbol{\mathrm{E}}\otimes\boldsymbol{\mathrm{I}}\)</span>. This product indicates that individuals’ trait values are independent and identically distributed, so that ignoring the Kronecker product in Stan with <code>re_E = std_E * diag_pre_multiply(sd_E,LE_cor)</code> is equivalent to specifying the matrix normal parameterization with additional Cholesky identity matrix <span class="math inline">\(\boldsymbol{\mathrm{L_{I}}}\)</span>, i.e. <code>re_E = LI * std_E * diag_pre_multiply(sd_E,LE_cor)'</code>.</p>
+<p>the model will be well defined and equivalent to the simpler formal model defined with Kronecker products of covariance matrices. Note that the permanent environmental effects are defined as they were for the purely phenotypic effects above, without consideration of the Kronecker product <span class="math inline">\(\boldsymbol{\mathrm{E}}\otimes\boldsymbol{\mathrm{I}}\)</span>. This product indicates that individuals’ trait values are independent and identically distributed, so that ignoring the Kronecker product in Stan with <code>re_E = std_E * diag_pre_multiply(sd_E,LEcor)'</code> is equivalent to specifying the matrix normal parameterization with additional Cholesky identity matrix <span class="math inline">\(\boldsymbol{\mathrm{L_{I}}}\)</span>, i.e. <code>re_E = LI * std_E * diag_pre_multiply(sd_E,LE_cor)'</code>.</p>
 </div>
 <div id="identifying-genetic-effects" class="section level3" number="1.5.2">
 <h3><span class="header-section-number">1.5.2</span> Identifying genetic effects</h3>
 <p>This matrix normal approach makes the animal model computationally efficient, but a more fundamental issue remains for identifying the scales of the distinct <span class="math inline">\(\boldsymbol{\mathrm{G}}\)</span> and <span class="math inline">\(\boldsymbol{\mathrm{E}}\)</span> effects during model estimation. Given that <span class="math inline">\(\boldsymbol{\mathrm{P}}=\boldsymbol{\mathrm{G}} + \boldsymbol{\mathrm{E}}\)</span> under the assumption of independent additive effects, it can be difficult to uniquely identify the scale of the distinct genetic and environmental trait values, as any increase/decrease in genetic trait values can be compensated by an equivalent decrease/increase in the environmental trait value to achieve equivalent phenotypic values. In principle, this issue is addressed by the fixed information in <span class="math inline">\(\boldsymbol{\mathrm{A}}\)</span> that is provided to the model prior to estimation. In reality, however, relatedness matrices in the wild are often quite sparse, with most elements at or near 0. As a consequence, when a single individual-level parameter is expressed as the sum of two distinct parameters, as differentiated by the scaling of <span class="math inline">\(\boldsymbol{\mathrm{A}}\)</span> and <span class="math inline">\(\boldsymbol{\mathrm{I}}\)</span>, it can be challenging to identify the proportion of variance attributable to each effect. Note that in the simplest case of completely unrelated individuals, i.e. <span class="math inline">\(\boldsymbol{\mathrm{A}} = \boldsymbol{\mathrm{I}}\)</span>, genetic and environmental effects are completely confounded and cannot be uniquely identified without introducing further assumptions, as any combination of genetic and environmental values summing to the same value will fit the data equally well.</p>
 <p>Fortunately, in spite of the empirical reality of sparse relatedness matrices, it is possible to parameterize an animal model in Stan so that even weakly identified genetic effects can be disentangled from environmental effects, using whatever information is provided by the fixed relatedness matrix and empirical data. This is accomplished by re-expressing the scale of the <span class="math inline">\(\boldsymbol{\mathrm{G}}\)</span> and <span class="math inline">\(\boldsymbol{\mathrm{E}}\)</span> effects not as independent parameters, but rather as dependent variances derived from their proportion of a common phenotypic variance parameter. In other words, the model only has to identify the scale of the total phenotypic trait values rather than attempting to identify two independent but potentially confounded random effect variances, i.e.</p>
-<p><span class="math display">\[\mathrm{Var}(\boldsymbol{\mu_\mathrm{P}}) = 
-\frac { \mathrm{Var}(\boldsymbol{\mu_{\mathrm{A}}}) }{\mathrm{Var}(\boldsymbol{\mu_{\mathrm{P}}})}\mathrm{Var}(\boldsymbol{\mu_\mathrm{P}}) + 
-\frac { \mathrm{Var}(\boldsymbol{\mu_{\mathrm{E}}}) }{\mathrm{Var}(\boldsymbol{\mu_{\mathrm{P}}})}\mathrm{Var}(\boldsymbol{\mu_\mathrm{P}})\]</span></p>
-<p><span class="math display">\[\mathrm{Var}(\boldsymbol{\beta_\mathrm{P}}) = 
-\frac { \mathrm{Var}(\boldsymbol{\beta_{\mathrm{A}}}) }{\mathrm{Var}(\boldsymbol{\beta_{\mathrm{P}}})}\mathrm{Var}(\boldsymbol{\beta_\mathrm{P}}) + 
-\frac { \mathrm{Var}(\boldsymbol{\beta_{\mathrm{E}}}) }{\mathrm{Var}(\boldsymbol{\beta_{\mathrm{P}}})}\mathrm{Var}(\boldsymbol{\beta_\mathrm{P}})\]</span></p>
-<p>The additive genetic proportions can be conceptualized as reaction norm heritabilities for the intercept and slope parameters</p>
-<p><span class="math display">\[h_{\mu}^{2} =\frac { \mathrm{Var}(\boldsymbol{\mu_{\mathrm{A}}}) }{\mathrm{Var}(\boldsymbol{\mu_{\mathrm{P}}})}\]</span>
-<span class="math display">\[h_{\beta}^{2}=\frac { \mathrm{Var}(\boldsymbol{\beta_{\mathrm{A}}}) }{\mathrm{Var}(\boldsymbol{\beta_{\mathrm{P}}})}\]</span></p>
-<p>Given that there are only two individual-level random effects, the proportion of variance attributable to environmental effects is necessarily <span class="math inline">\(1-h_{\mu}^{2}\)</span> and <span class="math inline">\(1-h_{\beta}^{2}\)</span> for intercepts and slopes respectively. This alternative parameterization is again mathematically equivalent to the previous model, but it is much easier for Stan to estimate appropriately.</p>
-<p>To implement this trick, we respecify the model parameters, removing the distinct genetic and environmental SDs and replacing them with common phenotypic SD scale parameters and reaction norm heritability parameters, which can subsequently be used to scale the distinct genetic and environmental standard normal deviates and correlation matrices in the <code>transformed parameters</code> block. This final model is given by</p>
-<pre class="stan"><code>data {
-  int&lt;lower=0&gt; N; 
-  int&lt;lower=0&gt; I; 
-  int&lt;lower=0&gt; id[N]; 
-  vector[N] x; 
-  vector[N] y;
-  matrix[I] A; //relatedness matrix
-}
-transformed data{
-  matrix[I,I] LA = cholesky_decompose(A); //lower tri Cholesky matrix 
-}
-parameters {
-  //fixed effects
-  real mu_0;
-  real beta_1;
-  
-  //random effects
-  cholesky_factor_corr[2] LG_cor; //additive genetic cor matrix
-  cholesky_factor_corr[2] LE_cor; //permanent environmental cor matrix
-  vector&lt;lower=0&gt;[2] sd_P; //total phenotypic SD (removed distinct G and E SDs)
-  real&lt;lower=0&gt; sd_R;
-  matrix[I,2] std_G; //matrix of standard normals for G effects
-  matrix[I,2] std_E; //matrix of standard normals for E effects
-  
-  //RN heritability (proportion between 0 and 1)
-  vector&lt;lower=0,upper=1&gt;[2] RN_h2;
-}
-transformed parameters {
-  vector&lt;lower=0&gt;[2] sd_G; //SDs of G effects
-  vector&lt;lower=0&gt;[2] sd_E; //SDs of E effects
-  matrix[I,2] re_G; //scaled G random effects
-  matrix[I,2] re_E;  //scaled E random effects
-  vector[I] mu; //total individual intercepts
-  vector[I] beta; //total individual slopes
-  
-  //SDs of genetic effects, sqrt(phenotypic variance * h2)
-  sd_G[1] = sd_P[1] * sqrt(RN_h2[1]); //genetic SD for ind intercepts 
-  sd_G[2] = sd_P[2] * sqrt(RN_h2[2]);  //genetic SD for ind slopes
-  
-  //SDs of environmental effects, sqrt(phenotypic variance * [1-h2])
-  sd_E[1] = sd_P[1] * sqrt(1 - RN_h2[1]); //environment SD for ind intercepts 
-  sd_E[2] = sd_P[2] * sqrt(1 - RN_h2[2]); //environment SD for ind slopes 
-  
-  //matrix normal parameterization
-  re_G =  LA * std_devG * diag_pre_multiply(sd_G, LG_cor)&#39; ; 
-  //non-centered parameterization
-  re_E = std_devE * diag_pre_multiply(sd_E, LE) ;
-  //phenotypic RN effects, P = G + E
-  re_P = re_G + re_E;
-  
-  //total trait values (+ population fixed effects)
-  mu = mu_0 + col(re_G, 1) + col(re_E, 1); //P = G + E
-  beta = beta_1 + col(re_G, 2) + col(re_E, 2); //P = G + E
-}
-model {
-  //model likelihood
-  y ~ normal(mu[id] + beta[id].*x, sd_R);
-
-  //priors
-  
-  //fixed effects
-  mu_0 ~ normal(0,1);
-  beta_1 ~ normal(0,1);
-
-  //random effects
-  to_vector(std_G) ~ std_normal(); //genetic std normal deviates
-  to_vector(std_E) ~ std_normal(); //environmental std normal deviates
-  LG_cor ~ lkj_corr_cholesky(2); //genetic correlations
-  LE_cor ~ lkj_corr_cholesky(2); //environmental correlations
-  
-  to_vector(sd_P) ~ cauchy(0,1); //only phenotypic scale
-  sd_R ~ cauchy(0,1);
-  
-  //reaction norm heritability
-  to_vector(RN_h2) ~  beta(1.2,1.2);
-  
-}
-generated quantities {
-matrix[2,2] Gcor = LG * LG&#39;; //genetic cor
-matrix[2,2] Ecor = LE * LG&#39;; //environmental cor
-matrix[2,2] Rcor = LR * LR&#39;; //residual cor 
-
-matrix[2,2] Gcov = diag_matrix(sd_G)*Gcor*diag_matrix(sd_G); //genetic cov
-matrix[2,2] Ecov = diag_matrix(sd_E)*Ecor*diag_matrix(sd_E); //environmental cov
-matrix[2,2] Rcov = diag_matrix(sd_R)*Rcor*diag_matrix(sd_R); //residual cov
-
-matrix[2,2] Pcov = Gcov + Ecov; //phenotypic covariance (assuming independent effects)
-matrix[2,2] Pcor = inverse(diag_matrix(sd_P))*Pcov*inverse(diag_matrix(sd_P)); //phenotypic cor
-
-//variances
-vector&lt;lower=0&gt;[2] V_P = sd_P .* sd_P;
-vector&lt;lower=0&gt;[2] V_G = sd_G .* sd_G;
-vector&lt;lower=0&gt;[2] V_E = sd_E .* sd_E;
-vector&lt;lower=0&gt;[2] V_R = sd_R .* sd_R;
-}
-</code></pre>
-<p>Note that because we specify phenotypic SDs <code>sd_P</code>, the genetic SDs <code>sd_G</code> are calculated as <span class="math inline">\(\mathrm{sqrt} ({\mathrm{Var}(\boldsymbol{\mu_{\mathrm{P}}})}h_{\mu}^{2})= {\mathrm{SD}(\boldsymbol{\mu_{\mathrm{P}}})}\mathrm{sqrt}(h_{\mu}^{2})\)</span> and <span class="math inline">\(\mathrm{sqrt} ({\mathrm{Var}(\boldsymbol{\beta_{\mathrm{P}}})}h_{\beta}^{2})= {\mathrm{SD}(\boldsymbol{\beta_{\mathrm{P}}})}\mathrm{sqrt}(h_{\beta}^{2})\)</span>, with the same approach taken for the proportion of environmental effects <span class="math inline">\(1- h_{\mu}^{2}\)</span> and <span class="math inline">\(1-h_{\beta}^{2}\)</span>. A weakly regularizing <span class="math inline">\(\mathrm{Beta}(1.2,1.2)\)</span> prior is placed on the reaction norm heritability parameters, which are constrained between 0 and 1. This and any other prior can be easily visualized in R by randomly sampling from the relevant distribution.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="using-stan-in-r.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>( <span class="fu">rbeta</span>(<span class="fl">1e5</span>, <span class="fl">1.2</span>, <span class="fl">1.2</span>), <span class="at">prob =</span> <span class="cn">TRUE</span> )</span></code></pre></div>
-<p><img src="SAMs_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><span class="math display">\[\mathrm{Var}(\boldsymbol{\mu_\mathrm{ }}) = 
+\frac { \mathrm{Var}(\boldsymbol{\mu_{\mathrm{A}}}) }{\mathrm{Var}(\boldsymbol{\mu_{\mathrm{P}}})}\mathrm{Var}(\boldsymbol{\mu_\mathrm{ }}) + 
+\frac { \mathrm{Var}(\boldsymbol{\mu_{\mathrm{E}}}) }{\mathrm{Var}(\boldsymbol{\mu_{\mathrm{P}}})}\mathrm{Var}(\boldsymbol{\mu_\mathrm{ }})\]</span></p>
+<p><span class="math display">\[\mathrm{Var}(\boldsymbol{\beta_\mathrm{ }}) = 
+\frac { \mathrm{Var}(\boldsymbol{\beta_{\mathrm{A}}}) }{\mathrm{Var}(\boldsymbol{\beta_{\mathrm{ }}})}\mathrm{Var}(\boldsymbol{\beta_\mathrm{ }}) + 
+\frac { \mathrm{Var}(\boldsymbol{\beta_{\mathrm{E}}}) }{\mathrm{Var}(\boldsymbol{\beta_{\mathrm{P}}})}\mathrm{Var}(\boldsymbol{\beta_\mathrm{ }})\]</span>
+The additive genetic proportions can be conceptualized as reaction norm heritabilities for the intercept and slope parameters</p>
+<p><span class="math display">\[h_{\mu}^{2} =\frac { \mathrm{Var}(\boldsymbol{\mu_{\mathrm{A}}}) }{\mathrm{Var}(\boldsymbol{\mu_{\mathrm{ }}})}\]</span>
+<span class="math display">\[h_{\beta}^{2}=\frac { \mathrm{Var}(\boldsymbol{\beta_{\mathrm{A}}}) }{\mathrm{Var}(\boldsymbol{\beta_{\mathrm{ }}})}\]</span></p>
+<p>Given that there are only two individual-level random effects, the proportion of variance attributable to environmental effects is necessarily <span class="math inline">\(1-h_{\mu}^{2}\)</span> and <span class="math inline">\(1-h_{\beta}^{2}\)</span> for intercepts and slopes respectively. This alternative parametrization is again mathematically equivalent to the previous model, but it is much easier for Stan to estimate appropriately.</p>
+<p>To implement this trick, we respecify the model parameters, removing the distinct genetic and environmental SDs and replacing them with common phenotypic SD scale parameters and reaction norm heritability parameters, which can subsequently be used to scale the distinct genetic and environmental standard normal deviates and correlation matrices in the <code>transformed parameters</code> block. This final model can thus be written as</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="using-stan-in-r.html#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(<span class="st">&quot;</span></span>
+<span id="cb59-2"><a href="using-stan-in-r.html#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
+<span id="cb59-3"><a href="using-stan-in-r.html#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; N; </span></span>
+<span id="cb59-4"><a href="using-stan-in-r.html#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; I; </span></span>
+<span id="cb59-5"><a href="using-stan-in-r.html#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; id[N]; </span></span>
+<span id="cb59-6"><a href="using-stan-in-r.html#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N] x; </span></span>
+<span id="cb59-7"><a href="using-stan-in-r.html#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N] z;</span></span>
+<span id="cb59-8"><a href="using-stan-in-r.html#cb59-8" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,I] A; //new relatedness matrix</span></span>
+<span id="cb59-9"><a href="using-stan-in-r.html#cb59-9" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb59-10"><a href="using-stan-in-r.html#cb59-10" aria-hidden="true" tabindex="-1"></a><span class="st">transformed data{</span></span>
+<span id="cb59-11"><a href="using-stan-in-r.html#cb59-11" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,I] LA = cholesky_decompose(A); //lower triangle relatedness matrix </span></span>
+<span id="cb59-12"><a href="using-stan-in-r.html#cb59-12" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb59-13"><a href="using-stan-in-r.html#cb59-13" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
+<span id="cb59-14"><a href="using-stan-in-r.html#cb59-14" aria-hidden="true" tabindex="-1"></a><span class="st">  //fixed effects</span></span>
+<span id="cb59-15"><a href="using-stan-in-r.html#cb59-15" aria-hidden="true" tabindex="-1"></a><span class="st">  real mu_0;</span></span>
+<span id="cb59-16"><a href="using-stan-in-r.html#cb59-16" aria-hidden="true" tabindex="-1"></a><span class="st">  real beta_1;</span></span>
+<span id="cb59-17"><a href="using-stan-in-r.html#cb59-17" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb59-18"><a href="using-stan-in-r.html#cb59-18" aria-hidden="true" tabindex="-1"></a><span class="st">  //random effects</span></span>
+<span id="cb59-19"><a href="using-stan-in-r.html#cb59-19" aria-hidden="true" tabindex="-1"></a><span class="st">  cholesky_factor_corr[2] LGcor; //additive genetic cor matrix</span></span>
+<span id="cb59-20"><a href="using-stan-in-r.html#cb59-20" aria-hidden="true" tabindex="-1"></a><span class="st">  cholesky_factor_corr[2] LEcor; //permanent environmental cor matrix</span></span>
+<span id="cb59-21"><a href="using-stan-in-r.html#cb59-21" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0&gt;[2] sd_P; //total phenotypic SD (removed distinct G and E SDs)</span></span>
+<span id="cb59-22"><a href="using-stan-in-r.html#cb59-22" aria-hidden="true" tabindex="-1"></a><span class="st">  real&lt;lower=0&gt; sd_R;</span></span>
+<span id="cb59-23"><a href="using-stan-in-r.html#cb59-23" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] std_G; //matrix of standard normals for G effects</span></span>
+<span id="cb59-24"><a href="using-stan-in-r.html#cb59-24" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] std_E; //matrix of standard normals for E effects</span></span>
+<span id="cb59-25"><a href="using-stan-in-r.html#cb59-25" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb59-26"><a href="using-stan-in-r.html#cb59-26" aria-hidden="true" tabindex="-1"></a><span class="st">  //RN heritability (proportion between 0 and 1)</span></span>
+<span id="cb59-27"><a href="using-stan-in-r.html#cb59-27" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0,upper=1&gt;[2] RN_h2;</span></span>
+<span id="cb59-28"><a href="using-stan-in-r.html#cb59-28" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb59-29"><a href="using-stan-in-r.html#cb59-29" aria-hidden="true" tabindex="-1"></a><span class="st">transformed parameters {</span></span>
+<span id="cb59-30"><a href="using-stan-in-r.html#cb59-30" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0&gt;[2] sd_G; //SDs of G effects</span></span>
+<span id="cb59-31"><a href="using-stan-in-r.html#cb59-31" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0&gt;[2] sd_E; //SDs of E effects</span></span>
+<span id="cb59-32"><a href="using-stan-in-r.html#cb59-32" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] re_G; //scaled G random effects</span></span>
+<span id="cb59-33"><a href="using-stan-in-r.html#cb59-33" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] re_E;  //scaled E random effects</span></span>
+<span id="cb59-34"><a href="using-stan-in-r.html#cb59-34" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[I] mu; //phenotypic individual intercepts</span></span>
+<span id="cb59-35"><a href="using-stan-in-r.html#cb59-35" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[I] beta; //phenotypic individual slopes</span></span>
+<span id="cb59-36"><a href="using-stan-in-r.html#cb59-36" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb59-37"><a href="using-stan-in-r.html#cb59-37" aria-hidden="true" tabindex="-1"></a><span class="st">  //SDs of genetic effects, sqrt(phenotypic variance * h2)</span></span>
+<span id="cb59-38"><a href="using-stan-in-r.html#cb59-38" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_G[1] = sd_P[1] * sqrt(RN_h2[1]); //genetic SD for ind intercepts </span></span>
+<span id="cb59-39"><a href="using-stan-in-r.html#cb59-39" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_G[2] = sd_P[2] * sqrt(RN_h2[2]);  //genetic SD for ind slopes</span></span>
+<span id="cb59-40"><a href="using-stan-in-r.html#cb59-40" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb59-41"><a href="using-stan-in-r.html#cb59-41" aria-hidden="true" tabindex="-1"></a><span class="st">  //SDs of environmental effects, sqrt(phenotypic variance * [1-h2])</span></span>
+<span id="cb59-42"><a href="using-stan-in-r.html#cb59-42" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_E[1] = sd_P[1] * sqrt(1 - RN_h2[1]); //environment SD for ind intercepts </span></span>
+<span id="cb59-43"><a href="using-stan-in-r.html#cb59-43" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_E[2] = sd_P[2] * sqrt(1 - RN_h2[2]); //environment SD for ind slopes </span></span>
+<span id="cb59-44"><a href="using-stan-in-r.html#cb59-44" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb59-45"><a href="using-stan-in-r.html#cb59-45" aria-hidden="true" tabindex="-1"></a><span class="st">  //matrix normal parameterization</span></span>
+<span id="cb59-46"><a href="using-stan-in-r.html#cb59-46" aria-hidden="true" tabindex="-1"></a><span class="st">  re_G =  LA * std_G * diag_pre_multiply(sd_G, LGcor)&#39; ; </span></span>
+<span id="cb59-47"><a href="using-stan-in-r.html#cb59-47" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb59-48"><a href="using-stan-in-r.html#cb59-48" aria-hidden="true" tabindex="-1"></a><span class="st">  //non-centered parameterization</span></span>
+<span id="cb59-49"><a href="using-stan-in-r.html#cb59-49" aria-hidden="true" tabindex="-1"></a><span class="st">  re_E = std_E * diag_pre_multiply(sd_E, LEcor)&#39; ;</span></span>
+<span id="cb59-50"><a href="using-stan-in-r.html#cb59-50" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb59-51"><a href="using-stan-in-r.html#cb59-51" aria-hidden="true" tabindex="-1"></a><span class="st">  //separate intercepts and slopes</span></span>
+<span id="cb59-52"><a href="using-stan-in-r.html#cb59-52" aria-hidden="true" tabindex="-1"></a><span class="st">  mu = col(re_G, 1) + col(re_E, 1); //P = G + E</span></span>
+<span id="cb59-53"><a href="using-stan-in-r.html#cb59-53" aria-hidden="true" tabindex="-1"></a><span class="st">  beta = col(re_G, 2) + col(re_E, 2); //P = G + E</span></span>
+<span id="cb59-54"><a href="using-stan-in-r.html#cb59-54" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb59-55"><a href="using-stan-in-r.html#cb59-55" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb59-56"><a href="using-stan-in-r.html#cb59-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-57"><a href="using-stan-in-r.html#cb59-57" aria-hidden="true" tabindex="-1"></a><span class="st">  //model likelihood</span></span>
+<span id="cb59-58"><a href="using-stan-in-r.html#cb59-58" aria-hidden="true" tabindex="-1"></a><span class="st">  z ~ normal(mu_0 + mu[id] + (beta_1 + beta[id]).*x, sd_R);</span></span>
+<span id="cb59-59"><a href="using-stan-in-r.html#cb59-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-60"><a href="using-stan-in-r.html#cb59-60" aria-hidden="true" tabindex="-1"></a><span class="st">  //priors</span></span>
+<span id="cb59-61"><a href="using-stan-in-r.html#cb59-61" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb59-62"><a href="using-stan-in-r.html#cb59-62" aria-hidden="true" tabindex="-1"></a><span class="st">  //fixed effects</span></span>
+<span id="cb59-63"><a href="using-stan-in-r.html#cb59-63" aria-hidden="true" tabindex="-1"></a><span class="st">  mu_0 ~ normal(0,1);</span></span>
+<span id="cb59-64"><a href="using-stan-in-r.html#cb59-64" aria-hidden="true" tabindex="-1"></a><span class="st">  beta_1 ~ normal(0,1);</span></span>
+<span id="cb59-65"><a href="using-stan-in-r.html#cb59-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-66"><a href="using-stan-in-r.html#cb59-66" aria-hidden="true" tabindex="-1"></a><span class="st">  //random effects</span></span>
+<span id="cb59-67"><a href="using-stan-in-r.html#cb59-67" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(std_G) ~ std_normal(); //genetic std normal deviates</span></span>
+<span id="cb59-68"><a href="using-stan-in-r.html#cb59-68" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(std_E) ~ std_normal(); //environmental std normal deviates</span></span>
+<span id="cb59-69"><a href="using-stan-in-r.html#cb59-69" aria-hidden="true" tabindex="-1"></a><span class="st">  LGcor ~ lkj_corr_cholesky(2); //genetic correlations</span></span>
+<span id="cb59-70"><a href="using-stan-in-r.html#cb59-70" aria-hidden="true" tabindex="-1"></a><span class="st">  LEcor ~ lkj_corr_cholesky(2); //environmental correlations</span></span>
+<span id="cb59-71"><a href="using-stan-in-r.html#cb59-71" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb59-72"><a href="using-stan-in-r.html#cb59-72" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(sd_P) ~ cauchy(0,1); //only phenotypic scale</span></span>
+<span id="cb59-73"><a href="using-stan-in-r.html#cb59-73" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_R ~ cauchy(0,1);</span></span>
+<span id="cb59-74"><a href="using-stan-in-r.html#cb59-74" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb59-75"><a href="using-stan-in-r.html#cb59-75" aria-hidden="true" tabindex="-1"></a><span class="st">  //reaction norm heritability</span></span>
+<span id="cb59-76"><a href="using-stan-in-r.html#cb59-76" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(RN_h2) ~  beta(1.2,1.2);</span></span>
+<span id="cb59-77"><a href="using-stan-in-r.html#cb59-77" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb59-78"><a href="using-stan-in-r.html#cb59-78" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb59-79"><a href="using-stan-in-r.html#cb59-79" aria-hidden="true" tabindex="-1"></a><span class="st">generated quantities {</span></span>
+<span id="cb59-80"><a href="using-stan-in-r.html#cb59-80" aria-hidden="true" tabindex="-1"></a><span class="st">corr_matrix[2] Gcor = LGcor * LGcor&#39;; //genetic cor</span></span>
+<span id="cb59-81"><a href="using-stan-in-r.html#cb59-81" aria-hidden="true" tabindex="-1"></a><span class="st">corr_matrix[2] Ecor = LEcor * LEcor&#39;; //environmental cor</span></span>
+<span id="cb59-82"><a href="using-stan-in-r.html#cb59-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-83"><a href="using-stan-in-r.html#cb59-83" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Gcov = diag_matrix(sd_G)*Gcor*diag_matrix(sd_G); //genetic cov</span></span>
+<span id="cb59-84"><a href="using-stan-in-r.html#cb59-84" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Ecov = diag_matrix(sd_E)*Ecor*diag_matrix(sd_E); //environmental cov</span></span>
+<span id="cb59-85"><a href="using-stan-in-r.html#cb59-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-86"><a href="using-stan-in-r.html#cb59-86" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Pcov = Gcov + Ecov; //phenotypic covariance (assuming independent effects)</span></span>
+<span id="cb59-87"><a href="using-stan-in-r.html#cb59-87" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Pcor = inverse(diag_matrix(sd_P))*Pcov*inverse(diag_matrix(sd_P)); //phenotypic cor</span></span>
+<span id="cb59-88"><a href="using-stan-in-r.html#cb59-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-89"><a href="using-stan-in-r.html#cb59-89" aria-hidden="true" tabindex="-1"></a><span class="st">//variances</span></span>
+<span id="cb59-90"><a href="using-stan-in-r.html#cb59-90" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_P = sd_P .* sd_P;</span></span>
+<span id="cb59-91"><a href="using-stan-in-r.html#cb59-91" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_G = sd_G .* sd_G;</span></span>
+<span id="cb59-92"><a href="using-stan-in-r.html#cb59-92" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_E = sd_E .* sd_E;</span></span>
+<span id="cb59-93"><a href="using-stan-in-r.html#cb59-93" aria-hidden="true" tabindex="-1"></a><span class="st">real V_R = sd_R * sd_R;</span></span>
+<span id="cb59-94"><a href="using-stan-in-r.html#cb59-94" aria-hidden="true" tabindex="-1"></a><span class="st">}&quot;</span>, <span class="st">&quot;mod1_QG.stan&quot;</span>)</span></code></pre></div>
+<p>Note that because we specify phenotypic SDs <code>sd_P</code>, the genetic SDs <code>sd_G</code> are calculated as <span class="math inline">\(\mathrm{sqrt} ({\mathrm{Var}(\boldsymbol{\mu_{\mathrm{}}})}h_{\mu}^{2})= {\mathrm{SD}(\boldsymbol{\mu_{\mathrm{}}})}\mathrm{sqrt}(h_{\mu}^{2})\)</span> and <span class="math inline">\(\mathrm{sqrt} ({\mathrm{Var}(\boldsymbol{\beta_{\mathrm{}}})}h_{\beta}^{2})= {\mathrm{SD}(\boldsymbol{\beta_{\mathrm{}}})}\mathrm{sqrt}(h_{\beta}^{2})\)</span>, with the same approach taken for the proportion of environmental effects <span class="math inline">\(1- h_{\mu}^{2}\)</span> and <span class="math inline">\(1-h_{\beta}^{2}\)</span>. A weakly regularizing <span class="math inline">\(\mathrm{Beta}(1.2,1.2)\)</span> prior is placed on the reaction norm heritability parameters, which are constrained between 0 and 1. This and any other prior can be easily visualized in R by randomly sampling from the relevant distribution.</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="using-stan-in-r.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>( <span class="fu">rbeta</span>(<span class="fl">1e5</span>, <span class="fl">1.2</span>, <span class="fl">1.2</span>), <span class="at">prob =</span> <span class="cn">TRUE</span> )</span></code></pre></div>
+<p><img src="SAMs_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
 <p>This prior is therefore relatively flat and uninformative over the range of plausible values, but provides very weak regularization by giving lower relative probability at the extreme ends approaching 0 (no genetic effect) and 1 (complete genetic effect). With more than two individual-level random effects, such as when specifying multiple matrices of individual autocorrelation <span class="citation">(<a href="resources.html#ref-Thomson2018" role="doc-biblioref">Thomson et al. 2018</a>)</span>, SDs and variances can instead be parameterized as scaled <a href="https://mc-stan.org/docs/2_19/reference-manual/vector-and-matrix-data-types.html">simplexes</a>.</p>
+<p>We can now estimate our animal model in Stan.</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="using-stan-in-r.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
+<span id="cb61-2"><a href="using-stan-in-r.html#cb61-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-3"><a href="using-stan-in-r.html#cb61-3" aria-hidden="true" tabindex="-1"></a>mod1_QG <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="st">&quot;mod1_QG.stan&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning in system(paste(CXX, ARGS), ignore.stdout = TRUE, ignore.stderr = TRUE): &#39;C:/rtools40/usr/mingw_/bin/g++&#39; not found</code></pre>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="using-stan-in-r.html#cb63-1" aria-hidden="true" tabindex="-1"></a>stan_resultsQG <span class="ot">&lt;-</span> <span class="fu">sampling</span>(mod1_QG, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">4500</span>,</span>
+<span id="cb63-2"><a href="using-stan-in-r.html#cb63-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span>
+<span id="cb63-3"><a href="using-stan-in-r.html#cb63-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-4"><a href="using-stan-in-r.html#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="co">#extracts posterior estimates</span></span>
+<span id="cb63-5"><a href="using-stan-in-r.html#cb63-5" aria-hidden="true" tabindex="-1"></a>post <span class="ot">=</span>  <span class="fu">extract</span>(stan_resultsQG)</span></code></pre></div>
+<p>Let’s see how well we recovered the genetic and environmental (co)variances of the reaction norm parameters. Due to random sampling and our relatively small sample size, we should anticipate noisy estimates.</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="using-stan-in-r.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co">#RN intercepts [1] and slopes [2]</span></span>
+<span id="cb64-2"><a href="using-stan-in-r.html#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(post<span class="sc">$</span>V_P, <span class="dv">2</span>, median) <span class="co">#phenotypic variance</span></span></code></pre></div>
+<pre><code>## [1] 0.5156651 0.4549509</code></pre>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="using-stan-in-r.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(post<span class="sc">$</span>V_G, <span class="dv">2</span>, median) <span class="co">#genetic variance</span></span></code></pre></div>
+<pre><code>## [1] 0.2675290 0.3123626</code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="using-stan-in-r.html#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(post<span class="sc">$</span>V_E, <span class="dv">2</span>, median) <span class="co">#environmental variance</span></span></code></pre></div>
+<pre><code>## [1] 0.2299883 0.1217462</code></pre>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="using-stan-in-r.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co">#RN intercept and slope correlation</span></span>
+<span id="cb70-2"><a href="using-stan-in-r.html#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post<span class="sc">$</span>Pcor[,<span class="dv">1</span>,<span class="dv">2</span>]) <span class="co">#phenotypic corr</span></span></code></pre></div>
+<pre><code>## [1] -0.1233359</code></pre>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="using-stan-in-r.html#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post<span class="sc">$</span>Gcor[,<span class="dv">1</span>,<span class="dv">2</span>]) <span class="co">#genetic corr</span></span></code></pre></div>
+<pre><code>## [1] -0.2064899</code></pre>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="using-stan-in-r.html#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post<span class="sc">$</span>Ecor[,<span class="dv">1</span>,<span class="dv">2</span>]) <span class="co">#environmental corr</span></span></code></pre></div>
+<pre><code>## [1] -0.02244352</code></pre>
 
 </div>
 </div>
