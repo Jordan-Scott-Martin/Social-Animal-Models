@@ -8,9 +8,11 @@ non-centered-random-effects
 animal-models
 kronecker-products
 identifying-genetic-effects
-sam-coding-tutorial
+within-partner-sam
+formal-overview
+computational-approach
+simulate-data
 coding-the-model
-quantifying-assortment
-selection-differentials
-the-response-to-selection
+between-partner-sam
+between-and-within-partner-sam
 extending-sams
