@@ -24,7 +24,7 @@
 <meta name="author" content="Jordan S. Martin &amp; Adrian V. Jaeggi" />
 
 
-<meta name="date" content="2021-05-20" />
+<meta name="date" content="2021-05-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -417,7 +417,7 @@ generated quantities {
 <pre><code>## Warning in system(paste(CXX, ARGS), ignore.stdout = TRUE, ignore.stderr = TRUE): &#39;C:/rtools40/usr/mingw_/bin/g++&#39; not found</code></pre>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="using-stan-in-r.html#cb19-1" aria-hidden="true" tabindex="-1"></a>stan_results <span class="ot">&lt;-</span> <span class="fu">sampling</span>(mod1, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">2500</span>,</span>
 <span id="cb19-2"><a href="using-stan-in-r.html#cb19-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span></code></pre></div>
-<pre><code>## Warning: There were 93 divergent transitions after warmup. See
+<pre><code>## Warning: There were 1 divergent transitions after warmup. See
 ## http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
 ## to find out why this is a problem and how to eliminate them.</code></pre>
 <pre><code>## Warning: There were 4 chains where the estimated Bayesian Fraction of Missing Information was low. See
@@ -435,54 +435,54 @@ generated quantities {
 <p>Stan flags a few potential issues with the MCMC sampler. Note that the warning <code>## Warning in system(paste(CXX, ARGS), ignore.stdout = TRUE, ignore.stderr = TRUE): 'C:/rtools40/usr/mingw_/bin/g++' not found</code> during compilation of the model will sometimes appear on Windows computers and can be safely ignored. Further description of the sampler warnings can be found in the <a href="https://mc-stan.org/misc/warnings.html">Stan Warning Guide</a>. One warning is that “The largest R-hat is NA, indicating chains have not mixed.” Stan does not know whether some parameter values are fixed (causing Rhat = NA) because the sampler is stuck, or because the model has been intentionally specified with fixed parameter values (e.g. diagonals fixed to 1 in a correlation matrix or an intercept forced to 0). For the specified model, this is a harmless warning that can be safely ignored. However, we can also check for issues by looking at the Rhat values of all model parameters using <code>summary()</code> on the saved results. If an expected parameter is missing from the table or shows NA, this likely indicates an unintentional error in the model code.</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="using-stan-in-r.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stan_results)<span class="sc">$</span>summary[,<span class="st">&quot;Rhat&quot;</span>]</span></code></pre></div>
 <pre><code>##       mu_0     beta_1  Pcor[1,1]  Pcor[1,2]  Pcor[2,1]  Pcor[2,2]    sd_P[1]    sd_P[2]       sd_R  re_P[1,1]  re_P[1,2]  re_P[2,1] 
-##  1.0026320  1.0009686        NaN  1.0166652  1.0166652  0.9989995  1.0726442  1.0638429  1.0263059  1.0088335  1.0116059  1.0058076 
+##  1.0008967  1.0001588        NaN  1.0072679  1.0072679  0.9989995  1.1574188  1.0775618  1.0398132  1.0196134  1.0284245  1.0452443 
 ##  re_P[2,2]  re_P[3,1]  re_P[3,2]  re_P[4,1]  re_P[4,2]  re_P[5,1]  re_P[5,2]  re_P[6,1]  re_P[6,2]  re_P[7,1]  re_P[7,2]  re_P[8,1] 
-##  1.0094798  1.0001408  0.9993205  1.0029558  1.0019506  1.0029157  1.0000847  1.0043532  1.0020348  1.0010222  1.0018598  1.0027319 
+##  1.0011629  1.0184104  1.0021715  0.9997928  1.0022767  1.0174439  1.0052449  1.0069304  1.0016392  1.0006691  0.9996614  1.0001272 
 ##  re_P[8,2]  re_P[9,1]  re_P[9,2] re_P[10,1] re_P[10,2] re_P[11,1] re_P[11,2] re_P[12,1] re_P[12,2] re_P[13,1] re_P[13,2] re_P[14,1] 
-##  1.0088854  1.0027357  1.0058682  1.0002392  1.0172781  1.0065172  1.0089800  1.0034526  1.0015110  1.0000772  1.0027827  1.0127108 
+##  1.0018600  1.0166775  1.0204737  1.0362708  1.0008611  1.0008434  1.0000359  1.0581012  1.0007606  1.0046482  1.0000243  0.9998035 
 ## re_P[14,2] re_P[15,1] re_P[15,2] re_P[16,1] re_P[16,2] re_P[17,1] re_P[17,2] re_P[18,1] re_P[18,2] re_P[19,1] re_P[19,2] re_P[20,1] 
-##  1.0179641  1.0377981  1.0166437  1.0121575  1.0077579  1.0121821  1.0029017  1.0002369  1.0045655  1.0106781  1.0077376  1.0034594 
+##  0.9996619  1.0206148  1.0050943  1.0495529  1.0244163  0.9997984  1.0207368  1.0023433  1.0027906  1.0264816  1.0050040  1.0307196 
 ## re_P[20,2] re_P[21,1] re_P[21,2] re_P[22,1] re_P[22,2] re_P[23,1] re_P[23,2] re_P[24,1] re_P[24,2] re_P[25,1] re_P[25,2] re_P[26,1] 
-##  1.0085485  1.0096558  1.0008878  1.0037961  1.0102729  1.0173207  1.0227251  1.0039997  1.0016865  1.0068340  1.0031383  1.0006287 
+##  1.0090449  1.0211593  0.9995477  1.0119403  1.0138074  1.0028584  0.9993717  1.0017201  1.0004068  1.0112600  1.0023976  1.0013392 
 ## re_P[26,2] re_P[27,1] re_P[27,2] re_P[28,1] re_P[28,2] re_P[29,1] re_P[29,2] re_P[30,1] re_P[30,2] re_P[31,1] re_P[31,2] re_P[32,1] 
-##  1.0000878  1.0003371  1.0024651  1.0017270  1.0164660  0.9999240  1.0087429  1.0203268  1.0135270  1.0017517  1.0011365  1.0049886 
+##  1.0107415  0.9998755  1.0003715  1.0050791  1.0005347  1.0157901  1.0030050  1.0314979  1.0000213  1.0145041  1.0029017  1.0098378 
 ## re_P[32,2] re_P[33,1] re_P[33,2] re_P[34,1] re_P[34,2] re_P[35,1] re_P[35,2] re_P[36,1] re_P[36,2] re_P[37,1] re_P[37,2] re_P[38,1] 
-##  1.0055626  1.0075793  1.0014159  1.0012052  1.0013731  1.0076768  1.0090014  1.0072797  1.0006327  1.0188806  1.0119415  1.0186577 
+##  1.0028675  1.0401011  1.0129501  1.0161442  1.0394234  1.0069250  1.0031071  1.0067137  1.0020411  1.0251800  1.0002062  1.0198244 
 ## re_P[38,2] re_P[39,1] re_P[39,2] re_P[40,1] re_P[40,2] re_P[41,1] re_P[41,2] re_P[42,1] re_P[42,2] re_P[43,1] re_P[43,2] re_P[44,1] 
-##  1.0151119  1.0090711  1.0004891  1.0006548  1.0011479  1.0207025  1.0135385  1.0098359  1.0043959  1.0222056  1.0084265  1.0070951 
+##  0.9994618  1.0070820  1.0001880  1.0026890  1.0001338  1.0016284  1.0174026  1.0010212  1.0085000  1.0147819  0.9994687  1.0335753 
 ## re_P[44,2] re_P[45,1] re_P[45,2] re_P[46,1] re_P[46,2] re_P[47,1] re_P[47,2] re_P[48,1] re_P[48,2] re_P[49,1] re_P[49,2] re_P[50,1] 
-##  1.0304457  1.0089018  1.0091918  1.0025607  1.0022025  1.0040155  1.0006533  1.0025001  1.0090719  1.0097918  1.0037073  1.0084893 
+##  1.0115280  1.0000137  1.0020411  1.0255249  1.0016970  1.0054378  1.0006933  1.0018467  0.9996326  1.0075404  1.0048380  1.0224494 
 ## re_P[50,2]  Pcov[1,1]  Pcov[1,2]  Pcov[2,1]  Pcov[2,2]     V_P[1]     V_P[2]        V_R       lp__ 
-##  1.0057531  1.0449044  1.0218233  1.0218233  1.0319164  1.0449044  1.0319164  1.0279306  1.1225149</code></pre>
+##  1.0004108  1.0956553  1.0227750  1.0227750  1.0528411  1.0956553  1.0528411  1.0386245  1.2341243</code></pre>
 <p>In addition to the Rhat warning, the effective sample sizes of some model parameters are too low to ensure accurate inferences. It is helpful to see which parameters are causing these warnings by sorting on the lowest <code>n_eff</code> values in the summary table.</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="using-stan-in-r.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">summary</span>(stan_results)<span class="sc">$</span>summary[,<span class="st">&quot;n_eff&quot;</span>])</span></code></pre></div>
-<pre><code>##       lp__    sd_P[1]    sd_P[2]  Pcov[1,1]     V_P[1] re_P[44,2] re_P[15,1]        V_R       sd_R     V_P[2]  Pcov[2,2]  Pcov[1,2] 
-##   35.65893   58.12899   62.80334   89.60433   89.60433   98.41921  105.35462  107.05856  111.01354  112.54882  112.54882  126.14428 
-##  Pcov[2,1]  Pcor[1,2]  Pcor[2,1] re_P[14,2] re_P[30,1] re_P[30,2] re_P[43,1] re_P[41,1] re_P[15,2] re_P[41,2] re_P[37,1] re_P[23,2] 
-##  126.14428  165.01637  165.01637  175.60617  181.79966  189.57341  190.26715  195.25187  198.53528  199.52543  203.59017  210.66865 
-## re_P[38,2] re_P[23,1] re_P[28,2] re_P[38,1] re_P[37,2] re_P[44,1] re_P[14,1] re_P[17,1] re_P[22,2] re_P[10,2]  re_P[2,2] re_P[45,2] 
-##  217.38826  221.53154  225.02074  231.82558  235.81486  269.22337  275.57595  288.67236  290.89820  313.29463  314.54274  356.12807 
-## re_P[49,1] re_P[42,1] re_P[50,1] re_P[16,1] re_P[50,2] re_P[19,2] re_P[45,1] re_P[19,1] re_P[39,1] re_P[43,2] re_P[21,1]  re_P[1,2] 
-##  357.63195  378.32709  395.45295  405.65965  409.88504  416.68229  419.21104  424.91383  429.64442  442.07352  470.31014  479.06601 
-## re_P[20,2] re_P[48,2] re_P[11,2]  re_P[9,2] re_P[42,2] re_P[29,2] re_P[16,2] re_P[35,2] re_P[49,2]  re_P[1,1]  re_P[2,1] re_P[32,2] 
-##  545.22258  559.98124  569.11151  584.91943  605.44400  616.45218  621.65780  624.82614  633.63990  654.69107  686.88941  692.29973 
-## re_P[36,1] re_P[35,1]  re_P[8,2] re_P[33,1] re_P[22,1] re_P[11,1] re_P[32,1] re_P[18,2]       mu_0 re_P[20,1] re_P[40,2] re_P[24,2] 
-##  749.90637  751.07229  781.70792  801.91688  821.22141  860.63509  874.00721  951.15378  957.21085  965.64037  993.97134 1018.00603 
-##  re_P[9,1] re_P[24,1] re_P[47,1] re_P[17,2]  re_P[6,1] re_P[46,2] re_P[33,2] re_P[34,2] re_P[25,2] re_P[25,1] re_P[46,1] re_P[26,2] 
-## 1041.44863 1057.54081 1083.22626 1114.82606 1142.57835 1183.08778 1197.29516 1223.05726 1233.85505 1246.44675 1263.75845 1308.85597 
-## re_P[12,1] re_P[40,1] re_P[28,1]  re_P[6,2] re_P[21,2]  re_P[5,1]  re_P[8,1]  re_P[4,2]     beta_1 re_P[34,1]  re_P[4,1] re_P[31,1] 
-## 1338.03356 1364.42699 1506.38212 1658.15969 1731.68936 1750.65817 1781.78022 1798.06437 1959.43300 1968.55354 1989.51415 1998.22083 
-## re_P[48,1] re_P[26,1] re_P[13,2]  Pcor[2,2] re_P[27,2]  re_P[5,2] re_P[31,2]  re_P[3,1] re_P[12,2] re_P[29,1]  re_P[3,2] re_P[27,1] 
-## 2071.43653 2132.96468 2181.82000 2241.25987 2272.30280 2272.81071 2282.25112 2313.26050 2615.54067 2671.80157 2775.73864 2787.60689 
-## re_P[18,1]  re_P[7,1] re_P[39,2] re_P[10,1] re_P[47,2]  re_P[7,2] re_P[13,1] re_P[36,2] 
-## 2938.57898 3014.69643 3504.62641 3645.64250 3869.54815 4033.43111 4048.90051 4634.91106</code></pre>
-<p>It is typical that individual-specific trait values in <code>re_P</code> have relatively lower effective sample sizes than the population-level parameters of primary interest. More damningly, however, we also see an extremely low effective sample for <code>lp__</code>, which is the joint log density of the model (up to a constant internally defined <a href="https://www.jax.org/news-and-insights/jax-blog/2015/october/lp-in-stan-output#">scale factor</a>. This provides further evidence that the model, as currently defined, is poorly identified. The key random effect SDs <code>sd_P</code> and variances <code>V_P</code> are also very poorly sampled, along with the residual SD <code>sd_R</code> and variance <code>V_R</code>. We could run the MCMC sampler for more iterations, increase the warm-up period, and change various other manual control settings. However, the deeper issue here is not that the model is formally mispecified but rather that we have inefficiently parametrized the model for sampling.</p>
+<pre><code>##       lp__    sd_P[1]  Pcov[1,1]     V_P[1] re_P[12,1]  re_P[2,1] re_P[16,1]    sd_P[2] re_P[33,1] re_P[10,1] re_P[44,1]       sd_R 
+##   10.97995   27.24745   42.16285   42.16285   64.40411   82.93862   83.16608   92.56539  102.40674  114.44290  116.45839  118.99962 
+## re_P[30,1] re_P[20,1]        V_R     V_P[2]  Pcov[2,2] re_P[37,1] re_P[46,1] re_P[19,1] re_P[34,2] re_P[50,1] re_P[15,1] re_P[38,1] 
+##  122.94777  124.82995  125.71990  134.79132  134.79132  155.26121  155.46897  157.98349  158.67595  183.74590  196.47660  197.55655 
+##  re_P[1,1] re_P[21,1] re_P[16,2]  re_P[3,1]  re_P[9,1] re_P[29,1]  re_P[1,2]  Pcov[1,2]  Pcov[2,1] re_P[31,1]  re_P[5,1]  re_P[9,2] 
+##  200.55848  224.97798  232.53858  234.30552  271.38077  273.57623  279.45320  296.76103  296.76103  326.50819  349.15362  358.43665 
+## re_P[43,1] re_P[17,2] re_P[41,2] re_P[22,1] re_P[22,2] re_P[34,1] re_P[32,1]  Pcor[1,2]  Pcor[2,1] re_P[44,2] re_P[26,2] re_P[33,2] 
+##  430.96482  432.25550  465.30813  487.01704  487.38079  521.68000  569.04680  593.83738  593.83738  595.85456  627.88391  630.52415 
+## re_P[25,1] re_P[20,2] re_P[49,1] re_P[36,1] re_P[42,2]  re_P[6,1] re_P[47,1] re_P[35,1] re_P[15,2] re_P[13,1] re_P[39,1] re_P[49,2] 
+##  725.27211  731.23054  781.43202  826.92835  883.60653  927.67319  984.36124 1039.65898 1068.96995 1255.79995 1381.24821 1474.95953 
+##  re_P[5,2] re_P[29,2] re_P[25,2] re_P[19,2] re_P[45,2]  re_P[3,2]  re_P[8,2] re_P[10,2] re_P[28,1]  re_P[4,2] re_P[46,2] re_P[18,2] 
+## 1626.33500 1650.43908 1703.85418 1763.79002 1798.34864 1858.14798 1886.58272 1986.00320 2066.43964 2237.87316 2460.50193 2517.59106 
+## re_P[35,2] re_P[30,2] re_P[24,2] re_P[41,1] re_P[32,2] re_P[28,2]  re_P[2,2]       mu_0     beta_1 re_P[23,1] re_P[12,2] re_P[47,2] 
+## 2555.80487 2566.52470 2621.26703 2633.14269 2786.17790 2809.10773 2812.69012 2854.84449 2856.14831 2924.49013 3003.85518 3007.51877 
+##  re_P[7,1] re_P[48,1] re_P[11,1] re_P[40,1]  re_P[6,2]  Pcor[2,2] re_P[14,2] re_P[21,2] re_P[36,2] re_P[23,2] re_P[48,2] re_P[31,2] 
+## 3053.59926 3053.78026 3091.77888 3115.32614 3118.84701 3269.96560 3358.36140 3369.13936 3396.81445 3500.03227 3541.64807 3580.73653 
+## re_P[26,1] re_P[24,1] re_P[50,2] re_P[18,1] re_P[11,2] re_P[42,1] re_P[38,2] re_P[39,2] re_P[17,1] re_P[27,1] re_P[43,2]  re_P[8,1] 
+## 3714.32350 3731.71198 3853.84891 4114.42998 4133.32341 4158.00773 4182.73043 4188.62715 4192.62621 4264.77744 4281.57240 4377.90817 
+##  re_P[7,2] re_P[45,1] re_P[13,2] re_P[40,2] re_P[37,2] re_P[14,1]  re_P[4,1] re_P[27,2] 
+## 4393.12039 4500.05943 4533.14194 4828.37430 5125.55654 5393.71614 5419.25127 5753.58966</code></pre>
+<p>It is typical that individual-specific trait values in <code>re_P</code> have relatively lower effective sample sizes than the population-level parameters of primary interest. More damningly, however, we also see an extremely low effective sample for <code>lp__</code>, which is the joint log density of the model (up to a constant internally defined <a href="https://www.jax.org/news-and-insights/jax-blog/2015/october/lp-in-stan-output#">scale factor</a>). This provides further evidence that the model, as currently defined, is poorly identified. The key random effect SDs <code>sd_P</code> and variances <code>V_P</code> are also very poorly sampled, along with the residual SD <code>sd_R</code> and variance <code>V_R</code>. We could run the MCMC sampler for more iterations, increase the warm-up period, and change various other manual control settings. However, the deeper issue here is not that the model is formally mispecified but rather that we have inefficiently parametrized the model for sampling.</p>
 <div id="cholesky-decompositions" class="section level3" number="1.4.1">
 <h3><span class="header-section-number">1.4.1</span> Cholesky decompositions</h3>
 <p>Although the <code>.stan</code> file appropriately represents the formal model, it is programmed in such a way that the MCMC sampler has troubling sampling from the joint posterior distribution of the model. One of the first things we can do to increase efficiency is to reduce redundant computation over matrices in our model. This can be done with Cholesky decompositions. For any positive definite matrix <span class="math inline">\(\boldsymbol{\Omega}\)</span>, a Cholesky decomposition can be defined such that</p>
 <p><span class="math display">\[\boldsymbol{\Omega} = \boldsymbol{\mathrm{L}_{\Omega}} \boldsymbol{\mathrm{L}_{\Omega}}^{\mathrm{T}}\]</span>
 where <span class="math inline">\(\boldsymbol{\mathrm{L}_{\Omega}}\)</span> is a lower-triangular matrix and <span class="math inline">\(^{\mathrm{T}}\)</span> indicates matrix transposition. This property means that we can always do computations of reduced dimensionality on the lower-triangular matrix <span class="math inline">\(\boldsymbol{\mathrm{L}_{\Omega}}\)</span> and subsequently recover the full positive-definitive matrix <span class="math inline">\(\boldsymbol{\Omega}\)</span> by post-multiplying <span class="math inline">\(\boldsymbol{\mathrm{L}_{\Omega}}\)</span> with its transpose.</p>
-<p>Stan provides many built-in functions for easily defining and manipulating Cholesky decomposed matrices, which we can use to re-parameterize the <code>.stan</code> file. Comments are added below where Cholesky decompositions have been introduced.</p>
+<p>Stan provides many built-in functions for easily defining and manipulating Cholesky decomposed matrices, which we can use to reparametrize the <code>.stan</code> file. Comments are added below where Cholesky decompositions have been introduced.</p>
 <pre class="stan"><code>data {
     int&lt;lower=1&gt; N; 
     int&lt;lower=1&gt; I; 
@@ -529,7 +529,7 @@ generated quantities {
 </div>
 <div id="non-centered-random-effects" class="section level3" number="1.4.2">
 <h3><span class="header-section-number">1.4.2</span> Non-centered random effects</h3>
-<p>Before running this model, we can also reparametrize the random effects to further enhance efficiency. Currently, we express the unobserved random effects in <code>re_P</code> as being generated from a distribution with unobserved lower Cholesky covariance matrix <code>LPcov</code>. While mathematically appropriate, this specification can make it difficult for the model to identify the scale of the random effects. An alternative but mathematically equivalent parametrization can be used to separating out the scale of the random effect deviations from the population-level (co)variances, which often will enhance model identification. Note that any normally distributed random variable <span class="math inline">\(\boldsymbol{z}\)</span> where</p>
+<p>Before running this model, we can also reparametrize the random effects to further enhance efficiency. Currently, we express the unobserved random effects in <code>re_P</code> as being generated from a distribution with unobserved lower Cholesky covariance matrix <code>LPcov</code>. While mathematically appropriate, this specification can make it difficult for the model to identify the scale of the random effects. An alternative but mathematically equivalent parametrization can be used to separate out the scale of the random effect deviations from the population-level (co)variances, which often will enhance model identification. Note that any normally distributed random variable <span class="math inline">\(\boldsymbol{z}\)</span> where</p>
 <p><span class="math display">\[\boldsymbol{z} \sim \mathrm{Normal}(0,\sigma_z)\]</span>
 can also be expressed as a standard normal variable <span class="math inline">\(z_{std}\)</span> scaled by the original SD
 <span class="math display">\[\boldsymbol{z} \equiv \boldsymbol{z_{\mathrm{std}}}\sigma_z\]</span>
@@ -537,7 +537,7 @@ can also be expressed as a standard normal variable <span class="math inline">\(
 Similarly for a <em>n</em> x <em>p</em> matrix <span class="math inline">\(\boldsymbol{Z}\)</span> of <em>p</em> multivariate phenotypes with covariance matrix <span class="math inline">\(\boldsymbol{\mathrm{C}}\)</span></p>
 <p><span class="math display">\[\boldsymbol{Z} \equiv   \boldsymbol{Z_{\mathrm{std}}} \boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}}}}^{\mathrm{T}}\]</span>
 <span class="math display">\[\mathrm{vec}(\boldsymbol{Z_{\mathrm{std}}}) \sim \mathrm{MVNormal}(\boldsymbol{0},\boldsymbol{\mathrm{I}})\]</span>
-where <span class="math inline">\(\boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}}}}\)</span> is the lower-triangular Cholesky decomposition. This decomposition. Implementing this so-called “non-centered parametrization” is straightforward in Stan and can of course also be applied to correlation matrices. Building on the Cholesky decompositions added in the previous subsection, and using the <code>'</code> symbol for the transpose function</p>
+where <span class="math inline">\(\boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}}}}\)</span> is the lower-triangular Cholesky decomposition. Implementing this so-called “non-centered parametrization” is straightforward in Stan and can of course also be applied to correlation matrices. Building on the Cholesky decompositions added in the previous subsection, and using the <code>'</code> symbol for the transpose function</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="using-stan-in-r.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(<span class="st">&quot;</span></span>
 <span id="cb31-2"><a href="using-stan-in-r.html#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
 <span id="cb31-3"><a href="using-stan-in-r.html#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; N; </span></span>
@@ -580,7 +580,7 @@ where <span class="math inline">\(\boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}
 <span id="cb31-40"><a href="using-stan-in-r.html#cb31-40" aria-hidden="true" tabindex="-1"></a><span class="st">  cov_matrix[2] Pcov = diag_matrix(V_P) * Pcor * diag_matrix(V_P);</span></span>
 <span id="cb31-41"><a href="using-stan-in-r.html#cb31-41" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
 <span id="cb31-42"><a href="using-stan-in-r.html#cb31-42" aria-hidden="true" tabindex="-1"></a><span class="st">}&quot;</span>, <span class="st">&quot;mod1.stan&quot;</span>)</span></code></pre></div>
-<p>Note that the specification of the random effects has been greatly simplified with the non-centered parameterization. By separating out the scale of the deviations and the population-level (co)variances, it becomes unnecessary to directly specify the generative distribution of the full random effects as above. Instead, the full distribution is partitioned into three independent priors over the random effect standard normal deviations, SDs, and correlations, and the generative distribution of these values is specified directly through the scaling of the standard normals, i.e. <code>re_P = std_P * diag_pre_multiply(sd_P,LP_cor)'</code>=<span class="math inline">\(\boldsymbol{Z} \equiv \boldsymbol{Z_{\mathrm{std}}} \boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}}}}^{\mathrm{T}}\)</span> above. This should make the model much easier to sample from.</p>
+<p>Note that the specification of the random effects has been greatly simplified with the non-centered parametrization. By separating out the scale of the deviations and the population-level (co)variances, it becomes unnecessary to directly specify the generative distribution of the full random effects as above. Instead, the full distribution is partitioned into three independent priors over the random effect standard normal deviations, SDs, and correlations, and the generative distribution of these values is specified directly through the scaling of the standard normals, i.e. <code>re_P = std_P * diag_pre_multiply(sd_P,LP_cor)'</code>=<span class="math inline">\(\boldsymbol{Z} \equiv \boldsymbol{Z_{\mathrm{std}}} \boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}}}}^{\mathrm{T}}\)</span> above. This should make the model much easier to sample from.</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="using-stan-in-r.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
 <span id="cb32-2"><a href="using-stan-in-r.html#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-3"><a href="using-stan-in-r.html#cb32-3" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="st">&quot;mod1.stan&quot;</span>)</span></code></pre></div>
@@ -594,14 +594,14 @@ where <span class="math inline">\(\boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="using-stan-in-r.html#cb35-1" aria-hidden="true" tabindex="-1"></a>post_beta_1 <span class="ot">=</span> MCMCsamples<span class="sc">$</span>beta_1 <span class="co">#extract population-level slope</span></span>
 <span id="cb35-2"><a href="using-stan-in-r.html#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb35-3"><a href="using-stan-in-r.html#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post_beta_1) <span class="co">#central tendency of posterior</span></span></code></pre></div>
-<pre><code>## [1] 0.4382729</code></pre>
+<pre><code>## [1] 0.3826693</code></pre>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="using-stan-in-r.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mad</span>(post_beta_1) <span class="co">#dispersion around central tendency</span></span></code></pre></div>
-<pre><code>## [1] 0.1093818</code></pre>
+<pre><code>## [1] 0.1289059</code></pre>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="using-stan-in-r.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(post_beta_1, <span class="fu">c</span>(<span class="fl">0.05</span>,<span class="fl">0.95</span>)) <span class="co">#90% credible interval</span></span></code></pre></div>
 <pre><code>##        5%       95% 
-## 0.2487193 0.6207473</code></pre>
+## 0.1594938 0.6001436</code></pre>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="using-stan-in-r.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(post_beta_1 <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="fu">length</span>(post_beta_1) <span class="co">#posterior probability of + effect</span></span></code></pre></div>
-<pre><code>## [1] 1</code></pre>
+<pre><code>## [1] 0.99825</code></pre>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="using-stan-in-r.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(post_beta_1) <span class="co">#MCMC approximation of posterior distribution</span></span></code></pre></div>
 <p><img src="SAMs_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <p>We encourage the use of the <code>shinystan</code> R package for deeper inspection of model convergence and results with a GUI. In general, researchers should be skeptical of reporting results accompanied with sampler warnings and should seek to remove any diagnostic concerns prior to biological interpretation of the estimates.</p>
@@ -794,15 +794,15 @@ where <span class="math inline">\(\boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}
 <span id="cb51-29"><a href="using-stan-in-r.html#cb51-29" aria-hidden="true" tabindex="-1"></a>Gvalues <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="fu">rep</span>(<span class="dv">0</span>,I<span class="sc">*</span><span class="dv">2</span>), <span class="at">sigma=</span>G_block)</span>
 <span id="cb51-30"><a href="using-stan-in-r.html#cb51-30" aria-hidden="true" tabindex="-1"></a>G_val <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(Gvalues, <span class="at">nrow=</span>I, <span class="at">ncol=</span><span class="dv">2</span>))</span>
 <span id="cb51-31"><a href="using-stan-in-r.html#cb51-31" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(G_val)</span></code></pre></div>
-<pre><code>##           X1        X2
-## X1 1.0000000 0.5736608
-## X2 0.5736608 1.0000000</code></pre>
+<pre><code>##          X1       X2
+## X1 1.000000 0.466178
+## X2 0.466178 1.000000</code></pre>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="using-stan-in-r.html#cb53-1" aria-hidden="true" tabindex="-1"></a>Evalues <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="fu">rep</span>(<span class="dv">0</span>,I<span class="sc">*</span><span class="dv">2</span>), <span class="at">sigma=</span>E_block)</span>
 <span id="cb53-2"><a href="using-stan-in-r.html#cb53-2" aria-hidden="true" tabindex="-1"></a>E_val <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(Evalues, <span class="at">nrow=</span>I, <span class="at">ncol=</span><span class="dv">2</span>))</span>
 <span id="cb53-3"><a href="using-stan-in-r.html#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(E_val)</span></code></pre></div>
-<pre><code>##            X1         X2
-## X1  1.0000000 -0.5803694
-## X2 -0.5803694  1.0000000</code></pre>
+<pre><code>##           X1        X2
+## X1  1.000000 -0.513424
+## X2 -0.513424  1.000000</code></pre>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="using-stan-in-r.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">#combine</span></span>
 <span id="cb55-2"><a href="using-stan-in-r.html#cb55-2" aria-hidden="true" tabindex="-1"></a>re_P <span class="ot">=</span> <span class="fu">cbind</span>(G_val,E_val)</span>
 <span id="cb55-3"><a href="using-stan-in-r.html#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(re_P) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;mu_A&quot;</span>, <span class="st">&quot;beta_A&quot;</span>, <span class="st">&quot;mu_E&quot;</span>, <span class="st">&quot;beta_E&quot;</span>)</span>
@@ -1037,18 +1037,18 @@ The additive genetic proportions can be conceptualized as reaction norm heritabi
 <p>Let’s see how well we recovered the genetic and environmental (co)variances of the reaction norm parameters. Due to random sampling and our relatively small sample size, we should anticipate noisy estimates.</p>
 <div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="using-stan-in-r.html#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co">#RN intercepts [1] and slopes [2]</span></span>
 <span id="cb65-2"><a href="using-stan-in-r.html#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(post<span class="sc">$</span>V_P, <span class="dv">2</span>, median) <span class="co">#phenotypic variance</span></span></code></pre></div>
-<pre><code>## [1] 0.9725473 0.7724381</code></pre>
+<pre><code>## [1] 0.4565685 0.8238613</code></pre>
 <div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="using-stan-in-r.html#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(post<span class="sc">$</span>V_G, <span class="dv">2</span>, median) <span class="co">#genetic variance</span></span></code></pre></div>
-<pre><code>## [1] 0.7025388 0.1696782</code></pre>
+<pre><code>## [1] 0.2154537 0.3128292</code></pre>
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="using-stan-in-r.html#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(post<span class="sc">$</span>V_E, <span class="dv">2</span>, median) <span class="co">#environmental variance</span></span></code></pre></div>
-<pre><code>## [1] 0.2558341 0.5818793</code></pre>
+<pre><code>## [1] 0.2269982 0.4946511</code></pre>
 <div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="using-stan-in-r.html#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co">#RN intercept and slope correlation</span></span>
 <span id="cb71-2"><a href="using-stan-in-r.html#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post<span class="sc">$</span>Pcor[,<span class="dv">1</span>,<span class="dv">2</span>]) <span class="co">#phenotypic corr</span></span></code></pre></div>
-<pre><code>## [1] 0.001691242</code></pre>
+<pre><code>## [1] -0.02621351</code></pre>
 <div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="using-stan-in-r.html#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post<span class="sc">$</span>Gcor[,<span class="dv">1</span>,<span class="dv">2</span>]) <span class="co">#genetic corr</span></span></code></pre></div>
-<pre><code>## [1] 0.2310703</code></pre>
+<pre><code>## [1] 0.4236677</code></pre>
 <div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="using-stan-in-r.html#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post<span class="sc">$</span>Ecor[,<span class="dv">1</span>,<span class="dv">2</span>]) <span class="co">#environmental corr</span></span></code></pre></div>
-<pre><code>## [1] -0.1965529</code></pre>
+<pre><code>## [1] -0.3703992</code></pre>
 
 </div>
 </div>
