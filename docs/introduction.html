@@ -24,7 +24,7 @@
 <meta name="author" content="Jordan S. Martin &amp; Adrian V. Jaeggi" />
 
 
-<meta name="date" content="2021-05-21" />
+<meta name="date" content="2021-05-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -143,16 +143,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="1.5" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#animal-models"><i class="fa fa-check"></i><b>1.5</b> Animal models</a>
 <ul>
-<li class="chapter" data-level="1.5.1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#kronecker-products"><i class="fa fa-check"></i><b>1.5.1</b> Kronecker products</a></li>
-<li class="chapter" data-level="1.5.2" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#identifying-genetic-effects"><i class="fa fa-check"></i><b>1.5.2</b> Identifying genetic effects</a></li>
+<li class="chapter" data-level="1.5.1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#simulate-data"><i class="fa fa-check"></i><b>1.5.1</b> Simulate data</a></li>
+<li class="chapter" data-level="1.5.2" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#kronecker-products"><i class="fa fa-check"></i><b>1.5.2</b> Kronecker products</a></li>
+<li class="chapter" data-level="1.5.3" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#identifying-genetic-effects"><i class="fa fa-check"></i><b>1.5.3</b> Identifying genetic effects</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="within-partner-sam.html"><a href="within-partner-sam.html"><i class="fa fa-check"></i><b>2</b> Within partner SAM</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="within-partner-sam.html"><a href="within-partner-sam.html#formal-overview"><i class="fa fa-check"></i><b>2.1</b> Formal overview</a></li>
 <li class="chapter" data-level="2.2" data-path="within-partner-sam.html"><a href="within-partner-sam.html#computational-approach"><i class="fa fa-check"></i><b>2.2</b> Computational approach</a></li>
-<li class="chapter" data-level="2.3" data-path="within-partner-sam.html"><a href="within-partner-sam.html#simulate-data"><i class="fa fa-check"></i><b>2.3</b> Simulate data</a></li>
+<li class="chapter" data-level="2.3" data-path="within-partner-sam.html"><a href="within-partner-sam.html#simulate-data-1"><i class="fa fa-check"></i><b>2.3</b> Simulate data</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="within-partner-sam.html"><a href="within-partner-sam.html#srn-parameters"><i class="fa fa-check"></i><b>2.3.1</b> SRN parameters</a></li>
+<li class="chapter" data-level="2.3.2" data-path="within-partner-sam.html"><a href="within-partner-sam.html#assortment"><i class="fa fa-check"></i><b>2.3.2</b> Assortment</a></li>
+<li class="chapter" data-level="2.3.3" data-path="within-partner-sam.html"><a href="within-partner-sam.html#repeated-measurements-within-the-partner"><i class="fa fa-check"></i><b>2.3.3</b> Repeated measurements within the partner</a></li>
+</ul></li>
 <li class="chapter" data-level="2.4" data-path="within-partner-sam.html"><a href="within-partner-sam.html#coding-the-model"><i class="fa fa-check"></i><b>2.4</b> Coding the model</a></li>
+<li class="chapter" data-level="2.5" data-path="within-partner-sam.html"><a href="within-partner-sam.html#estimating-the-model"><i class="fa fa-check"></i><b>2.5</b> Estimating the model</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="between-partner-sam.html"><a href="between-partner-sam.html"><i class="fa fa-check"></i><b>3</b> Between partner SAM</a></li>
 <li class="chapter" data-level="4" data-path="between-and-within-partner-sam.html"><a href="between-and-within-partner-sam.html"><i class="fa fa-check"></i><b>4</b> Between-and-within partner SAM</a></li>
@@ -178,7 +185,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Estimating Social Animal Models in Stan</h1>
 <p class="author"><em>Jordan S. Martin &amp; Adrian V. Jaeggi</em></p>
-<p class="date"><em>2021-05-21</em></p>
+<p class="date"><em>2021-05-23</em></p>
 </div>
 <div id="introduction" class="section level1 unnumbered">
 <h1>Introduction</h1>
