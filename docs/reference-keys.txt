@@ -18,6 +18,8 @@ assortment
 repeated-measurements-within-the-partner
 coding-the-model
 estimating-the-model
+failure-to-detect-assortment
+phenotypic-model
 between-partner-sam
 between-and-within-partner-sam
 extending-sams

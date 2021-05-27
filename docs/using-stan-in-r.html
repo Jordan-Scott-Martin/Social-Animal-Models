@@ -24,7 +24,7 @@
 <meta name="author" content="Jordan S. Martin &amp; Adrian V. Jaeggi" />
 
 
-<meta name="date" content="2021-05-23" />
+<meta name="date" content="2021-05-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -160,6 +160,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="2.4" data-path="within-partner-sam.html"><a href="within-partner-sam.html#coding-the-model"><i class="fa fa-check"></i><b>2.4</b> Coding the model</a></li>
 <li class="chapter" data-level="2.5" data-path="within-partner-sam.html"><a href="within-partner-sam.html#estimating-the-model"><i class="fa fa-check"></i><b>2.5</b> Estimating the model</a></li>
+<li class="chapter" data-level="2.6" data-path="within-partner-sam.html"><a href="within-partner-sam.html#failure-to-detect-assortment"><i class="fa fa-check"></i><b>2.6</b> Failure to detect assortment</a></li>
+<li class="chapter" data-level="2.7" data-path="within-partner-sam.html"><a href="within-partner-sam.html#phenotypic-model"><i class="fa fa-check"></i><b>2.7</b> Phenotypic model</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="between-partner-sam.html"><a href="between-partner-sam.html"><i class="fa fa-check"></i><b>3</b> Between partner SAM</a></li>
 <li class="chapter" data-level="4" data-path="between-and-within-partner-sam.html"><a href="between-and-within-partner-sam.html"><i class="fa fa-check"></i><b>4</b> Between-and-within partner SAM</a></li>
@@ -426,11 +428,9 @@ generated quantities {
 <pre><code>## Warning in system(paste(CXX, ARGS), ignore.stdout = TRUE, ignore.stderr = TRUE): &#39;C:/rtools40/usr/mingw_/bin/g++&#39; not found</code></pre>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="using-stan-in-r.html#cb19-1" aria-hidden="true" tabindex="-1"></a>stan_results <span class="ot">&lt;-</span> <span class="fu">sampling</span>(mod1, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">2500</span>,</span>
 <span id="cb19-2"><a href="using-stan-in-r.html#cb19-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span></code></pre></div>
-<pre><code>## Warning: There were 1 divergent transitions after warmup. See
+<pre><code>## Warning: There were 9 divergent transitions after warmup. See
 ## http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
 ## to find out why this is a problem and how to eliminate them.</code></pre>
-<pre><code>## Warning: There were 560 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
-## http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded</code></pre>
 <pre><code>## Warning: There were 4 chains where the estimated Bayesian Fraction of Missing Information was low. See
 ## http://mc-stan.org/misc/warnings.html#bfmi-low</code></pre>
 <pre><code>## Warning: Examine the pairs() plot to diagnose sampling problems</code></pre>
@@ -444,51 +444,41 @@ generated quantities {
 ## Running the chains for more iterations may help. See
 ## http://mc-stan.org/misc/warnings.html#tail-ess</code></pre>
 <p>Stan flags a few potential issues with the MCMC sampler. Note that the warning <code>## Warning in system(paste(CXX, ARGS), ignore.stdout = TRUE, ignore.stderr = TRUE): 'C:/rtools40/usr/mingw_/bin/g++' not found</code> during compilation of the model will sometimes appear on Windows computers and can be safely ignored. Further description of the sampler warnings can be found in the <a href="https://mc-stan.org/misc/warnings.html">Stan Warning Guide</a>. One warning is that “The largest R-hat is NA, indicating chains have not mixed.” Stan does not know whether some parameter values are fixed (causing Rhat = NA) because the sampler is stuck, or because the model has been intentionally specified with fixed parameter values (e.g. diagonals fixed to 1 in a correlation matrix or an intercept forced to 0). For the specified model, this is a harmless warning that can be safely ignored. However, we can also check for issues by looking at the Rhat values of all model parameters using <code>summary()</code> on the saved results. If an expected parameter is missing from the table or shows NA, this likely indicates an unintentional error in the model code.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="using-stan-in-r.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stan_results)<span class="sc">$</span>summary[,<span class="st">&quot;Rhat&quot;</span>]</span></code></pre></div>
-<pre><code>##       mu_0     beta_1  Pcor[1,1]  Pcor[1,2]  Pcor[2,1]  Pcor[2,2]    sd_P[1]    sd_P[2]       sd_R  re_P[1,1]  re_P[1,2]  re_P[2,1] 
-##  1.0023125  1.0009792        NaN  1.0014167  1.0014167  0.9989995  1.3355759  1.0567805  1.0435846  1.0045370  0.9995170  1.0163295 
-##  re_P[2,2]  re_P[3,1]  re_P[3,2]  re_P[4,1]  re_P[4,2]  re_P[5,1]  re_P[5,2]  re_P[6,1]  re_P[6,2]  re_P[7,1]  re_P[7,2]  re_P[8,1] 
-##  1.0092503  1.0281672  1.0022168  1.0100255  1.0015516  1.0071146  0.9995909  1.0083608  0.9993693  1.0161077  1.0055455  1.0015342 
-##  re_P[8,2]  re_P[9,1]  re_P[9,2] re_P[10,1] re_P[10,2] re_P[11,1] re_P[11,2] re_P[12,1] re_P[12,2] re_P[13,1] re_P[13,2] re_P[14,1] 
-##  1.0069797  1.0032591  1.0015454  1.0027223  1.0010312  1.0028381  0.9999166  1.0223308  1.0075474  0.9994103  1.0001770  1.0302161 
-## re_P[14,2] re_P[15,1] re_P[15,2] re_P[16,1] re_P[16,2] re_P[17,1] re_P[17,2] re_P[18,1] re_P[18,2] re_P[19,1] re_P[19,2] re_P[20,1] 
-##  0.9996869  1.0073784  1.0015517  1.0311850  1.0002289  1.0183860  1.0004545  0.9992614  0.9996829  1.0037414  0.9997638  1.0321196 
-## re_P[20,2] re_P[21,1] re_P[21,2] re_P[22,1] re_P[22,2] re_P[23,1] re_P[23,2] re_P[24,1] re_P[24,2] re_P[25,1] re_P[25,2] re_P[26,1] 
-##  1.0129191  1.0256305  1.0212460  1.0101994  1.0108546  1.0469337  1.0012023  1.0347123  1.0140819  1.0911399  1.0044771  1.0054504 
-## re_P[26,2] re_P[27,1] re_P[27,2] re_P[28,1] re_P[28,2] re_P[29,1] re_P[29,2] re_P[30,1] re_P[30,2] re_P[31,1] re_P[31,2] re_P[32,1] 
-##  1.0040508  1.0040123  1.0003481  1.0037975  1.0101233  1.0329680  1.0004512  1.0155498  1.0016808  0.9997760  1.0182539  1.0271858 
-## re_P[32,2] re_P[33,1] re_P[33,2] re_P[34,1] re_P[34,2] re_P[35,1] re_P[35,2] re_P[36,1] re_P[36,2] re_P[37,1] re_P[37,2] re_P[38,1] 
-##  1.0011163  1.0221020  0.9994697  1.0089284  1.0187467  1.0415898  0.9999222  1.0424864  1.0069667  1.0080675  1.0004507  1.0165298 
-## re_P[38,2] re_P[39,1] re_P[39,2] re_P[40,1] re_P[40,2] re_P[41,1] re_P[41,2] re_P[42,1] re_P[42,2] re_P[43,1] re_P[43,2] re_P[44,1] 
-##  1.0064106  1.0006453  1.0037440  1.0147437  1.0004811  1.0014861  1.0031799  1.0386969  0.9996734  0.9999628  1.0086699  1.0089259 
-## re_P[44,2] re_P[45,1] re_P[45,2] re_P[46,1] re_P[46,2] re_P[47,1] re_P[47,2] re_P[48,1] re_P[48,2] re_P[49,1] re_P[49,2] re_P[50,1] 
-##  1.0004659  1.0269704  1.0123117  0.9999101  1.0001808  0.9997029  1.0027431  1.0156913  0.9991759  1.0015530  1.0008434  1.0815037 
-## re_P[50,2]  Pcov[1,1]  Pcov[1,2]  Pcov[2,1]  Pcov[2,2]     V_P[1]     V_P[2]        V_R       lp__ 
-##  1.0027191  1.1518410  1.0016986  1.0016986  1.0350405  1.1518410  1.0350405  1.0434468  1.7631873</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="using-stan-in-r.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stan_results)<span class="sc">$</span>summary[,<span class="st">&quot;Rhat&quot;</span>]</span></code></pre></div>
+<pre><code>##       mu_0     beta_1  Pcor[1,1]  Pcor[1,2]  Pcor[2,1]  Pcor[2,2]    sd_P[1]    sd_P[2]       sd_R  re_P[1,1]  re_P[1,2]  re_P[2,1]  re_P[2,2]  re_P[3,1]  re_P[3,2] 
+##  1.0089169  1.0143337        NaN  1.0295342  1.0295342  0.9989995  1.1122870  1.1596028  1.0384696  1.0315023  1.0011075  1.0461068  1.0425002  1.0392727  1.0147624 
+##  re_P[4,1]  re_P[4,2]  re_P[5,1]  re_P[5,2]  re_P[6,1]  re_P[6,2]  re_P[7,1]  re_P[7,2]  re_P[8,1]  re_P[8,2]  re_P[9,1]  re_P[9,2] re_P[10,1] re_P[10,2] re_P[11,1] 
+##  1.0016195  0.9995043  1.0318913  1.0174621  1.0106942  1.0025070  1.0279679  1.0371078  1.0161616  1.0091334  1.0177939  1.0025715  1.0271978  1.0044400  1.0161498 
+## re_P[11,2] re_P[12,1] re_P[12,2] re_P[13,1] re_P[13,2] re_P[14,1] re_P[14,2] re_P[15,1] re_P[15,2] re_P[16,1] re_P[16,2] re_P[17,1] re_P[17,2] re_P[18,1] re_P[18,2] 
+##  1.0028441  1.0211265  1.0074300  1.0061769  0.9998625  1.0011576  1.0004114  1.0036813  1.0205256  1.0032904  1.0006440  1.0053320  1.0047863  1.0000848  1.0074848 
+## re_P[19,1] re_P[19,2] re_P[20,1] re_P[20,2] re_P[21,1] re_P[21,2] re_P[22,1] re_P[22,2] re_P[23,1] re_P[23,2] re_P[24,1] re_P[24,2] re_P[25,1] re_P[25,2] re_P[26,1] 
+##  1.0060952  1.0024164  1.0097950  1.0145174  1.0683725  1.0528545  1.0024196  1.0003107  1.0541535  1.0019347  1.0298157  1.0146746  1.0042745  1.0071421  1.0383798 
+## re_P[26,2] re_P[27,1] re_P[27,2] re_P[28,1] re_P[28,2] re_P[29,1] re_P[29,2] re_P[30,1] re_P[30,2] re_P[31,1] re_P[31,2] re_P[32,1] re_P[32,2] re_P[33,1] re_P[33,2] 
+##  1.0013754  1.0083567  0.9996555  1.0045959  1.0090489  1.0046841  1.0001289  1.0007078  1.0001726  1.0368820  1.0170342  1.0393391  1.0165001  1.0349881  1.0040793 
+## re_P[34,1] re_P[34,2] re_P[35,1] re_P[35,2] re_P[36,1] re_P[36,2] re_P[37,1] re_P[37,2] re_P[38,1] re_P[38,2] re_P[39,1] re_P[39,2] re_P[40,1] re_P[40,2] re_P[41,1] 
+##  1.0056810  1.0002317  1.0230174  0.9995134  1.0026541  1.0094877  1.0065760  1.0001929  1.0504939  1.0146908  1.0148546  1.0015515  1.0031119  1.0027436  1.0022580 
+## re_P[41,2] re_P[42,1] re_P[42,2] re_P[43,1] re_P[43,2] re_P[44,1] re_P[44,2] re_P[45,1] re_P[45,2] re_P[46,1] re_P[46,2] re_P[47,1] re_P[47,2] re_P[48,1] re_P[48,2] 
+##  1.0030929  1.0074408  1.0019564  1.0007142  1.0017546  1.0003513  1.0031319  1.0152129  1.0029893  1.0108794  1.0011625  1.0369586  1.0015935  1.0343403  1.0083050 
+## re_P[49,1] re_P[49,2] re_P[50,1] re_P[50,2]  Pcov[1,1]  Pcov[1,2]  Pcov[2,1]  Pcov[2,2]     V_P[1]     V_P[2]        V_R       lp__ 
+##  1.0161215  1.0088073  1.0540572  1.0047303  1.0662970  1.0423684  1.0423684  1.1117795  1.0662970  1.1117795  1.0379019  1.1605869</code></pre>
 <p>In addition to the Rhat warning, the effective sample sizes of some model parameters are too low to ensure accurate inferences. It is helpful to see which parameters are causing these warnings by sorting on the lowest <code>n_eff</code> values in the summary table.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="using-stan-in-r.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">summary</span>(stan_results)<span class="sc">$</span>summary[,<span class="st">&quot;n_eff&quot;</span>])</span></code></pre></div>
-<pre><code>##        lp__     sd_P[1]   Pcov[1,1]      V_P[1]  re_P[25,1]  re_P[50,1]  re_P[23,1]        sd_R         V_R  re_P[36,1]     sd_P[2] 
-##    3.450771    5.864922   14.431771   14.431771   21.901264   26.342211   48.706735   51.711571   52.116656   66.106869   68.152928 
-##  re_P[35,1]  re_P[42,1]  re_P[24,1]  re_P[16,1]   re_P[3,1]  re_P[29,1]  re_P[20,1]  re_P[14,1]   Pcov[2,2]      V_P[2]  re_P[45,1] 
-##   68.792163   76.765748   79.873542   81.568286   87.592331   94.947303  100.570822  100.798447  107.732214  107.732214  119.798112 
-##  re_P[32,1]  re_P[21,1]  re_P[21,2]  re_P[12,1]  re_P[33,1]  re_P[31,2]  re_P[34,2]  re_P[24,2]  re_P[38,1]  re_P[20,2]  re_P[17,1] 
-##  147.454007  166.315958  169.504646  198.186665  200.563443  224.293636  236.283265  256.013381  277.754972  298.150455  312.749972 
-##  re_P[45,2]  re_P[22,2]   re_P[7,1]  re_P[30,1]  re_P[48,1]   re_P[2,2]   re_P[2,1]  re_P[28,2]  re_P[43,2]  re_P[12,2]  re_P[38,2] 
-##  333.886674  342.635057  379.990901  393.771465  397.235204  398.754751  421.104880  478.746494  531.944876  561.705808  624.345570 
-##  re_P[36,2]   re_P[8,2]   re_P[7,2]  re_P[40,1]   Pcov[1,2]   Pcov[2,1]   re_P[4,1]  re_P[37,1]   Pcor[1,2]   Pcor[2,1]  re_P[39,2] 
-##  637.028428  703.738905  711.566638  740.679158  806.020619  806.020619  853.558918  919.087837  931.363156  931.363156  995.654584 
-##  re_P[44,1]  re_P[25,2]  re_P[15,1]   re_P[6,1]  re_P[22,1]   re_P[5,1]  re_P[26,2]   re_P[9,2]  re_P[34,1]  re_P[10,2]  re_P[28,1] 
-## 1112.775406 1125.128185 1180.979748 1239.138758 1240.741314 1509.915249 1536.276807 1572.683402 1756.066267 1802.010746 1821.707684 
-##  re_P[26,1]  re_P[27,1]   re_P[4,2]  re_P[15,2]  re_P[47,2]      beta_1  re_P[19,1]  re_P[30,2]  re_P[50,2]        mu_0   re_P[3,2] 
-## 1892.141006 2109.734389 2158.570467 2239.317311 2338.955058 2341.542904 2342.861857 2345.716421 2470.032036 2547.233311 2811.572618 
-##  re_P[29,2]  re_P[11,1]   re_P[1,1]  re_P[41,2]   re_P[9,1]  re_P[16,2]  re_P[46,2]  re_P[49,1]   re_P[8,1]   re_P[1,2]  re_P[32,2] 
-## 2883.680341 2974.924050 3296.516398 3296.615246 3346.715089 3424.859717 3528.566469 3530.847329 3553.640037 3714.998818 3731.100425 
-##  re_P[10,1]   re_P[6,2]  re_P[31,1]  re_P[39,1]  re_P[44,2]  re_P[42,2]  re_P[23,2]   Pcor[2,2]  re_P[33,2]  re_P[49,2]  re_P[35,2] 
-## 3793.204428 3825.185111 3966.356078 4034.100414 4060.816116 4069.026601 4081.253098 4093.745656 4122.282977 4207.503442 4214.308949 
-##  re_P[48,2]  re_P[47,1]  re_P[37,2]   re_P[5,2]  re_P[41,1]  re_P[19,2]  re_P[14,2]  re_P[18,2]  re_P[40,2]  re_P[18,1]  re_P[46,1] 
-## 4228.498216 4251.032316 4285.700570 4355.490982 4432.832418 4443.874033 4450.147285 4458.702927 4472.580469 4714.892685 4766.585442 
-##  re_P[27,2]  re_P[17,2]  re_P[13,2]  re_P[11,2]  re_P[43,1]  re_P[13,1] 
-## 4845.990958 4997.341072 5157.452504 5169.404664 5174.830305 5499.842073</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="using-stan-in-r.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">summary</span>(stan_results)<span class="sc">$</span>summary[,<span class="st">&quot;n_eff&quot;</span>])</span></code></pre></div>
+<pre><code>##    sd_P[2]       lp__    sd_P[1]  Pcov[2,2]     V_P[2] re_P[21,1]  Pcov[1,1]     V_P[1] re_P[38,1] re_P[23,1] re_P[50,1] re_P[21,2]  re_P[3,1]       sd_R        V_R 
+##   20.38479   22.16340   33.93299   37.73562   37.73562   50.82806   54.07871   54.07871   58.76153   71.78236   73.81317   85.22529   86.01507   90.12876   91.91342 
+## re_P[26,1] re_P[31,1] re_P[47,1] re_P[32,1]  re_P[5,1] re_P[48,1] re_P[24,1]  re_P[2,1]  re_P[2,2]  re_P[7,2]  Pcov[1,2]  Pcov[2,1]  re_P[1,1] re_P[10,1]  re_P[7,1] 
+##   93.08391   95.87013  102.86894  108.26465  109.10568  110.46136  111.48001  112.21553  120.68130  123.88761  124.50646  124.50646  136.49510  138.40443  139.53978 
+## re_P[33,1] re_P[49,1] re_P[35,1]  re_P[9,1] re_P[12,1]  Pcor[1,2]  Pcor[2,1] re_P[11,1]  re_P[5,2] re_P[15,2] re_P[31,2]  Pcor[2,2]  re_P[8,1] re_P[32,2] re_P[39,1] 
+##  140.99619  216.13567  259.86726  316.12829  320.20156  326.39943  326.39943  330.96720  341.36129  344.45283  344.61088  361.59732  430.02129  442.41954  455.69519 
+## re_P[20,1]     beta_1 re_P[38,2]  re_P[3,2] re_P[24,2] re_P[45,1] re_P[19,1] re_P[13,1] re_P[28,1] re_P[20,2] re_P[42,1] re_P[37,1]       mu_0  re_P[6,1] re_P[27,1] 
+##  502.04589  509.59874  570.31695  577.98326  578.79022  583.65048  599.54121  623.52307  631.35071  646.81080  716.82907  741.61526  763.01919  772.58949  823.49022 
+## re_P[29,1] re_P[46,1] re_P[36,2] re_P[49,2] re_P[48,2] re_P[17,1] re_P[28,2] re_P[10,2] re_P[12,2] re_P[40,1]  re_P[8,2] re_P[33,2] re_P[34,1] re_P[15,1] re_P[50,2] 
+##  866.90795  874.37848  881.87116  912.10651  938.14021 1047.65143 1050.41044 1117.88097 1453.04682 1527.27552 1577.35741 1595.02986 1632.85406 1671.20268 1790.49551 
+## re_P[25,1] re_P[25,2] re_P[19,2]  re_P[4,1] re_P[26,2] re_P[18,2] re_P[17,2] re_P[40,2] re_P[14,1] re_P[41,1] re_P[16,1]  re_P[1,2] re_P[36,1] re_P[22,1] re_P[11,2] 
+## 1833.37345 1868.19863 1917.96313 2113.59837 2255.30421 2392.51019 2456.40846 2502.24643 2574.97043 2663.20401 2690.04784 2765.83329 2834.28694 2976.77610 3004.31384 
+## re_P[45,2]  re_P[6,2] re_P[27,2] re_P[44,1] re_P[46,2] re_P[41,2] re_P[30,1] re_P[18,1] re_P[29,2] re_P[39,2] re_P[23,2] re_P[47,2] re_P[42,2] re_P[37,2] re_P[22,2] 
+## 3070.10635 3135.17151 3171.93489 3291.45510 3542.99824 3562.98304 3618.91571 3898.46602 3905.58300 3925.74320 3991.41287 4038.95413 4098.38824 4147.75931 4155.05163 
+##  re_P[9,2] re_P[14,2] re_P[43,1] re_P[35,2] re_P[44,2] re_P[43,2] re_P[30,2] re_P[16,2] re_P[13,2] re_P[34,2]  re_P[4,2] 
+## 4202.53169 4232.38691 4349.81165 4414.18023 4440.14436 4464.33384 4486.18903 4814.86446 4857.24025 5032.83994 5207.43756</code></pre>
 <p>It is typical that individual-specific trait values in <code>re_P</code> have relatively lower effective sample sizes than the population-level parameters of primary interest. More damningly, however, we also see an extremely low effective sample for <code>lp__</code>, which is the joint log density of the model (up to a constant internally defined <a href="https://www.jax.org/news-and-insights/jax-blog/2015/october/lp-in-stan-output#">scale factor</a>). This provides further evidence that the model, as currently defined, is poorly identified. The key random effect SDs <code>sd_P</code> and variances <code>V_P</code> are also very poorly sampled, along with the residual SD <code>sd_R</code> and variance <code>V_R</code>. We could run the MCMC sampler for more iterations, increase the warm-up period, and change various other manual control settings. However, the deeper issue here is not that the model is formally mispecified but rather that we have inefficiently parametrized the model for sampling.</p>
 <div id="cholesky-decompositions" class="section level3" number="1.4.1">
 <h3><span class="header-section-number">1.4.1</span> Cholesky decompositions</h3>
@@ -551,71 +541,71 @@ Similarly for a <em>n</em> x <em>p</em> matrix <span class="math inline">\(\bold
 <p><span class="math display">\[\boldsymbol{Z} \equiv   \boldsymbol{Z_{\mathrm{std}}} \boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}}}}^{\mathrm{T}}\]</span>
 <span class="math display">\[\mathrm{vec}(\boldsymbol{Z_{\mathrm{std}}}) \sim \mathrm{MVNormal}(\boldsymbol{0},\boldsymbol{\mathrm{I}})\]</span>
 where <span class="math inline">\(\boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}}}}\)</span> is the lower-triangular Cholesky decomposition. Implementing this so-called “non-centered parametrization” is straightforward in Stan and can of course also be applied to correlation matrices. Building on the Cholesky decompositions added in the previous subsection, and using the <code>'</code> symbol for the transpose function</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="using-stan-in-r.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(<span class="st">&quot;</span></span>
-<span id="cb32-2"><a href="using-stan-in-r.html#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
-<span id="cb32-3"><a href="using-stan-in-r.html#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; N; </span></span>
-<span id="cb32-4"><a href="using-stan-in-r.html#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; I; </span></span>
-<span id="cb32-5"><a href="using-stan-in-r.html#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; id[N];  </span></span>
-<span id="cb32-6"><a href="using-stan-in-r.html#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
-<span id="cb32-7"><a href="using-stan-in-r.html#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="st">    vector[N] x; </span></span>
-<span id="cb32-8"><a href="using-stan-in-r.html#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="st">    vector[N] z; </span></span>
-<span id="cb32-9"><a href="using-stan-in-r.html#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb32-10"><a href="using-stan-in-r.html#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
-<span id="cb32-11"><a href="using-stan-in-r.html#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="st">    real mu_0;</span></span>
-<span id="cb32-12"><a href="using-stan-in-r.html#cb32-12" aria-hidden="true" tabindex="-1"></a><span class="st">    real beta_1; </span></span>
-<span id="cb32-13"><a href="using-stan-in-r.html#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
-<span id="cb32-14"><a href="using-stan-in-r.html#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="st">    cholesky_factor_corr[2] LPcor; </span></span>
-<span id="cb32-15"><a href="using-stan-in-r.html#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="st">    vector&lt;lower=0&gt;[2] sd_P; </span></span>
-<span id="cb32-16"><a href="using-stan-in-r.html#cb32-16" aria-hidden="true" tabindex="-1"></a><span class="st">    real&lt;lower=0&gt; sd_R;</span></span>
-<span id="cb32-17"><a href="using-stan-in-r.html#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="st">    matrix[I,2] std_P; //now matrix of standard normals (see priors below)</span></span>
-<span id="cb32-18"><a href="using-stan-in-r.html#cb32-18" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb32-19"><a href="using-stan-in-r.html#cb32-19" aria-hidden="true" tabindex="-1"></a><span class="st">transformed parameters {</span></span>
-<span id="cb32-20"><a href="using-stan-in-r.html#cb32-20" aria-hidden="true" tabindex="-1"></a><span class="st">    matrix[I,2] re_P = std_P * diag_pre_multiply(sd_P,LPcor)&#39;; //non-centered parameterization</span></span>
-<span id="cb32-21"><a href="using-stan-in-r.html#cb32-21" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb32-22"><a href="using-stan-in-r.html#cb32-22" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
-<span id="cb32-23"><a href="using-stan-in-r.html#cb32-23" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[I] mu = col(re_P, 1);</span></span>
-<span id="cb32-24"><a href="using-stan-in-r.html#cb32-24" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[I] beta = col(re_P, 2);</span></span>
-<span id="cb32-25"><a href="using-stan-in-r.html#cb32-25" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb32-26"><a href="using-stan-in-r.html#cb32-26" aria-hidden="true" tabindex="-1"></a><span class="st">  z ~ normal(mu_0 + mu[id] + (beta_1 + beta[id]).*x, sd_R);</span></span>
-<span id="cb32-27"><a href="using-stan-in-r.html#cb32-27" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb32-28"><a href="using-stan-in-r.html#cb32-28" aria-hidden="true" tabindex="-1"></a><span class="st">  mu_0 ~ normal(0,1);</span></span>
-<span id="cb32-29"><a href="using-stan-in-r.html#cb32-29" aria-hidden="true" tabindex="-1"></a><span class="st">  beta_1 ~ normal(0,1);</span></span>
-<span id="cb32-30"><a href="using-stan-in-r.html#cb32-30" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(std_P) ~ std_normal(); //new prior distribution over standard normal deviations</span></span>
-<span id="cb32-31"><a href="using-stan-in-r.html#cb32-31" aria-hidden="true" tabindex="-1"></a><span class="st">  LPcor ~ lkj_corr_cholesky(2);</span></span>
-<span id="cb32-32"><a href="using-stan-in-r.html#cb32-32" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(sd_P) ~ cauchy(0,1);</span></span>
-<span id="cb32-33"><a href="using-stan-in-r.html#cb32-33" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_R ~ cauchy(0,1); </span></span>
-<span id="cb32-34"><a href="using-stan-in-r.html#cb32-34" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb32-35"><a href="using-stan-in-r.html#cb32-35" aria-hidden="true" tabindex="-1"></a><span class="st">generated quantities {</span></span>
-<span id="cb32-36"><a href="using-stan-in-r.html#cb32-36" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[2] V_P = sd_P .* sd_P;</span></span>
-<span id="cb32-37"><a href="using-stan-in-r.html#cb32-37" aria-hidden="true" tabindex="-1"></a><span class="st">  real V_R = sd_R * sd_R;</span></span>
-<span id="cb32-38"><a href="using-stan-in-r.html#cb32-38" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb32-39"><a href="using-stan-in-r.html#cb32-39" aria-hidden="true" tabindex="-1"></a><span class="st">  corr_matrix[2] Pcor = LPcor*LPcor&#39; ;</span></span>
-<span id="cb32-40"><a href="using-stan-in-r.html#cb32-40" aria-hidden="true" tabindex="-1"></a><span class="st">  cov_matrix[2] Pcov = diag_matrix(V_P) * Pcor * diag_matrix(V_P);</span></span>
-<span id="cb32-41"><a href="using-stan-in-r.html#cb32-41" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb32-42"><a href="using-stan-in-r.html#cb32-42" aria-hidden="true" tabindex="-1"></a><span class="st">}&quot;</span>, <span class="st">&quot;mod1.stan&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="using-stan-in-r.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(<span class="st">&quot;</span></span>
+<span id="cb31-2"><a href="using-stan-in-r.html#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
+<span id="cb31-3"><a href="using-stan-in-r.html#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; N; </span></span>
+<span id="cb31-4"><a href="using-stan-in-r.html#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; I; </span></span>
+<span id="cb31-5"><a href="using-stan-in-r.html#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="st">    int&lt;lower=1&gt; id[N];  </span></span>
+<span id="cb31-6"><a href="using-stan-in-r.html#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb31-7"><a href="using-stan-in-r.html#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="st">    vector[N] x; </span></span>
+<span id="cb31-8"><a href="using-stan-in-r.html#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="st">    vector[N] z; </span></span>
+<span id="cb31-9"><a href="using-stan-in-r.html#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb31-10"><a href="using-stan-in-r.html#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
+<span id="cb31-11"><a href="using-stan-in-r.html#cb31-11" aria-hidden="true" tabindex="-1"></a><span class="st">    real mu_0;</span></span>
+<span id="cb31-12"><a href="using-stan-in-r.html#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="st">    real beta_1; </span></span>
+<span id="cb31-13"><a href="using-stan-in-r.html#cb31-13" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb31-14"><a href="using-stan-in-r.html#cb31-14" aria-hidden="true" tabindex="-1"></a><span class="st">    cholesky_factor_corr[2] LPcor; </span></span>
+<span id="cb31-15"><a href="using-stan-in-r.html#cb31-15" aria-hidden="true" tabindex="-1"></a><span class="st">    vector&lt;lower=0&gt;[2] sd_P; </span></span>
+<span id="cb31-16"><a href="using-stan-in-r.html#cb31-16" aria-hidden="true" tabindex="-1"></a><span class="st">    real&lt;lower=0&gt; sd_R;</span></span>
+<span id="cb31-17"><a href="using-stan-in-r.html#cb31-17" aria-hidden="true" tabindex="-1"></a><span class="st">    matrix[I,2] std_P; //now matrix of standard normals (see priors below)</span></span>
+<span id="cb31-18"><a href="using-stan-in-r.html#cb31-18" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb31-19"><a href="using-stan-in-r.html#cb31-19" aria-hidden="true" tabindex="-1"></a><span class="st">transformed parameters {</span></span>
+<span id="cb31-20"><a href="using-stan-in-r.html#cb31-20" aria-hidden="true" tabindex="-1"></a><span class="st">    matrix[I,2] re_P = std_P * diag_pre_multiply(sd_P,LPcor)&#39;; //non-centered parameterization</span></span>
+<span id="cb31-21"><a href="using-stan-in-r.html#cb31-21" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb31-22"><a href="using-stan-in-r.html#cb31-22" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb31-23"><a href="using-stan-in-r.html#cb31-23" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[I] mu = col(re_P, 1);</span></span>
+<span id="cb31-24"><a href="using-stan-in-r.html#cb31-24" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[I] beta = col(re_P, 2);</span></span>
+<span id="cb31-25"><a href="using-stan-in-r.html#cb31-25" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb31-26"><a href="using-stan-in-r.html#cb31-26" aria-hidden="true" tabindex="-1"></a><span class="st">  z ~ normal(mu_0 + mu[id] + (beta_1 + beta[id]).*x, sd_R);</span></span>
+<span id="cb31-27"><a href="using-stan-in-r.html#cb31-27" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb31-28"><a href="using-stan-in-r.html#cb31-28" aria-hidden="true" tabindex="-1"></a><span class="st">  mu_0 ~ normal(0,1);</span></span>
+<span id="cb31-29"><a href="using-stan-in-r.html#cb31-29" aria-hidden="true" tabindex="-1"></a><span class="st">  beta_1 ~ normal(0,1);</span></span>
+<span id="cb31-30"><a href="using-stan-in-r.html#cb31-30" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(std_P) ~ std_normal(); //new prior distribution over standard normal deviations</span></span>
+<span id="cb31-31"><a href="using-stan-in-r.html#cb31-31" aria-hidden="true" tabindex="-1"></a><span class="st">  LPcor ~ lkj_corr_cholesky(2);</span></span>
+<span id="cb31-32"><a href="using-stan-in-r.html#cb31-32" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(sd_P) ~ cauchy(0,1);</span></span>
+<span id="cb31-33"><a href="using-stan-in-r.html#cb31-33" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_R ~ cauchy(0,1); </span></span>
+<span id="cb31-34"><a href="using-stan-in-r.html#cb31-34" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb31-35"><a href="using-stan-in-r.html#cb31-35" aria-hidden="true" tabindex="-1"></a><span class="st">generated quantities {</span></span>
+<span id="cb31-36"><a href="using-stan-in-r.html#cb31-36" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[2] V_P = sd_P .* sd_P;</span></span>
+<span id="cb31-37"><a href="using-stan-in-r.html#cb31-37" aria-hidden="true" tabindex="-1"></a><span class="st">  real V_R = sd_R * sd_R;</span></span>
+<span id="cb31-38"><a href="using-stan-in-r.html#cb31-38" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb31-39"><a href="using-stan-in-r.html#cb31-39" aria-hidden="true" tabindex="-1"></a><span class="st">  corr_matrix[2] Pcor = LPcor*LPcor&#39; ;</span></span>
+<span id="cb31-40"><a href="using-stan-in-r.html#cb31-40" aria-hidden="true" tabindex="-1"></a><span class="st">  cov_matrix[2] Pcov = diag_matrix(V_P) * Pcor * diag_matrix(V_P);</span></span>
+<span id="cb31-41"><a href="using-stan-in-r.html#cb31-41" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb31-42"><a href="using-stan-in-r.html#cb31-42" aria-hidden="true" tabindex="-1"></a><span class="st">}&quot;</span>, <span class="st">&quot;mod1.stan&quot;</span>)</span></code></pre></div>
 <p>Note that the specification of the random effects has been greatly simplified with the non-centered parametrization. By separating out the scale of the deviations and the population-level (co)variances, it becomes unnecessary to directly specify the generative distribution of the full random effects as above. Instead, the full distribution is partitioned into three independent priors over the random effect standard normal deviations, SDs, and correlations, and the generative distribution of these values is specified directly through the scaling of the standard normals, i.e. <code>re_P = std_P * diag_pre_multiply(sd_P,LP_cor)'</code>=<span class="math inline">\(\boldsymbol{Z} \equiv \boldsymbol{Z_{\mathrm{std}}} \boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}}}}^{\mathrm{T}}\)</span> above. This should make the model much easier to sample from.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="using-stan-in-r.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
-<span id="cb33-2"><a href="using-stan-in-r.html#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-3"><a href="using-stan-in-r.html#cb33-3" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="st">&quot;mod1.stan&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="using-stan-in-r.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
+<span id="cb32-2"><a href="using-stan-in-r.html#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="using-stan-in-r.html#cb32-3" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="st">&quot;mod1.stan&quot;</span>)</span></code></pre></div>
 <pre><code>## Warning in system(paste(CXX, ARGS), ignore.stdout = TRUE, ignore.stderr = TRUE): &#39;C:/rtools40/usr/mingw_/bin/g++&#39; not found</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="using-stan-in-r.html#cb35-1" aria-hidden="true" tabindex="-1"></a>stan_results2 <span class="ot">&lt;-</span> <span class="fu">sampling</span>(mod1, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">2500</span>,</span>
-<span id="cb35-2"><a href="using-stan-in-r.html#cb35-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span>
-<span id="cb35-3"><a href="using-stan-in-r.html#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-4"><a href="using-stan-in-r.html#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co">#extracts posterior estimates</span></span>
-<span id="cb35-5"><a href="using-stan-in-r.html#cb35-5" aria-hidden="true" tabindex="-1"></a>MCMCsamples <span class="ot">&lt;-</span>  <span class="fu">extract</span>(stan_results2)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="using-stan-in-r.html#cb34-1" aria-hidden="true" tabindex="-1"></a>stan_results2 <span class="ot">&lt;-</span> <span class="fu">sampling</span>(mod1, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">2500</span>,</span>
+<span id="cb34-2"><a href="using-stan-in-r.html#cb34-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span>
+<span id="cb34-3"><a href="using-stan-in-r.html#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="using-stan-in-r.html#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co">#extracts posterior estimates</span></span>
+<span id="cb34-5"><a href="using-stan-in-r.html#cb34-5" aria-hidden="true" tabindex="-1"></a>MCMCsamples <span class="ot">&lt;-</span>  <span class="fu">extract</span>(stan_results2)</span></code></pre></div>
 <p>The absence of warning messages indicates that our mathematically equivalent reparametrizations have enhanced the efficiency of the MCMC sampler. The posterior samples of the model can subsequently be extracted, summarized, visualized, and manipulated. E.g.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="using-stan-in-r.html#cb36-1" aria-hidden="true" tabindex="-1"></a>post_beta_1 <span class="ot">=</span> MCMCsamples<span class="sc">$</span>beta_1 <span class="co">#extract population-level slope</span></span>
-<span id="cb36-2"><a href="using-stan-in-r.html#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-3"><a href="using-stan-in-r.html#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post_beta_1) <span class="co">#central tendency of posterior</span></span></code></pre></div>
-<pre><code>## [1] 0.5800502</code></pre>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="using-stan-in-r.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mad</span>(post_beta_1) <span class="co">#dispersion around central tendency</span></span></code></pre></div>
-<pre><code>## [1] 0.1202392</code></pre>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="using-stan-in-r.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(post_beta_1, <span class="fu">c</span>(<span class="fl">0.05</span>,<span class="fl">0.95</span>)) <span class="co">#90% credible interval</span></span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="using-stan-in-r.html#cb35-1" aria-hidden="true" tabindex="-1"></a>post_beta_1 <span class="ot">=</span> MCMCsamples<span class="sc">$</span>beta_1 <span class="co">#extract population-level slope</span></span>
+<span id="cb35-2"><a href="using-stan-in-r.html#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="using-stan-in-r.html#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post_beta_1) <span class="co">#central tendency of posterior</span></span></code></pre></div>
+<pre><code>## [1] 0.2715603</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="using-stan-in-r.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mad</span>(post_beta_1) <span class="co">#dispersion around central tendency</span></span></code></pre></div>
+<pre><code>## [1] 0.09308014</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="using-stan-in-r.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(post_beta_1, <span class="fu">c</span>(<span class="fl">0.05</span>,<span class="fl">0.95</span>)) <span class="co">#90% credible interval</span></span></code></pre></div>
 <pre><code>##        5%       95% 
-## 0.3758679 0.7953395</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="using-stan-in-r.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(post_beta_1 <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="fu">length</span>(post_beta_1) <span class="co">#posterior probability of + effect</span></span></code></pre></div>
-<pre><code>## [1] 1</code></pre>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="using-stan-in-r.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(post_beta_1) <span class="co">#MCMC approximation of posterior distribution</span></span></code></pre></div>
+## 0.1207370 0.4241234</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="using-stan-in-r.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(post_beta_1 <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="fu">length</span>(post_beta_1) <span class="co">#posterior probability of + effect</span></span></code></pre></div>
+<pre><code>## [1] 0.997</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="using-stan-in-r.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(post_beta_1) <span class="co">#MCMC approximation of posterior distribution</span></span></code></pre></div>
 <p><img src="SAMs_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <p>We encourage the use of the <code>shinystan</code> R package for deeper inspection of model convergence and results with a GUI. In general, researchers should be skeptical of reporting results accompanied with sampler warnings and should seek to remove any diagnostic concerns prior to biological interpretation of the estimates.</p>
 </div>
@@ -651,188 +641,188 @@ where <span class="math inline">\(\boldsymbol{\mathrm{L}_{\boldsymbol{\mathrm{C}
 <div id="simulate-data" class="section level3" number="1.5.1">
 <h3><span class="header-section-number">1.5.1</span> Simulate data</h3>
 <p>We use a custom function <code>pedfun</code> to generate an appropriately sized, positive-definite matrix for data simulation, which has been modified from prior work by <span class="citation"><a href="resources.html#ref-Thomson2018" role="doc-biblioref">Thomson et al.</a> (<a href="resources.html#ref-Thomson2018" role="doc-biblioref">2018</a>)</span>. This function is also utilized in the simulation code provided on the Github page. We supply basic demographic settings and generate <span class="math inline">\(\boldsymbol{\mathrm{A}}\)</span>, and we increase the sample size to N=300 to aid parameter estimate.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="using-stan-in-r.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">#custom function</span></span>
-<span id="cb45-2"><a href="using-stan-in-r.html#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MCMCglmm)</span>
-<span id="cb45-3"><a href="using-stan-in-r.html#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Matrix)</span>
-<span id="cb45-4"><a href="using-stan-in-r.html#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-5"><a href="using-stan-in-r.html#cb45-5" aria-hidden="true" tabindex="-1"></a>pedfun <span class="ot">&lt;-</span> <span class="cf">function</span>(popmin, popmax, ngenerations,</span>
-<span id="cb45-6"><a href="using-stan-in-r.html#cb45-6" aria-hidden="true" tabindex="-1"></a>                 epm, nonb, nids, I, <span class="at">missing=</span><span class="cn">FALSE</span>){</span>
-<span id="cb45-7"><a href="using-stan-in-r.html#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get list of individuals and their generations</span></span>
-<span id="cb45-8"><a href="using-stan-in-r.html#cb45-8" aria-hidden="true" tabindex="-1"></a>  gener<span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">:</span>ngenerations</span>
-<span id="cb45-9"><a href="using-stan-in-r.html#cb45-9" aria-hidden="true" tabindex="-1"></a>  genern <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>ngenerations, <span class="at">times =</span> nids)</span>
-<span id="cb45-10"><a href="using-stan-in-r.html#cb45-10" aria-hidden="true" tabindex="-1"></a>  ID <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">sum</span>(nids)</span>
-<span id="cb45-11"><a href="using-stan-in-r.html#cb45-11" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb45-12"><a href="using-stan-in-r.html#cb45-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># runs on generation-by-generation basis</span></span>
-<span id="cb45-13"><a href="using-stan-in-r.html#cb45-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>ngenerations){</span>
-<span id="cb45-14"><a href="using-stan-in-r.html#cb45-14" aria-hidden="true" tabindex="-1"></a>    id<span class="ot">&lt;-</span>ID[<span class="fu">which</span>(genern<span class="sc">==</span>i)]</span>
-<span id="cb45-15"><a href="using-stan-in-r.html#cb45-15" aria-hidden="true" tabindex="-1"></a>    dam<span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="cn">NA</span>, nids[i])</span>
-<span id="cb45-16"><a href="using-stan-in-r.html#cb45-16" aria-hidden="true" tabindex="-1"></a>    sire<span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="cn">NA</span>, nids[i])</span>
-<span id="cb45-17"><a href="using-stan-in-r.html#cb45-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># randomly allocates sex (0 = male, 1 = female)</span></span>
-<span id="cb45-18"><a href="using-stan-in-r.html#cb45-18" aria-hidden="true" tabindex="-1"></a>    sex<span class="ot">&lt;-</span><span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">length</span>(id), <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb45-19"><a href="using-stan-in-r.html#cb45-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># for first generation, no dams or sires are known </span></span>
-<span id="cb45-20"><a href="using-stan-in-r.html#cb45-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># so remain NA</span></span>
-<span id="cb45-21"><a href="using-stan-in-r.html#cb45-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(i<span class="sc">==</span><span class="dv">1</span>){</span>
-<span id="cb45-22"><a href="using-stan-in-r.html#cb45-22" aria-hidden="true" tabindex="-1"></a>      <span class="co"># combine into single data frame</span></span>
-<span id="cb45-23"><a href="using-stan-in-r.html#cb45-23" aria-hidden="true" tabindex="-1"></a>      pedigree<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">id=</span>id, <span class="at">dam=</span>dam, <span class="at">sire=</span>sire, </span>
-<span id="cb45-24"><a href="using-stan-in-r.html#cb45-24" aria-hidden="true" tabindex="-1"></a>                           <span class="at">generation=</span>i, <span class="at">sex=</span>sex)</span>
-<span id="cb45-25"><a href="using-stan-in-r.html#cb45-25" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb45-26"><a href="using-stan-in-r.html#cb45-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span>(i<span class="sc">&gt;</span><span class="dv">1</span>){</span>
-<span id="cb45-27"><a href="using-stan-in-r.html#cb45-27" aria-hidden="true" tabindex="-1"></a>      <span class="co"># for all generations after first</span></span>
-<span id="cb45-28"><a href="using-stan-in-r.html#cb45-28" aria-hidden="true" tabindex="-1"></a>      <span class="co"># list of all possible dams and sires</span></span>
-<span id="cb45-29"><a href="using-stan-in-r.html#cb45-29" aria-hidden="true" tabindex="-1"></a>      <span class="co"># from previous generation</span></span>
-<span id="cb45-30"><a href="using-stan-in-r.html#cb45-30" aria-hidden="true" tabindex="-1"></a>      pdams<span class="ot">&lt;-</span>pedigree<span class="sc">$</span>id[<span class="fu">which</span>(pedigree<span class="sc">$</span>generation<span class="sc">==</span>(i<span class="dv">-1</span>) <span class="sc">&amp;</span></span>
-<span id="cb45-31"><a href="using-stan-in-r.html#cb45-31" aria-hidden="true" tabindex="-1"></a>                                 pedigree<span class="sc">$</span>sex<span class="sc">==</span><span class="dv">1</span>)]</span>
-<span id="cb45-32"><a href="using-stan-in-r.html#cb45-32" aria-hidden="true" tabindex="-1"></a>      psires<span class="ot">&lt;-</span>pedigree<span class="sc">$</span>id[<span class="fu">which</span>(pedigree<span class="sc">$</span>generation<span class="sc">==</span>(i<span class="dv">-1</span>) <span class="sc">&amp;</span></span>
-<span id="cb45-33"><a href="using-stan-in-r.html#cb45-33" aria-hidden="true" tabindex="-1"></a>                                  pedigree<span class="sc">$</span>sex<span class="sc">==</span><span class="dv">0</span>)]</span>
-<span id="cb45-34"><a href="using-stan-in-r.html#cb45-34" aria-hidden="true" tabindex="-1"></a>      <span class="co"># determine number of pairs</span></span>
-<span id="cb45-35"><a href="using-stan-in-r.html#cb45-35" aria-hidden="true" tabindex="-1"></a>      <span class="co"># depending on how many males and females</span></span>
-<span id="cb45-36"><a href="using-stan-in-r.html#cb45-36" aria-hidden="true" tabindex="-1"></a>      <span class="co"># and the proportion of the population that is non-breeding</span></span>
-<span id="cb45-37"><a href="using-stan-in-r.html#cb45-37" aria-hidden="true" tabindex="-1"></a>      npairs<span class="ot">&lt;-</span><span class="fu">min</span>(<span class="fu">length</span>(pdams), <span class="fu">length</span>(psires)) <span class="sc">-</span> </span>
-<span id="cb45-38"><a href="using-stan-in-r.html#cb45-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">round</span>(<span class="fu">min</span>(<span class="fu">length</span>(pdams), <span class="fu">length</span>(psires))<span class="sc">*</span>nonb)</span>
-<span id="cb45-39"><a href="using-stan-in-r.html#cb45-39" aria-hidden="true" tabindex="-1"></a>      <span class="co"># selects breeding males and females</span></span>
-<span id="cb45-40"><a href="using-stan-in-r.html#cb45-40" aria-hidden="true" tabindex="-1"></a>      pdams<span class="ot">&lt;-</span>pedigree<span class="sc">$</span>id[<span class="fu">which</span>(pedigree<span class="sc">$</span>generation<span class="sc">==</span>(i<span class="dv">-1</span>) <span class="sc">&amp;</span> </span>
-<span id="cb45-41"><a href="using-stan-in-r.html#cb45-41" aria-hidden="true" tabindex="-1"></a>                                 pedigree<span class="sc">$</span>sex<span class="sc">==</span><span class="dv">1</span>)]</span>
-<span id="cb45-42"><a href="using-stan-in-r.html#cb45-42" aria-hidden="true" tabindex="-1"></a>      psires<span class="ot">&lt;-</span>pedigree<span class="sc">$</span>id[<span class="fu">which</span>(pedigree<span class="sc">$</span>generation<span class="sc">==</span>(i<span class="dv">-1</span>) <span class="sc">&amp;</span> </span>
-<span id="cb45-43"><a href="using-stan-in-r.html#cb45-43" aria-hidden="true" tabindex="-1"></a>                                  pedigree<span class="sc">$</span>sex<span class="sc">==</span><span class="dv">0</span>)]</span>
-<span id="cb45-44"><a href="using-stan-in-r.html#cb45-44" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="fu">length</span>(pdams)<span class="sc">&lt;</span>npairs <span class="sc">|</span> <span class="fu">length</span>(psires)<span class="sc">&lt;</span>npairs){</span>
-<span id="cb45-45"><a href="using-stan-in-r.html#cb45-45" aria-hidden="true" tabindex="-1"></a>        npairs<span class="ot">&lt;-</span><span class="fu">min</span>(<span class="fu">length</span>(pdams), <span class="fu">length</span>(psires))</span>
-<span id="cb45-46"><a href="using-stan-in-r.html#cb45-46" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb45-47"><a href="using-stan-in-r.html#cb45-47" aria-hidden="true" tabindex="-1"></a>      <span class="co"># selects pairs from possible dams and sires</span></span>
-<span id="cb45-48"><a href="using-stan-in-r.html#cb45-48" aria-hidden="true" tabindex="-1"></a>      pairs<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">dam=</span><span class="fu">sample</span>(pdams, npairs, <span class="at">replace=</span><span class="cn">FALSE</span>),</span>
-<span id="cb45-49"><a href="using-stan-in-r.html#cb45-49" aria-hidden="true" tabindex="-1"></a>                        <span class="at">sire=</span><span class="fu">sample</span>(psires, npairs, <span class="at">replace=</span><span class="cn">FALSE</span>))</span>
-<span id="cb45-50"><a href="using-stan-in-r.html#cb45-50" aria-hidden="true" tabindex="-1"></a>      <span class="co"># gives each offspring their parental pair</span></span>
-<span id="cb45-51"><a href="using-stan-in-r.html#cb45-51" aria-hidden="true" tabindex="-1"></a>      pairid<span class="ot">&lt;-</span><span class="fu">as.numeric</span>(<span class="fu">sample</span>(<span class="fu">rownames</span>(pairs), </span>
-<span id="cb45-52"><a href="using-stan-in-r.html#cb45-52" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">length</span>(id), <span class="at">replace=</span><span class="cn">TRUE</span>))</span>
-<span id="cb45-53"><a href="using-stan-in-r.html#cb45-53" aria-hidden="true" tabindex="-1"></a>      <span class="co"># gives each offspring their sex</span></span>
-<span id="cb45-54"><a href="using-stan-in-r.html#cb45-54" aria-hidden="true" tabindex="-1"></a>      sex<span class="ot">&lt;-</span><span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">length</span>(id), <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb45-55"><a href="using-stan-in-r.html#cb45-55" aria-hidden="true" tabindex="-1"></a>      <span class="co"># put into dataframe format</span></span>
-<span id="cb45-56"><a href="using-stan-in-r.html#cb45-56" aria-hidden="true" tabindex="-1"></a>      addped<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">id=</span>id, </span>
-<span id="cb45-57"><a href="using-stan-in-r.html#cb45-57" aria-hidden="true" tabindex="-1"></a>                         <span class="at">dam=</span>pairs<span class="sc">$</span>dam[pairid], </span>
-<span id="cb45-58"><a href="using-stan-in-r.html#cb45-58" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sire=</span>pairs<span class="sc">$</span>sire[pairid],</span>
-<span id="cb45-59"><a href="using-stan-in-r.html#cb45-59" aria-hidden="true" tabindex="-1"></a>                         <span class="at">generation=</span>i, </span>
-<span id="cb45-60"><a href="using-stan-in-r.html#cb45-60" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sex=</span>sex)</span>
-<span id="cb45-61"><a href="using-stan-in-r.html#cb45-61" aria-hidden="true" tabindex="-1"></a>      <span class="co"># deals with extra-pair mating (if included)</span></span>
-<span id="cb45-62"><a href="using-stan-in-r.html#cb45-62" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(epm)){</span>
-<span id="cb45-63"><a href="using-stan-in-r.html#cb45-63" aria-hidden="true" tabindex="-1"></a>        <span class="co"># for each individual, sample if they are extra pair</span></span>
-<span id="cb45-64"><a href="using-stan-in-r.html#cb45-64" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if 0 not extra pair</span></span>
-<span id="cb45-65"><a href="using-stan-in-r.html#cb45-65" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if 1 sire resampled from breeding population</span></span>
-<span id="cb45-66"><a href="using-stan-in-r.html#cb45-66" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if 2 dam resampled</span></span>
-<span id="cb45-67"><a href="using-stan-in-r.html#cb45-67" aria-hidden="true" tabindex="-1"></a>        ext<span class="ot">&lt;-</span><span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="fu">nrow</span>(addped), </span>
-<span id="cb45-68"><a href="using-stan-in-r.html#cb45-68" aria-hidden="true" tabindex="-1"></a>                    <span class="at">replace=</span><span class="cn">TRUE</span>, </span>
-<span id="cb45-69"><a href="using-stan-in-r.html#cb45-69" aria-hidden="true" tabindex="-1"></a>                    <span class="at">prob =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">-</span>epm, epm<span class="sc">/</span><span class="dv">2</span>, epm<span class="sc">/</span><span class="dv">2</span>))</span>
-<span id="cb45-70"><a href="using-stan-in-r.html#cb45-70" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(addped)){</span>
-<span id="cb45-71"><a href="using-stan-in-r.html#cb45-71" aria-hidden="true" tabindex="-1"></a>          <span class="cf">if</span>(ext[j]<span class="sc">&gt;</span><span class="dv">0</span>){</span>
-<span id="cb45-72"><a href="using-stan-in-r.html#cb45-72" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span>(ext[j]<span class="sc">==</span><span class="dv">1</span>){</span>
-<span id="cb45-73"><a href="using-stan-in-r.html#cb45-73" aria-hidden="true" tabindex="-1"></a>              addped<span class="sc">$</span>sire[j]<span class="ot">&lt;-</span><span class="fu">sample</span>(psires,<span class="dv">1</span>,<span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb45-74"><a href="using-stan-in-r.html#cb45-74" aria-hidden="true" tabindex="-1"></a>            }<span class="cf">else</span> <span class="cf">if</span> (ext[j]<span class="sc">==</span><span class="dv">2</span>){</span>
-<span id="cb45-75"><a href="using-stan-in-r.html#cb45-75" aria-hidden="true" tabindex="-1"></a>              addped<span class="sc">$</span>dam[j]<span class="ot">&lt;-</span><span class="fu">sample</span>(pdams,<span class="dv">1</span>,<span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb45-76"><a href="using-stan-in-r.html#cb45-76" aria-hidden="true" tabindex="-1"></a>            }</span>
-<span id="cb45-77"><a href="using-stan-in-r.html#cb45-77" aria-hidden="true" tabindex="-1"></a>          }</span>
-<span id="cb45-78"><a href="using-stan-in-r.html#cb45-78" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb45-79"><a href="using-stan-in-r.html#cb45-79" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb45-80"><a href="using-stan-in-r.html#cb45-80" aria-hidden="true" tabindex="-1"></a>      <span class="co"># add new generation to the whole pedigree</span></span>
-<span id="cb45-81"><a href="using-stan-in-r.html#cb45-81" aria-hidden="true" tabindex="-1"></a>      pedigree<span class="ot">&lt;-</span><span class="fu">rbind</span>(pedigree, addped)</span>
-<span id="cb45-82"><a href="using-stan-in-r.html#cb45-82" aria-hidden="true" tabindex="-1"></a>   }</span>
-<span id="cb45-83"><a href="using-stan-in-r.html#cb45-83" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb45-84"><a href="using-stan-in-r.html#cb45-84" aria-hidden="true" tabindex="-1"></a>  ped <span class="ot">&lt;-</span> pedigree</span>
-<span id="cb45-85"><a href="using-stan-in-r.html#cb45-85" aria-hidden="true" tabindex="-1"></a>  <span class="co"># make id&#39;s non-numeric</span></span>
-<span id="cb45-86"><a href="using-stan-in-r.html#cb45-86" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>id<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">&quot;ID&quot;</span>,ped<span class="sc">$</span>id, <span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
-<span id="cb45-87"><a href="using-stan-in-r.html#cb45-87" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>dam[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(ped<span class="sc">$</span>dam))]<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">&quot;ID&quot;</span>,ped<span class="sc">$</span>dam[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(ped<span class="sc">$</span>dam))], <span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
-<span id="cb45-88"><a href="using-stan-in-r.html#cb45-88" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>sire[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(ped<span class="sc">$</span>sire))]<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">&quot;ID&quot;</span>,ped<span class="sc">$</span>sire[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(ped<span class="sc">$</span>sire))], <span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
-<span id="cb45-89"><a href="using-stan-in-r.html#cb45-89" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>id<span class="ot">&lt;-</span><span class="fu">as.character</span>(ped<span class="sc">$</span>id)</span>
-<span id="cb45-90"><a href="using-stan-in-r.html#cb45-90" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>dam<span class="ot">&lt;-</span><span class="fu">as.character</span>(ped<span class="sc">$</span>dam)</span>
-<span id="cb45-91"><a href="using-stan-in-r.html#cb45-91" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>sire<span class="ot">&lt;-</span><span class="fu">as.character</span>(ped<span class="sc">$</span>sire)</span>
-<span id="cb45-92"><a href="using-stan-in-r.html#cb45-92" aria-hidden="true" tabindex="-1"></a>  IDs <span class="ot">&lt;-</span> <span class="fu">sample</span>(ped[ped<span class="sc">$</span>generation<span class="sc">==</span>ngenerations, <span class="st">&quot;id&quot;</span>], I, <span class="at">replace=</span><span class="cn">FALSE</span>)</span>
-<span id="cb45-93"><a href="using-stan-in-r.html#cb45-93" aria-hidden="true" tabindex="-1"></a>  ped <span class="ot">&lt;-</span> <span class="fu">prunePed</span>(ped, <span class="at">keep =</span> IDs, <span class="at">make.base=</span><span class="cn">TRUE</span>)</span>
-<span id="cb45-94"><a href="using-stan-in-r.html#cb45-94" aria-hidden="true" tabindex="-1"></a>  inv.phylo <span class="ot">&lt;-</span> <span class="fu">inverseA</span>(ped[,<span class="fu">c</span>(<span class="st">&quot;id&quot;</span>,<span class="st">&quot;dam&quot;</span>,<span class="st">&quot;sire&quot;</span>)])</span>
-<span id="cb45-95"><a href="using-stan-in-r.html#cb45-95" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">&lt;-</span> <span class="fu">solve</span>(inv.phylo<span class="sc">$</span>Ainv)</span>
-<span id="cb45-96"><a href="using-stan-in-r.html#cb45-96" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">&lt;-</span> <span class="fu">cov2cor</span>(A)</span>
-<span id="cb45-97"><a href="using-stan-in-r.html#cb45-97" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">=</span> (A <span class="sc">+</span> <span class="fu">t</span>(A))<span class="sc">/</span><span class="dv">2</span> <span class="co"># Not always symmetric after inversion</span></span>
-<span id="cb45-98"><a href="using-stan-in-r.html#cb45-98" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(A)</span>
-<span id="cb45-99"><a href="using-stan-in-r.html#cb45-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(A) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(inv.phylo<span class="sc">$</span>Ainv)</span>
-<span id="cb45-100"><a href="using-stan-in-r.html#cb45-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(A) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(inv.phylo<span class="sc">$</span>Ainv)</span>
-<span id="cb45-101"><a href="using-stan-in-r.html#cb45-101" aria-hidden="true" tabindex="-1"></a>  <span class="co">#subset to final generation</span></span>
-<span id="cb45-102"><a href="using-stan-in-r.html#cb45-102" aria-hidden="true" tabindex="-1"></a>  A_sub<span class="ot">&lt;-</span>A[IDs,IDs]</span>
-<span id="cb45-103"><a href="using-stan-in-r.html#cb45-103" aria-hidden="true" tabindex="-1"></a>  A_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">nearPD</span>(A_sub)<span class="sc">$</span>mat)</span>
-<span id="cb45-104"><a href="using-stan-in-r.html#cb45-104" aria-hidden="true" tabindex="-1"></a>  A_mat <span class="ot">&lt;-</span> <span class="fu">cov2cor</span>(A_mat)</span>
-<span id="cb45-105"><a href="using-stan-in-r.html#cb45-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(A_mat)</span>
-<span id="cb45-106"><a href="using-stan-in-r.html#cb45-106" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb45-107"><a href="using-stan-in-r.html#cb45-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-108"><a href="using-stan-in-r.html#cb45-108" aria-hidden="true" tabindex="-1"></a> <span class="co">#population properties</span></span>
-<span id="cb45-109"><a href="using-stan-in-r.html#cb45-109" aria-hidden="true" tabindex="-1"></a> I<span class="ot">=</span><span class="dv">300</span> <span class="co">#total individuals for simulation</span></span>
-<span id="cb45-110"><a href="using-stan-in-r.html#cb45-110" aria-hidden="true" tabindex="-1"></a> popmin<span class="ot">=</span><span class="dv">400</span></span>
-<span id="cb45-111"><a href="using-stan-in-r.html#cb45-111" aria-hidden="true" tabindex="-1"></a> popmax<span class="ot">=</span><span class="dv">600</span></span>
-<span id="cb45-112"><a href="using-stan-in-r.html#cb45-112" aria-hidden="true" tabindex="-1"></a> ngenerations <span class="ot">=</span> <span class="dv">10</span></span>
-<span id="cb45-113"><a href="using-stan-in-r.html#cb45-113" aria-hidden="true" tabindex="-1"></a> nids<span class="ot">&lt;-</span><span class="fu">sample</span>(popmin<span class="sc">:</span>popmax, ngenerations, <span class="at">replace=</span><span class="cn">TRUE</span>) <span class="co">#N / generation</span></span>
-<span id="cb45-114"><a href="using-stan-in-r.html#cb45-114" aria-hidden="true" tabindex="-1"></a> epm <span class="ot">=</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="fl">0.15</span>, <span class="fl">0.25</span>,<span class="at">by=</span><span class="fl">0.05</span>),<span class="dv">1</span>) <span class="co">#extra-pair mating</span></span>
-<span id="cb45-115"><a href="using-stan-in-r.html#cb45-115" aria-hidden="true" tabindex="-1"></a> nonb <span class="ot">=</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="fl">0.4</span>,<span class="fl">0.6</span>,<span class="at">by=</span><span class="fl">0.05</span>),<span class="dv">1</span>) <span class="co">#proportion of non-breeding / generation</span></span>
-<span id="cb45-116"><a href="using-stan-in-r.html#cb45-116" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb45-117"><a href="using-stan-in-r.html#cb45-117" aria-hidden="true" tabindex="-1"></a> <span class="co">#relatedness matrix</span></span>
-<span id="cb45-118"><a href="using-stan-in-r.html#cb45-118" aria-hidden="true" tabindex="-1"></a> A_mat <span class="ot">&lt;-</span> <span class="fu">pedfun</span>(<span class="at">popmin=</span>popmin, <span class="at">popmax=</span>popmax, <span class="at">ngenerations=</span>ngenerations,</span>
-<span id="cb45-119"><a href="using-stan-in-r.html#cb45-119" aria-hidden="true" tabindex="-1"></a>                  <span class="at">epm=</span>epm, <span class="at">nonb=</span>nonb, <span class="at">nids=</span>nids, <span class="at">I=</span>I, <span class="at">missing=</span><span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="using-stan-in-r.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">#custom function</span></span>
+<span id="cb44-2"><a href="using-stan-in-r.html#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MCMCglmm)</span>
+<span id="cb44-3"><a href="using-stan-in-r.html#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Matrix)</span>
+<span id="cb44-4"><a href="using-stan-in-r.html#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="using-stan-in-r.html#cb44-5" aria-hidden="true" tabindex="-1"></a>pedfun <span class="ot">&lt;-</span> <span class="cf">function</span>(popmin, popmax, ngenerations,</span>
+<span id="cb44-6"><a href="using-stan-in-r.html#cb44-6" aria-hidden="true" tabindex="-1"></a>                 epm, nonb, nids, I, <span class="at">missing=</span><span class="cn">FALSE</span>){</span>
+<span id="cb44-7"><a href="using-stan-in-r.html#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get list of individuals and their generations</span></span>
+<span id="cb44-8"><a href="using-stan-in-r.html#cb44-8" aria-hidden="true" tabindex="-1"></a>  gener<span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">:</span>ngenerations</span>
+<span id="cb44-9"><a href="using-stan-in-r.html#cb44-9" aria-hidden="true" tabindex="-1"></a>  genern <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>ngenerations, <span class="at">times =</span> nids)</span>
+<span id="cb44-10"><a href="using-stan-in-r.html#cb44-10" aria-hidden="true" tabindex="-1"></a>  ID <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">sum</span>(nids)</span>
+<span id="cb44-11"><a href="using-stan-in-r.html#cb44-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb44-12"><a href="using-stan-in-r.html#cb44-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># runs on generation-by-generation basis</span></span>
+<span id="cb44-13"><a href="using-stan-in-r.html#cb44-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>ngenerations){</span>
+<span id="cb44-14"><a href="using-stan-in-r.html#cb44-14" aria-hidden="true" tabindex="-1"></a>    id<span class="ot">&lt;-</span>ID[<span class="fu">which</span>(genern<span class="sc">==</span>i)]</span>
+<span id="cb44-15"><a href="using-stan-in-r.html#cb44-15" aria-hidden="true" tabindex="-1"></a>    dam<span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="cn">NA</span>, nids[i])</span>
+<span id="cb44-16"><a href="using-stan-in-r.html#cb44-16" aria-hidden="true" tabindex="-1"></a>    sire<span class="ot">&lt;-</span><span class="fu">rep</span>(<span class="cn">NA</span>, nids[i])</span>
+<span id="cb44-17"><a href="using-stan-in-r.html#cb44-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># randomly allocates sex (0 = male, 1 = female)</span></span>
+<span id="cb44-18"><a href="using-stan-in-r.html#cb44-18" aria-hidden="true" tabindex="-1"></a>    sex<span class="ot">&lt;-</span><span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">length</span>(id), <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb44-19"><a href="using-stan-in-r.html#cb44-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># for first generation, no dams or sires are known </span></span>
+<span id="cb44-20"><a href="using-stan-in-r.html#cb44-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># so remain NA</span></span>
+<span id="cb44-21"><a href="using-stan-in-r.html#cb44-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(i<span class="sc">==</span><span class="dv">1</span>){</span>
+<span id="cb44-22"><a href="using-stan-in-r.html#cb44-22" aria-hidden="true" tabindex="-1"></a>      <span class="co"># combine into single data frame</span></span>
+<span id="cb44-23"><a href="using-stan-in-r.html#cb44-23" aria-hidden="true" tabindex="-1"></a>      pedigree<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">id=</span>id, <span class="at">dam=</span>dam, <span class="at">sire=</span>sire, </span>
+<span id="cb44-24"><a href="using-stan-in-r.html#cb44-24" aria-hidden="true" tabindex="-1"></a>                           <span class="at">generation=</span>i, <span class="at">sex=</span>sex)</span>
+<span id="cb44-25"><a href="using-stan-in-r.html#cb44-25" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb44-26"><a href="using-stan-in-r.html#cb44-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span>(i<span class="sc">&gt;</span><span class="dv">1</span>){</span>
+<span id="cb44-27"><a href="using-stan-in-r.html#cb44-27" aria-hidden="true" tabindex="-1"></a>      <span class="co"># for all generations after first</span></span>
+<span id="cb44-28"><a href="using-stan-in-r.html#cb44-28" aria-hidden="true" tabindex="-1"></a>      <span class="co"># list of all possible dams and sires</span></span>
+<span id="cb44-29"><a href="using-stan-in-r.html#cb44-29" aria-hidden="true" tabindex="-1"></a>      <span class="co"># from previous generation</span></span>
+<span id="cb44-30"><a href="using-stan-in-r.html#cb44-30" aria-hidden="true" tabindex="-1"></a>      pdams<span class="ot">&lt;-</span>pedigree<span class="sc">$</span>id[<span class="fu">which</span>(pedigree<span class="sc">$</span>generation<span class="sc">==</span>(i<span class="dv">-1</span>) <span class="sc">&amp;</span></span>
+<span id="cb44-31"><a href="using-stan-in-r.html#cb44-31" aria-hidden="true" tabindex="-1"></a>                                 pedigree<span class="sc">$</span>sex<span class="sc">==</span><span class="dv">1</span>)]</span>
+<span id="cb44-32"><a href="using-stan-in-r.html#cb44-32" aria-hidden="true" tabindex="-1"></a>      psires<span class="ot">&lt;-</span>pedigree<span class="sc">$</span>id[<span class="fu">which</span>(pedigree<span class="sc">$</span>generation<span class="sc">==</span>(i<span class="dv">-1</span>) <span class="sc">&amp;</span></span>
+<span id="cb44-33"><a href="using-stan-in-r.html#cb44-33" aria-hidden="true" tabindex="-1"></a>                                  pedigree<span class="sc">$</span>sex<span class="sc">==</span><span class="dv">0</span>)]</span>
+<span id="cb44-34"><a href="using-stan-in-r.html#cb44-34" aria-hidden="true" tabindex="-1"></a>      <span class="co"># determine number of pairs</span></span>
+<span id="cb44-35"><a href="using-stan-in-r.html#cb44-35" aria-hidden="true" tabindex="-1"></a>      <span class="co"># depending on how many males and females</span></span>
+<span id="cb44-36"><a href="using-stan-in-r.html#cb44-36" aria-hidden="true" tabindex="-1"></a>      <span class="co"># and the proportion of the population that is non-breeding</span></span>
+<span id="cb44-37"><a href="using-stan-in-r.html#cb44-37" aria-hidden="true" tabindex="-1"></a>      npairs<span class="ot">&lt;-</span><span class="fu">min</span>(<span class="fu">length</span>(pdams), <span class="fu">length</span>(psires)) <span class="sc">-</span> </span>
+<span id="cb44-38"><a href="using-stan-in-r.html#cb44-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">round</span>(<span class="fu">min</span>(<span class="fu">length</span>(pdams), <span class="fu">length</span>(psires))<span class="sc">*</span>nonb)</span>
+<span id="cb44-39"><a href="using-stan-in-r.html#cb44-39" aria-hidden="true" tabindex="-1"></a>      <span class="co"># selects breeding males and females</span></span>
+<span id="cb44-40"><a href="using-stan-in-r.html#cb44-40" aria-hidden="true" tabindex="-1"></a>      pdams<span class="ot">&lt;-</span>pedigree<span class="sc">$</span>id[<span class="fu">which</span>(pedigree<span class="sc">$</span>generation<span class="sc">==</span>(i<span class="dv">-1</span>) <span class="sc">&amp;</span> </span>
+<span id="cb44-41"><a href="using-stan-in-r.html#cb44-41" aria-hidden="true" tabindex="-1"></a>                                 pedigree<span class="sc">$</span>sex<span class="sc">==</span><span class="dv">1</span>)]</span>
+<span id="cb44-42"><a href="using-stan-in-r.html#cb44-42" aria-hidden="true" tabindex="-1"></a>      psires<span class="ot">&lt;-</span>pedigree<span class="sc">$</span>id[<span class="fu">which</span>(pedigree<span class="sc">$</span>generation<span class="sc">==</span>(i<span class="dv">-1</span>) <span class="sc">&amp;</span> </span>
+<span id="cb44-43"><a href="using-stan-in-r.html#cb44-43" aria-hidden="true" tabindex="-1"></a>                                  pedigree<span class="sc">$</span>sex<span class="sc">==</span><span class="dv">0</span>)]</span>
+<span id="cb44-44"><a href="using-stan-in-r.html#cb44-44" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="fu">length</span>(pdams)<span class="sc">&lt;</span>npairs <span class="sc">|</span> <span class="fu">length</span>(psires)<span class="sc">&lt;</span>npairs){</span>
+<span id="cb44-45"><a href="using-stan-in-r.html#cb44-45" aria-hidden="true" tabindex="-1"></a>        npairs<span class="ot">&lt;-</span><span class="fu">min</span>(<span class="fu">length</span>(pdams), <span class="fu">length</span>(psires))</span>
+<span id="cb44-46"><a href="using-stan-in-r.html#cb44-46" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb44-47"><a href="using-stan-in-r.html#cb44-47" aria-hidden="true" tabindex="-1"></a>      <span class="co"># selects pairs from possible dams and sires</span></span>
+<span id="cb44-48"><a href="using-stan-in-r.html#cb44-48" aria-hidden="true" tabindex="-1"></a>      pairs<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">dam=</span><span class="fu">sample</span>(pdams, npairs, <span class="at">replace=</span><span class="cn">FALSE</span>),</span>
+<span id="cb44-49"><a href="using-stan-in-r.html#cb44-49" aria-hidden="true" tabindex="-1"></a>                        <span class="at">sire=</span><span class="fu">sample</span>(psires, npairs, <span class="at">replace=</span><span class="cn">FALSE</span>))</span>
+<span id="cb44-50"><a href="using-stan-in-r.html#cb44-50" aria-hidden="true" tabindex="-1"></a>      <span class="co"># gives each offspring their parental pair</span></span>
+<span id="cb44-51"><a href="using-stan-in-r.html#cb44-51" aria-hidden="true" tabindex="-1"></a>      pairid<span class="ot">&lt;-</span><span class="fu">as.numeric</span>(<span class="fu">sample</span>(<span class="fu">rownames</span>(pairs), </span>
+<span id="cb44-52"><a href="using-stan-in-r.html#cb44-52" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">length</span>(id), <span class="at">replace=</span><span class="cn">TRUE</span>))</span>
+<span id="cb44-53"><a href="using-stan-in-r.html#cb44-53" aria-hidden="true" tabindex="-1"></a>      <span class="co"># gives each offspring their sex</span></span>
+<span id="cb44-54"><a href="using-stan-in-r.html#cb44-54" aria-hidden="true" tabindex="-1"></a>      sex<span class="ot">&lt;-</span><span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">length</span>(id), <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb44-55"><a href="using-stan-in-r.html#cb44-55" aria-hidden="true" tabindex="-1"></a>      <span class="co"># put into dataframe format</span></span>
+<span id="cb44-56"><a href="using-stan-in-r.html#cb44-56" aria-hidden="true" tabindex="-1"></a>      addped<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">id=</span>id, </span>
+<span id="cb44-57"><a href="using-stan-in-r.html#cb44-57" aria-hidden="true" tabindex="-1"></a>                         <span class="at">dam=</span>pairs<span class="sc">$</span>dam[pairid], </span>
+<span id="cb44-58"><a href="using-stan-in-r.html#cb44-58" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sire=</span>pairs<span class="sc">$</span>sire[pairid],</span>
+<span id="cb44-59"><a href="using-stan-in-r.html#cb44-59" aria-hidden="true" tabindex="-1"></a>                         <span class="at">generation=</span>i, </span>
+<span id="cb44-60"><a href="using-stan-in-r.html#cb44-60" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sex=</span>sex)</span>
+<span id="cb44-61"><a href="using-stan-in-r.html#cb44-61" aria-hidden="true" tabindex="-1"></a>      <span class="co"># deals with extra-pair mating (if included)</span></span>
+<span id="cb44-62"><a href="using-stan-in-r.html#cb44-62" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(epm)){</span>
+<span id="cb44-63"><a href="using-stan-in-r.html#cb44-63" aria-hidden="true" tabindex="-1"></a>        <span class="co"># for each individual, sample if they are extra pair</span></span>
+<span id="cb44-64"><a href="using-stan-in-r.html#cb44-64" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if 0 not extra pair</span></span>
+<span id="cb44-65"><a href="using-stan-in-r.html#cb44-65" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if 1 sire resampled from breeding population</span></span>
+<span id="cb44-66"><a href="using-stan-in-r.html#cb44-66" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if 2 dam resampled</span></span>
+<span id="cb44-67"><a href="using-stan-in-r.html#cb44-67" aria-hidden="true" tabindex="-1"></a>        ext<span class="ot">&lt;-</span><span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="fu">nrow</span>(addped), </span>
+<span id="cb44-68"><a href="using-stan-in-r.html#cb44-68" aria-hidden="true" tabindex="-1"></a>                    <span class="at">replace=</span><span class="cn">TRUE</span>, </span>
+<span id="cb44-69"><a href="using-stan-in-r.html#cb44-69" aria-hidden="true" tabindex="-1"></a>                    <span class="at">prob =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">-</span>epm, epm<span class="sc">/</span><span class="dv">2</span>, epm<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb44-70"><a href="using-stan-in-r.html#cb44-70" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(addped)){</span>
+<span id="cb44-71"><a href="using-stan-in-r.html#cb44-71" aria-hidden="true" tabindex="-1"></a>          <span class="cf">if</span>(ext[j]<span class="sc">&gt;</span><span class="dv">0</span>){</span>
+<span id="cb44-72"><a href="using-stan-in-r.html#cb44-72" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span>(ext[j]<span class="sc">==</span><span class="dv">1</span>){</span>
+<span id="cb44-73"><a href="using-stan-in-r.html#cb44-73" aria-hidden="true" tabindex="-1"></a>              addped<span class="sc">$</span>sire[j]<span class="ot">&lt;-</span><span class="fu">sample</span>(psires,<span class="dv">1</span>,<span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb44-74"><a href="using-stan-in-r.html#cb44-74" aria-hidden="true" tabindex="-1"></a>            }<span class="cf">else</span> <span class="cf">if</span> (ext[j]<span class="sc">==</span><span class="dv">2</span>){</span>
+<span id="cb44-75"><a href="using-stan-in-r.html#cb44-75" aria-hidden="true" tabindex="-1"></a>              addped<span class="sc">$</span>dam[j]<span class="ot">&lt;-</span><span class="fu">sample</span>(pdams,<span class="dv">1</span>,<span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb44-76"><a href="using-stan-in-r.html#cb44-76" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb44-77"><a href="using-stan-in-r.html#cb44-77" aria-hidden="true" tabindex="-1"></a>          }</span>
+<span id="cb44-78"><a href="using-stan-in-r.html#cb44-78" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb44-79"><a href="using-stan-in-r.html#cb44-79" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb44-80"><a href="using-stan-in-r.html#cb44-80" aria-hidden="true" tabindex="-1"></a>      <span class="co"># add new generation to the whole pedigree</span></span>
+<span id="cb44-81"><a href="using-stan-in-r.html#cb44-81" aria-hidden="true" tabindex="-1"></a>      pedigree<span class="ot">&lt;-</span><span class="fu">rbind</span>(pedigree, addped)</span>
+<span id="cb44-82"><a href="using-stan-in-r.html#cb44-82" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb44-83"><a href="using-stan-in-r.html#cb44-83" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb44-84"><a href="using-stan-in-r.html#cb44-84" aria-hidden="true" tabindex="-1"></a>  ped <span class="ot">&lt;-</span> pedigree</span>
+<span id="cb44-85"><a href="using-stan-in-r.html#cb44-85" aria-hidden="true" tabindex="-1"></a>  <span class="co"># make id&#39;s non-numeric</span></span>
+<span id="cb44-86"><a href="using-stan-in-r.html#cb44-86" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>id<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">&quot;ID&quot;</span>,ped<span class="sc">$</span>id, <span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb44-87"><a href="using-stan-in-r.html#cb44-87" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>dam[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(ped<span class="sc">$</span>dam))]<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">&quot;ID&quot;</span>,ped<span class="sc">$</span>dam[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(ped<span class="sc">$</span>dam))], <span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb44-88"><a href="using-stan-in-r.html#cb44-88" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>sire[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(ped<span class="sc">$</span>sire))]<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">&quot;ID&quot;</span>,ped<span class="sc">$</span>sire[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(ped<span class="sc">$</span>sire))], <span class="at">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb44-89"><a href="using-stan-in-r.html#cb44-89" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>id<span class="ot">&lt;-</span><span class="fu">as.character</span>(ped<span class="sc">$</span>id)</span>
+<span id="cb44-90"><a href="using-stan-in-r.html#cb44-90" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>dam<span class="ot">&lt;-</span><span class="fu">as.character</span>(ped<span class="sc">$</span>dam)</span>
+<span id="cb44-91"><a href="using-stan-in-r.html#cb44-91" aria-hidden="true" tabindex="-1"></a>  ped<span class="sc">$</span>sire<span class="ot">&lt;-</span><span class="fu">as.character</span>(ped<span class="sc">$</span>sire)</span>
+<span id="cb44-92"><a href="using-stan-in-r.html#cb44-92" aria-hidden="true" tabindex="-1"></a>  IDs <span class="ot">&lt;-</span> <span class="fu">sample</span>(ped[ped<span class="sc">$</span>generation<span class="sc">==</span>ngenerations, <span class="st">&quot;id&quot;</span>], I, <span class="at">replace=</span><span class="cn">FALSE</span>)</span>
+<span id="cb44-93"><a href="using-stan-in-r.html#cb44-93" aria-hidden="true" tabindex="-1"></a>  ped <span class="ot">&lt;-</span> <span class="fu">prunePed</span>(ped, <span class="at">keep =</span> IDs, <span class="at">make.base=</span><span class="cn">TRUE</span>)</span>
+<span id="cb44-94"><a href="using-stan-in-r.html#cb44-94" aria-hidden="true" tabindex="-1"></a>  inv.phylo <span class="ot">&lt;-</span> <span class="fu">inverseA</span>(ped[,<span class="fu">c</span>(<span class="st">&quot;id&quot;</span>,<span class="st">&quot;dam&quot;</span>,<span class="st">&quot;sire&quot;</span>)])</span>
+<span id="cb44-95"><a href="using-stan-in-r.html#cb44-95" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">&lt;-</span> <span class="fu">solve</span>(inv.phylo<span class="sc">$</span>Ainv)</span>
+<span id="cb44-96"><a href="using-stan-in-r.html#cb44-96" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">&lt;-</span> <span class="fu">cov2cor</span>(A)</span>
+<span id="cb44-97"><a href="using-stan-in-r.html#cb44-97" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">=</span> (A <span class="sc">+</span> <span class="fu">t</span>(A))<span class="sc">/</span><span class="dv">2</span> <span class="co"># Not always symmetric after inversion</span></span>
+<span id="cb44-98"><a href="using-stan-in-r.html#cb44-98" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(A)</span>
+<span id="cb44-99"><a href="using-stan-in-r.html#cb44-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>(A) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(inv.phylo<span class="sc">$</span>Ainv)</span>
+<span id="cb44-100"><a href="using-stan-in-r.html#cb44-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(A) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(inv.phylo<span class="sc">$</span>Ainv)</span>
+<span id="cb44-101"><a href="using-stan-in-r.html#cb44-101" aria-hidden="true" tabindex="-1"></a>  <span class="co">#subset to final generation</span></span>
+<span id="cb44-102"><a href="using-stan-in-r.html#cb44-102" aria-hidden="true" tabindex="-1"></a>  A_sub<span class="ot">&lt;-</span>A[IDs,IDs]</span>
+<span id="cb44-103"><a href="using-stan-in-r.html#cb44-103" aria-hidden="true" tabindex="-1"></a>  A_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">nearPD</span>(A_sub)<span class="sc">$</span>mat)</span>
+<span id="cb44-104"><a href="using-stan-in-r.html#cb44-104" aria-hidden="true" tabindex="-1"></a>  A_mat <span class="ot">&lt;-</span> <span class="fu">cov2cor</span>(A_mat)</span>
+<span id="cb44-105"><a href="using-stan-in-r.html#cb44-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(A_mat)</span>
+<span id="cb44-106"><a href="using-stan-in-r.html#cb44-106" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb44-107"><a href="using-stan-in-r.html#cb44-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-108"><a href="using-stan-in-r.html#cb44-108" aria-hidden="true" tabindex="-1"></a> <span class="co">#population properties</span></span>
+<span id="cb44-109"><a href="using-stan-in-r.html#cb44-109" aria-hidden="true" tabindex="-1"></a> I<span class="ot">=</span><span class="dv">300</span> <span class="co">#total individuals for simulation</span></span>
+<span id="cb44-110"><a href="using-stan-in-r.html#cb44-110" aria-hidden="true" tabindex="-1"></a> popmin<span class="ot">=</span><span class="dv">400</span></span>
+<span id="cb44-111"><a href="using-stan-in-r.html#cb44-111" aria-hidden="true" tabindex="-1"></a> popmax<span class="ot">=</span><span class="dv">600</span></span>
+<span id="cb44-112"><a href="using-stan-in-r.html#cb44-112" aria-hidden="true" tabindex="-1"></a> ngenerations <span class="ot">=</span> <span class="dv">10</span></span>
+<span id="cb44-113"><a href="using-stan-in-r.html#cb44-113" aria-hidden="true" tabindex="-1"></a> nids<span class="ot">&lt;-</span><span class="fu">sample</span>(popmin<span class="sc">:</span>popmax, ngenerations, <span class="at">replace=</span><span class="cn">TRUE</span>) <span class="co">#N / generation</span></span>
+<span id="cb44-114"><a href="using-stan-in-r.html#cb44-114" aria-hidden="true" tabindex="-1"></a> epm <span class="ot">=</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="fl">0.15</span>, <span class="fl">0.25</span>,<span class="at">by=</span><span class="fl">0.05</span>),<span class="dv">1</span>) <span class="co">#extra-pair mating</span></span>
+<span id="cb44-115"><a href="using-stan-in-r.html#cb44-115" aria-hidden="true" tabindex="-1"></a> nonb <span class="ot">=</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="fl">0.4</span>,<span class="fl">0.6</span>,<span class="at">by=</span><span class="fl">0.05</span>),<span class="dv">1</span>) <span class="co">#proportion of non-breeding / generation</span></span>
+<span id="cb44-116"><a href="using-stan-in-r.html#cb44-116" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb44-117"><a href="using-stan-in-r.html#cb44-117" aria-hidden="true" tabindex="-1"></a> <span class="co">#relatedness matrix</span></span>
+<span id="cb44-118"><a href="using-stan-in-r.html#cb44-118" aria-hidden="true" tabindex="-1"></a> A_mat <span class="ot">&lt;-</span> <span class="fu">pedfun</span>(<span class="at">popmin=</span>popmin, <span class="at">popmax=</span>popmax, <span class="at">ngenerations=</span>ngenerations,</span>
+<span id="cb44-119"><a href="using-stan-in-r.html#cb44-119" aria-hidden="true" tabindex="-1"></a>                  <span class="at">epm=</span>epm, <span class="at">nonb=</span>nonb, <span class="at">nids=</span>nids, <span class="at">I=</span>I, <span class="at">missing=</span><span class="cn">FALSE</span>)</span></code></pre></div>
 <p>We can now simulate a new dataset using the code from above, partitioning the distinct additive genetic and permanent environmental trait values. We include a third measurement per individual to enhance estimation of the individual-level RN intercepts and slopes.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="using-stan-in-r.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
-<span id="cb46-2"><a href="using-stan-in-r.html#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-3"><a href="using-stan-in-r.html#cb46-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">=</span> <span class="dv">900</span> <span class="co">#total observations (3x/individual)</span></span>
-<span id="cb46-4"><a href="using-stan-in-r.html#cb46-4" aria-hidden="true" tabindex="-1"></a>I <span class="ot">=</span> <span class="dv">300</span> <span class="co">#total individuals</span></span>
-<span id="cb46-5"><a href="using-stan-in-r.html#cb46-5" aria-hidden="true" tabindex="-1"></a>intercept <span class="ot">=</span> <span class="dv">1</span> <span class="co">#global intercept</span></span>
-<span id="cb46-6"><a href="using-stan-in-r.html#cb46-6" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#fixed effect regression coefficient</span></span>
-<span id="cb46-7"><a href="using-stan-in-r.html#cb46-7" aria-hidden="true" tabindex="-1"></a>SD_intercept <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#standard deviation of random intercepts</span></span>
-<span id="cb46-8"><a href="using-stan-in-r.html#cb46-8" aria-hidden="true" tabindex="-1"></a>SD_slope <span class="ot">=</span> <span class="fl">0.3</span></span>
-<span id="cb46-9"><a href="using-stan-in-r.html#cb46-9" aria-hidden="true" tabindex="-1"></a>SD_residual <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb46-10"><a href="using-stan-in-r.html#cb46-10" aria-hidden="true" tabindex="-1"></a>r_G <span class="ot">=</span> <span class="fl">0.5</span> <span class="co">#genetic correlation of random intercepts and slopes</span></span>
-<span id="cb46-11"><a href="using-stan-in-r.html#cb46-11" aria-hidden="true" tabindex="-1"></a>r_E <span class="ot">=</span> <span class="sc">-</span><span class="fl">0.5</span> <span class="co">#environmental correlation</span></span>
-<span id="cb46-12"><a href="using-stan-in-r.html#cb46-12" aria-hidden="true" tabindex="-1"></a>V_G <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#genetic variance of REs</span></span>
-<span id="cb46-13"><a href="using-stan-in-r.html#cb46-13" aria-hidden="true" tabindex="-1"></a>V_E <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#genetic variance of REs</span></span>
-<span id="cb46-14"><a href="using-stan-in-r.html#cb46-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-15"><a href="using-stan-in-r.html#cb46-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Random effect correlations</span></span>
-<span id="cb46-16"><a href="using-stan-in-r.html#cb46-16" aria-hidden="true" tabindex="-1"></a>G_cor <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,r_G,r_G,<span class="dv">1</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>) <span class="co">#mu_A, beta_A</span></span>
-<span id="cb46-17"><a href="using-stan-in-r.html#cb46-17" aria-hidden="true" tabindex="-1"></a>G_sd  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">sqrt</span>(V_G),<span class="fu">sqrt</span>(V_G)) <span class="co">#G effect sds</span></span>
-<span id="cb46-18"><a href="using-stan-in-r.html#cb46-18" aria-hidden="true" tabindex="-1"></a>G_cov <span class="ot">&lt;-</span> <span class="fu">diag</span>(G_sd) <span class="sc">%*%</span> G_cor <span class="sc">%*%</span> <span class="fu">diag</span>(G_sd)</span>
-<span id="cb46-19"><a href="using-stan-in-r.html#cb46-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb46-20"><a href="using-stan-in-r.html#cb46-20" aria-hidden="true" tabindex="-1"></a>E_cor <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,r_E,r_E,<span class="dv">1</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>) <span class="co">#mu_E, beta_E</span></span>
-<span id="cb46-21"><a href="using-stan-in-r.html#cb46-21" aria-hidden="true" tabindex="-1"></a>E_sd  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">sqrt</span>(V_E),<span class="fu">sqrt</span>(V_E)) <span class="co">#E effect sds</span></span>
-<span id="cb46-22"><a href="using-stan-in-r.html#cb46-22" aria-hidden="true" tabindex="-1"></a>E_cov <span class="ot">&lt;-</span> <span class="fu">diag</span>(E_sd) <span class="sc">%*%</span> E_cor <span class="sc">%*%</span> <span class="fu">diag</span>(E_sd)</span>
-<span id="cb46-23"><a href="using-stan-in-r.html#cb46-23" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb46-24"><a href="using-stan-in-r.html#cb46-24" aria-hidden="true" tabindex="-1"></a><span class="co">#matrices</span></span>
-<span id="cb46-25"><a href="using-stan-in-r.html#cb46-25" aria-hidden="true" tabindex="-1"></a>G_block <span class="ot">&lt;-</span> G_cov <span class="sc">%x%</span> A_mat</span>
-<span id="cb46-26"><a href="using-stan-in-r.html#cb46-26" aria-hidden="true" tabindex="-1"></a>E_block <span class="ot">&lt;-</span> E_cov <span class="sc">%x%</span> <span class="fu">diag</span>(<span class="dv">1</span>,I)</span>
-<span id="cb46-27"><a href="using-stan-in-r.html#cb46-27" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb46-28"><a href="using-stan-in-r.html#cb46-28" aria-hidden="true" tabindex="-1"></a><span class="co">#generate correlated REs</span></span>
-<span id="cb46-29"><a href="using-stan-in-r.html#cb46-29" aria-hidden="true" tabindex="-1"></a>Gvalues <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="fu">rep</span>(<span class="dv">0</span>,I<span class="sc">*</span><span class="dv">2</span>), <span class="at">sigma=</span>G_block)</span>
-<span id="cb46-30"><a href="using-stan-in-r.html#cb46-30" aria-hidden="true" tabindex="-1"></a>G_val <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(Gvalues, <span class="at">nrow=</span>I, <span class="at">ncol=</span><span class="dv">2</span>))</span>
-<span id="cb46-31"><a href="using-stan-in-r.html#cb46-31" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(G_val)</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="using-stan-in-r.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
+<span id="cb45-2"><a href="using-stan-in-r.html#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="using-stan-in-r.html#cb45-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">=</span> <span class="dv">900</span> <span class="co">#total observations (3x/individual)</span></span>
+<span id="cb45-4"><a href="using-stan-in-r.html#cb45-4" aria-hidden="true" tabindex="-1"></a>I <span class="ot">=</span> <span class="dv">300</span> <span class="co">#total individuals</span></span>
+<span id="cb45-5"><a href="using-stan-in-r.html#cb45-5" aria-hidden="true" tabindex="-1"></a>intercept <span class="ot">=</span> <span class="dv">1</span> <span class="co">#global intercept</span></span>
+<span id="cb45-6"><a href="using-stan-in-r.html#cb45-6" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#fixed effect regression coefficient</span></span>
+<span id="cb45-7"><a href="using-stan-in-r.html#cb45-7" aria-hidden="true" tabindex="-1"></a>SD_intercept <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#standard deviation of random intercepts</span></span>
+<span id="cb45-8"><a href="using-stan-in-r.html#cb45-8" aria-hidden="true" tabindex="-1"></a>SD_slope <span class="ot">=</span> <span class="fl">0.3</span></span>
+<span id="cb45-9"><a href="using-stan-in-r.html#cb45-9" aria-hidden="true" tabindex="-1"></a>SD_residual <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb45-10"><a href="using-stan-in-r.html#cb45-10" aria-hidden="true" tabindex="-1"></a>r_G <span class="ot">=</span> <span class="fl">0.5</span> <span class="co">#genetic correlation of random intercepts and slopes</span></span>
+<span id="cb45-11"><a href="using-stan-in-r.html#cb45-11" aria-hidden="true" tabindex="-1"></a>r_E <span class="ot">=</span> <span class="sc">-</span><span class="fl">0.5</span> <span class="co">#environmental correlation</span></span>
+<span id="cb45-12"><a href="using-stan-in-r.html#cb45-12" aria-hidden="true" tabindex="-1"></a>V_G <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#genetic variance of REs</span></span>
+<span id="cb45-13"><a href="using-stan-in-r.html#cb45-13" aria-hidden="true" tabindex="-1"></a>V_E <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#genetic variance of REs</span></span>
+<span id="cb45-14"><a href="using-stan-in-r.html#cb45-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-15"><a href="using-stan-in-r.html#cb45-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Random effect correlations</span></span>
+<span id="cb45-16"><a href="using-stan-in-r.html#cb45-16" aria-hidden="true" tabindex="-1"></a>G_cor <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,r_G,r_G,<span class="dv">1</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>) <span class="co">#mu_A, beta_A</span></span>
+<span id="cb45-17"><a href="using-stan-in-r.html#cb45-17" aria-hidden="true" tabindex="-1"></a>G_sd  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">sqrt</span>(V_G),<span class="fu">sqrt</span>(V_G)) <span class="co">#G effect sds</span></span>
+<span id="cb45-18"><a href="using-stan-in-r.html#cb45-18" aria-hidden="true" tabindex="-1"></a>G_cov <span class="ot">&lt;-</span> <span class="fu">diag</span>(G_sd) <span class="sc">%*%</span> G_cor <span class="sc">%*%</span> <span class="fu">diag</span>(G_sd)</span>
+<span id="cb45-19"><a href="using-stan-in-r.html#cb45-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb45-20"><a href="using-stan-in-r.html#cb45-20" aria-hidden="true" tabindex="-1"></a>E_cor <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,r_E,r_E,<span class="dv">1</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>) <span class="co">#mu_E, beta_E</span></span>
+<span id="cb45-21"><a href="using-stan-in-r.html#cb45-21" aria-hidden="true" tabindex="-1"></a>E_sd  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">sqrt</span>(V_E),<span class="fu">sqrt</span>(V_E)) <span class="co">#E effect sds</span></span>
+<span id="cb45-22"><a href="using-stan-in-r.html#cb45-22" aria-hidden="true" tabindex="-1"></a>E_cov <span class="ot">&lt;-</span> <span class="fu">diag</span>(E_sd) <span class="sc">%*%</span> E_cor <span class="sc">%*%</span> <span class="fu">diag</span>(E_sd)</span>
+<span id="cb45-23"><a href="using-stan-in-r.html#cb45-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb45-24"><a href="using-stan-in-r.html#cb45-24" aria-hidden="true" tabindex="-1"></a><span class="co">#matrices</span></span>
+<span id="cb45-25"><a href="using-stan-in-r.html#cb45-25" aria-hidden="true" tabindex="-1"></a>G_block <span class="ot">&lt;-</span> G_cov <span class="sc">%x%</span> A_mat</span>
+<span id="cb45-26"><a href="using-stan-in-r.html#cb45-26" aria-hidden="true" tabindex="-1"></a>E_block <span class="ot">&lt;-</span> E_cov <span class="sc">%x%</span> <span class="fu">diag</span>(<span class="dv">1</span>,I)</span>
+<span id="cb45-27"><a href="using-stan-in-r.html#cb45-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb45-28"><a href="using-stan-in-r.html#cb45-28" aria-hidden="true" tabindex="-1"></a><span class="co">#generate correlated REs</span></span>
+<span id="cb45-29"><a href="using-stan-in-r.html#cb45-29" aria-hidden="true" tabindex="-1"></a>Gvalues <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="fu">rep</span>(<span class="dv">0</span>,I<span class="sc">*</span><span class="dv">2</span>), <span class="at">sigma=</span>G_block)</span>
+<span id="cb45-30"><a href="using-stan-in-r.html#cb45-30" aria-hidden="true" tabindex="-1"></a>G_val <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(Gvalues, <span class="at">nrow=</span>I, <span class="at">ncol=</span><span class="dv">2</span>))</span>
+<span id="cb45-31"><a href="using-stan-in-r.html#cb45-31" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(G_val)</span></code></pre></div>
 <pre><code>##           X1        X2
-## X1 1.0000000 0.4949995
-## X2 0.4949995 1.0000000</code></pre>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="using-stan-in-r.html#cb48-1" aria-hidden="true" tabindex="-1"></a>Evalues <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="fu">rep</span>(<span class="dv">0</span>,I<span class="sc">*</span><span class="dv">2</span>), <span class="at">sigma=</span>E_block)</span>
-<span id="cb48-2"><a href="using-stan-in-r.html#cb48-2" aria-hidden="true" tabindex="-1"></a>E_val <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(Evalues, <span class="at">nrow=</span>I, <span class="at">ncol=</span><span class="dv">2</span>))</span>
-<span id="cb48-3"><a href="using-stan-in-r.html#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(E_val)</span></code></pre></div>
+## X1 1.0000000 0.4894477
+## X2 0.4894477 1.0000000</code></pre>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="using-stan-in-r.html#cb47-1" aria-hidden="true" tabindex="-1"></a>Evalues <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="fu">rep</span>(<span class="dv">0</span>,I<span class="sc">*</span><span class="dv">2</span>), <span class="at">sigma=</span>E_block)</span>
+<span id="cb47-2"><a href="using-stan-in-r.html#cb47-2" aria-hidden="true" tabindex="-1"></a>E_val <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(Evalues, <span class="at">nrow=</span>I, <span class="at">ncol=</span><span class="dv">2</span>))</span>
+<span id="cb47-3"><a href="using-stan-in-r.html#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(E_val)</span></code></pre></div>
 <pre><code>##            X1         X2
-## X1  1.0000000 -0.5089571
-## X2 -0.5089571  1.0000000</code></pre>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="using-stan-in-r.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">#combine</span></span>
-<span id="cb50-2"><a href="using-stan-in-r.html#cb50-2" aria-hidden="true" tabindex="-1"></a>re_P <span class="ot">=</span> <span class="fu">cbind</span>(G_val,E_val)</span>
-<span id="cb50-3"><a href="using-stan-in-r.html#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(re_P) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;mu_A&quot;</span>, <span class="st">&quot;beta_A&quot;</span>, <span class="st">&quot;mu_E&quot;</span>, <span class="st">&quot;beta_E&quot;</span>)</span>
-<span id="cb50-4"><a href="using-stan-in-r.html#cb50-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-5"><a href="using-stan-in-r.html#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="co">#individual-level index</span></span>
-<span id="cb50-6"><a href="using-stan-in-r.html#cb50-6" aria-hidden="true" tabindex="-1"></a>id <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="dv">1</span>, I), <span class="at">each =</span> N<span class="sc">/</span>I) <span class="co">#i.e. two observations per individual</span></span>
-<span id="cb50-7"><a href="using-stan-in-r.html#cb50-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-8"><a href="using-stan-in-r.html#cb50-8" aria-hidden="true" tabindex="-1"></a><span class="co">#simulate fixed effect covariate</span></span>
-<span id="cb50-9"><a href="using-stan-in-r.html#cb50-9" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">rnorm</span>(N,<span class="dv">0</span>,<span class="dv">1</span>)</span>
-<span id="cb50-10"><a href="using-stan-in-r.html#cb50-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-11"><a href="using-stan-in-r.html#cb50-11" aria-hidden="true" tabindex="-1"></a><span class="co">#individual phenotypic REs</span></span>
-<span id="cb50-12"><a href="using-stan-in-r.html#cb50-12" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">=</span> re_P<span class="sc">$</span>mu_A <span class="sc">+</span> re_P<span class="sc">$</span>mu_E</span>
-<span id="cb50-13"><a href="using-stan-in-r.html#cb50-13" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">=</span> re_P<span class="sc">$</span>beta_A <span class="sc">+</span> re_P<span class="sc">$</span>beta_E</span>
-<span id="cb50-14"><a href="using-stan-in-r.html#cb50-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-15"><a href="using-stan-in-r.html#cb50-15" aria-hidden="true" tabindex="-1"></a><span class="co">#residual effects</span></span>
-<span id="cb50-16"><a href="using-stan-in-r.html#cb50-16" aria-hidden="true" tabindex="-1"></a>epsilon <span class="ot">=</span> <span class="fu">rnorm</span>(N, <span class="dv">0</span>, SD_residual )</span>
-<span id="cb50-17"><a href="using-stan-in-r.html#cb50-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-18"><a href="using-stan-in-r.html#cb50-18" aria-hidden="true" tabindex="-1"></a><span class="co">#measured response</span></span>
-<span id="cb50-19"><a href="using-stan-in-r.html#cb50-19" aria-hidden="true" tabindex="-1"></a>z <span class="ot">=</span> intercept <span class="sc">+</span> mu[id] <span class="sc">+</span> (beta1 <span class="sc">+</span> beta[id])<span class="sc">*</span>x <span class="sc">+</span> epsilon</span>
-<span id="cb50-20"><a href="using-stan-in-r.html#cb50-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-21"><a href="using-stan-in-r.html#cb50-21" aria-hidden="true" tabindex="-1"></a><span class="co">#combine into list for Stan</span></span>
-<span id="cb50-22"><a href="using-stan-in-r.html#cb50-22" aria-hidden="true" tabindex="-1"></a>stan_data <span class="ot">=</span> <span class="fu">list</span>(<span class="at">z =</span> z, <span class="at">x =</span> x, <span class="at">id =</span> id, <span class="at">N =</span> N, <span class="at">I =</span> I, <span class="at">A =</span> A_mat)</span></code></pre></div>
+## X1  1.0000000 -0.4505948
+## X2 -0.4505948  1.0000000</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="using-stan-in-r.html#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co">#combine</span></span>
+<span id="cb49-2"><a href="using-stan-in-r.html#cb49-2" aria-hidden="true" tabindex="-1"></a>re_P <span class="ot">=</span> <span class="fu">cbind</span>(G_val,E_val)</span>
+<span id="cb49-3"><a href="using-stan-in-r.html#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(re_P) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;mu_A&quot;</span>, <span class="st">&quot;beta_A&quot;</span>, <span class="st">&quot;mu_E&quot;</span>, <span class="st">&quot;beta_E&quot;</span>)</span>
+<span id="cb49-4"><a href="using-stan-in-r.html#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-5"><a href="using-stan-in-r.html#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="co">#individual-level index</span></span>
+<span id="cb49-6"><a href="using-stan-in-r.html#cb49-6" aria-hidden="true" tabindex="-1"></a>id <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="dv">1</span>, I), <span class="at">each =</span> N<span class="sc">/</span>I) <span class="co">#i.e. two observations per individual</span></span>
+<span id="cb49-7"><a href="using-stan-in-r.html#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-8"><a href="using-stan-in-r.html#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="co">#simulate fixed effect covariate</span></span>
+<span id="cb49-9"><a href="using-stan-in-r.html#cb49-9" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">rnorm</span>(N,<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb49-10"><a href="using-stan-in-r.html#cb49-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-11"><a href="using-stan-in-r.html#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="co">#individual phenotypic REs</span></span>
+<span id="cb49-12"><a href="using-stan-in-r.html#cb49-12" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">=</span> re_P<span class="sc">$</span>mu_A <span class="sc">+</span> re_P<span class="sc">$</span>mu_E</span>
+<span id="cb49-13"><a href="using-stan-in-r.html#cb49-13" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">=</span> re_P<span class="sc">$</span>beta_A <span class="sc">+</span> re_P<span class="sc">$</span>beta_E</span>
+<span id="cb49-14"><a href="using-stan-in-r.html#cb49-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-15"><a href="using-stan-in-r.html#cb49-15" aria-hidden="true" tabindex="-1"></a><span class="co">#residual effects</span></span>
+<span id="cb49-16"><a href="using-stan-in-r.html#cb49-16" aria-hidden="true" tabindex="-1"></a>epsilon <span class="ot">=</span> <span class="fu">rnorm</span>(N, <span class="dv">0</span>, SD_residual )</span>
+<span id="cb49-17"><a href="using-stan-in-r.html#cb49-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-18"><a href="using-stan-in-r.html#cb49-18" aria-hidden="true" tabindex="-1"></a><span class="co">#measured response</span></span>
+<span id="cb49-19"><a href="using-stan-in-r.html#cb49-19" aria-hidden="true" tabindex="-1"></a>z <span class="ot">=</span> intercept <span class="sc">+</span> mu[id] <span class="sc">+</span> (beta1 <span class="sc">+</span> beta[id])<span class="sc">*</span>x <span class="sc">+</span> epsilon</span>
+<span id="cb49-20"><a href="using-stan-in-r.html#cb49-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-21"><a href="using-stan-in-r.html#cb49-21" aria-hidden="true" tabindex="-1"></a><span class="co">#combine into list for Stan</span></span>
+<span id="cb49-22"><a href="using-stan-in-r.html#cb49-22" aria-hidden="true" tabindex="-1"></a>stan_data <span class="ot">=</span> <span class="fu">list</span>(<span class="at">z =</span> z, <span class="at">x =</span> x, <span class="at">id =</span> id, <span class="at">N =</span> N, <span class="at">I =</span> I, <span class="at">A =</span> A_mat)</span></code></pre></div>
 </div>
 <div id="kronecker-products" class="section level3" number="1.5.2">
 <h3><span class="header-section-number">1.5.2</span> Kronecker products</h3>
@@ -935,129 +925,129 @@ The additive genetic proportions can be conceptualized as reaction norm heritabi
 <span class="math display">\[h_{\beta}^{2}=\frac { \mathrm{Var}(\boldsymbol{\beta_{\mathrm{A}}}) }{\mathrm{Var}(\boldsymbol{\beta_{\mathrm{ }}})}\]</span></p>
 <p>Given that there are only two individual-level random effects, the proportion of variance attributable to environmental effects is necessarily <span class="math inline">\(1-h_{\mu}^{2}\)</span> and <span class="math inline">\(1-h_{\beta}^{2}\)</span> for intercepts and slopes respectively. This alternative parametrization is again mathematically equivalent to the previous model, but it is much easier for Stan to estimate appropriately.</p>
 <p>To implement this trick, we respecify the model parameters, removing the distinct genetic and environmental SDs and replacing them with common phenotypic SD scale parameters and reaction norm heritability parameters, which can subsequently be used to scale the distinct genetic and environmental standard normal deviates and correlation matrices in the <code>transformed parameters</code> block. This final model can thus be written as</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="using-stan-in-r.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(<span class="st">&quot;</span></span>
-<span id="cb55-2"><a href="using-stan-in-r.html#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
-<span id="cb55-3"><a href="using-stan-in-r.html#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; N; </span></span>
-<span id="cb55-4"><a href="using-stan-in-r.html#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; I; </span></span>
-<span id="cb55-5"><a href="using-stan-in-r.html#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; id[N]; </span></span>
-<span id="cb55-6"><a href="using-stan-in-r.html#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N] x; </span></span>
-<span id="cb55-7"><a href="using-stan-in-r.html#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N] z;</span></span>
-<span id="cb55-8"><a href="using-stan-in-r.html#cb55-8" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,I] A; //new relatedness matrix</span></span>
-<span id="cb55-9"><a href="using-stan-in-r.html#cb55-9" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb55-10"><a href="using-stan-in-r.html#cb55-10" aria-hidden="true" tabindex="-1"></a><span class="st">transformed data{</span></span>
-<span id="cb55-11"><a href="using-stan-in-r.html#cb55-11" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,I] LA = cholesky_decompose(A); //lower triangle relatedness matrix </span></span>
-<span id="cb55-12"><a href="using-stan-in-r.html#cb55-12" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb55-13"><a href="using-stan-in-r.html#cb55-13" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
-<span id="cb55-14"><a href="using-stan-in-r.html#cb55-14" aria-hidden="true" tabindex="-1"></a><span class="st">  //fixed effects</span></span>
-<span id="cb55-15"><a href="using-stan-in-r.html#cb55-15" aria-hidden="true" tabindex="-1"></a><span class="st">  real mu_0;</span></span>
-<span id="cb55-16"><a href="using-stan-in-r.html#cb55-16" aria-hidden="true" tabindex="-1"></a><span class="st">  real beta_1;</span></span>
-<span id="cb55-17"><a href="using-stan-in-r.html#cb55-17" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb55-18"><a href="using-stan-in-r.html#cb55-18" aria-hidden="true" tabindex="-1"></a><span class="st">  //random effects</span></span>
-<span id="cb55-19"><a href="using-stan-in-r.html#cb55-19" aria-hidden="true" tabindex="-1"></a><span class="st">  cholesky_factor_corr[2] LGcor; //additive genetic cor matrix</span></span>
-<span id="cb55-20"><a href="using-stan-in-r.html#cb55-20" aria-hidden="true" tabindex="-1"></a><span class="st">  cholesky_factor_corr[2] LEcor; //permanent environmental cor matrix</span></span>
-<span id="cb55-21"><a href="using-stan-in-r.html#cb55-21" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0&gt;[2] sd_P; //total phenotypic SD (removed distinct G and E SDs)</span></span>
-<span id="cb55-22"><a href="using-stan-in-r.html#cb55-22" aria-hidden="true" tabindex="-1"></a><span class="st">  real&lt;lower=0&gt; sd_R;</span></span>
-<span id="cb55-23"><a href="using-stan-in-r.html#cb55-23" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] std_G; //matrix of standard normals for G effects</span></span>
-<span id="cb55-24"><a href="using-stan-in-r.html#cb55-24" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] std_E; //matrix of standard normals for E effects</span></span>
-<span id="cb55-25"><a href="using-stan-in-r.html#cb55-25" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb55-26"><a href="using-stan-in-r.html#cb55-26" aria-hidden="true" tabindex="-1"></a><span class="st">  //RN heritability (proportion between 0 and 1)</span></span>
-<span id="cb55-27"><a href="using-stan-in-r.html#cb55-27" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0,upper=1&gt;[2] RN_h2;</span></span>
-<span id="cb55-28"><a href="using-stan-in-r.html#cb55-28" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb55-29"><a href="using-stan-in-r.html#cb55-29" aria-hidden="true" tabindex="-1"></a><span class="st">transformed parameters {</span></span>
-<span id="cb55-30"><a href="using-stan-in-r.html#cb55-30" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0&gt;[2] sd_G; //SDs of G effects</span></span>
-<span id="cb55-31"><a href="using-stan-in-r.html#cb55-31" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0&gt;[2] sd_E; //SDs of E effects</span></span>
-<span id="cb55-32"><a href="using-stan-in-r.html#cb55-32" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] re_G; //scaled G random effects</span></span>
-<span id="cb55-33"><a href="using-stan-in-r.html#cb55-33" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] re_E;  //scaled E random effects</span></span>
-<span id="cb55-34"><a href="using-stan-in-r.html#cb55-34" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[I] mu; //phenotypic individual intercepts</span></span>
-<span id="cb55-35"><a href="using-stan-in-r.html#cb55-35" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[I] beta; //phenotypic individual slopes</span></span>
-<span id="cb55-36"><a href="using-stan-in-r.html#cb55-36" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb55-37"><a href="using-stan-in-r.html#cb55-37" aria-hidden="true" tabindex="-1"></a><span class="st">  //SDs of genetic effects, sqrt(phenotypic variance * h2)</span></span>
-<span id="cb55-38"><a href="using-stan-in-r.html#cb55-38" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_G[1] = sd_P[1] * sqrt(RN_h2[1]); //genetic SD for ind intercepts </span></span>
-<span id="cb55-39"><a href="using-stan-in-r.html#cb55-39" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_G[2] = sd_P[2] * sqrt(RN_h2[2]);  //genetic SD for ind slopes</span></span>
-<span id="cb55-40"><a href="using-stan-in-r.html#cb55-40" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb55-41"><a href="using-stan-in-r.html#cb55-41" aria-hidden="true" tabindex="-1"></a><span class="st">  //SDs of environmental effects, sqrt(phenotypic variance * [1-h2])</span></span>
-<span id="cb55-42"><a href="using-stan-in-r.html#cb55-42" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_E[1] = sd_P[1] * sqrt(1 - RN_h2[1]); //environment SD for ind intercepts </span></span>
-<span id="cb55-43"><a href="using-stan-in-r.html#cb55-43" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_E[2] = sd_P[2] * sqrt(1 - RN_h2[2]); //environment SD for ind slopes </span></span>
-<span id="cb55-44"><a href="using-stan-in-r.html#cb55-44" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb55-45"><a href="using-stan-in-r.html#cb55-45" aria-hidden="true" tabindex="-1"></a><span class="st">  //matrix normal parameterization</span></span>
-<span id="cb55-46"><a href="using-stan-in-r.html#cb55-46" aria-hidden="true" tabindex="-1"></a><span class="st">  re_G =  LA * std_G * diag_pre_multiply(sd_G, LGcor)&#39; ; </span></span>
-<span id="cb55-47"><a href="using-stan-in-r.html#cb55-47" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb55-48"><a href="using-stan-in-r.html#cb55-48" aria-hidden="true" tabindex="-1"></a><span class="st">  //non-centered parameterization</span></span>
-<span id="cb55-49"><a href="using-stan-in-r.html#cb55-49" aria-hidden="true" tabindex="-1"></a><span class="st">  re_E = std_E * diag_pre_multiply(sd_E, LEcor)&#39; ;</span></span>
-<span id="cb55-50"><a href="using-stan-in-r.html#cb55-50" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb55-51"><a href="using-stan-in-r.html#cb55-51" aria-hidden="true" tabindex="-1"></a><span class="st">  //separate intercepts and slopes</span></span>
-<span id="cb55-52"><a href="using-stan-in-r.html#cb55-52" aria-hidden="true" tabindex="-1"></a><span class="st">  mu = col(re_G, 1) + col(re_E, 1); //P = G + E</span></span>
-<span id="cb55-53"><a href="using-stan-in-r.html#cb55-53" aria-hidden="true" tabindex="-1"></a><span class="st">  beta = col(re_G, 2) + col(re_E, 2); //P = G + E</span></span>
-<span id="cb55-54"><a href="using-stan-in-r.html#cb55-54" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb55-55"><a href="using-stan-in-r.html#cb55-55" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
-<span id="cb55-56"><a href="using-stan-in-r.html#cb55-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-57"><a href="using-stan-in-r.html#cb55-57" aria-hidden="true" tabindex="-1"></a><span class="st">  //model likelihood</span></span>
-<span id="cb55-58"><a href="using-stan-in-r.html#cb55-58" aria-hidden="true" tabindex="-1"></a><span class="st">  z ~ normal(mu_0 + mu[id] + (beta_1 + beta[id]).*x, sd_R);</span></span>
-<span id="cb55-59"><a href="using-stan-in-r.html#cb55-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-60"><a href="using-stan-in-r.html#cb55-60" aria-hidden="true" tabindex="-1"></a><span class="st">  //priors</span></span>
-<span id="cb55-61"><a href="using-stan-in-r.html#cb55-61" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb55-62"><a href="using-stan-in-r.html#cb55-62" aria-hidden="true" tabindex="-1"></a><span class="st">  //fixed effects</span></span>
-<span id="cb55-63"><a href="using-stan-in-r.html#cb55-63" aria-hidden="true" tabindex="-1"></a><span class="st">  mu_0 ~ normal(0,1);</span></span>
-<span id="cb55-64"><a href="using-stan-in-r.html#cb55-64" aria-hidden="true" tabindex="-1"></a><span class="st">  beta_1 ~ normal(0,1);</span></span>
-<span id="cb55-65"><a href="using-stan-in-r.html#cb55-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-66"><a href="using-stan-in-r.html#cb55-66" aria-hidden="true" tabindex="-1"></a><span class="st">  //random effects</span></span>
-<span id="cb55-67"><a href="using-stan-in-r.html#cb55-67" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(std_G) ~ std_normal(); //genetic std normal deviates</span></span>
-<span id="cb55-68"><a href="using-stan-in-r.html#cb55-68" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(std_E) ~ std_normal(); //environmental std normal deviates</span></span>
-<span id="cb55-69"><a href="using-stan-in-r.html#cb55-69" aria-hidden="true" tabindex="-1"></a><span class="st">  LGcor ~ lkj_corr_cholesky(2); //genetic correlations</span></span>
-<span id="cb55-70"><a href="using-stan-in-r.html#cb55-70" aria-hidden="true" tabindex="-1"></a><span class="st">  LEcor ~ lkj_corr_cholesky(2); //environmental correlations</span></span>
-<span id="cb55-71"><a href="using-stan-in-r.html#cb55-71" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb55-72"><a href="using-stan-in-r.html#cb55-72" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(sd_P) ~ cauchy(0,1); //only phenotypic scale</span></span>
-<span id="cb55-73"><a href="using-stan-in-r.html#cb55-73" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_R ~ cauchy(0,1);</span></span>
-<span id="cb55-74"><a href="using-stan-in-r.html#cb55-74" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb55-75"><a href="using-stan-in-r.html#cb55-75" aria-hidden="true" tabindex="-1"></a><span class="st">  //reaction norm heritability</span></span>
-<span id="cb55-76"><a href="using-stan-in-r.html#cb55-76" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(RN_h2) ~  beta(1.2,1.2);</span></span>
-<span id="cb55-77"><a href="using-stan-in-r.html#cb55-77" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb55-78"><a href="using-stan-in-r.html#cb55-78" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb55-79"><a href="using-stan-in-r.html#cb55-79" aria-hidden="true" tabindex="-1"></a><span class="st">generated quantities {</span></span>
-<span id="cb55-80"><a href="using-stan-in-r.html#cb55-80" aria-hidden="true" tabindex="-1"></a><span class="st">corr_matrix[2] Gcor = LGcor * LGcor&#39;; //genetic cor</span></span>
-<span id="cb55-81"><a href="using-stan-in-r.html#cb55-81" aria-hidden="true" tabindex="-1"></a><span class="st">corr_matrix[2] Ecor = LEcor * LEcor&#39;; //environmental cor</span></span>
-<span id="cb55-82"><a href="using-stan-in-r.html#cb55-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-83"><a href="using-stan-in-r.html#cb55-83" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Gcov = diag_matrix(sd_G)*Gcor*diag_matrix(sd_G); //genetic cov</span></span>
-<span id="cb55-84"><a href="using-stan-in-r.html#cb55-84" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Ecov = diag_matrix(sd_E)*Ecor*diag_matrix(sd_E); //environmental cov</span></span>
-<span id="cb55-85"><a href="using-stan-in-r.html#cb55-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-86"><a href="using-stan-in-r.html#cb55-86" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Pcov = Gcov + Ecov; //phenotypic covariance (assuming independent effects)</span></span>
-<span id="cb55-87"><a href="using-stan-in-r.html#cb55-87" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Pcor = inverse(diag_matrix(sd_P))*Pcov*inverse(diag_matrix(sd_P)); //phenotypic cor</span></span>
-<span id="cb55-88"><a href="using-stan-in-r.html#cb55-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-89"><a href="using-stan-in-r.html#cb55-89" aria-hidden="true" tabindex="-1"></a><span class="st">//variances</span></span>
-<span id="cb55-90"><a href="using-stan-in-r.html#cb55-90" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_P = sd_P .* sd_P;</span></span>
-<span id="cb55-91"><a href="using-stan-in-r.html#cb55-91" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_G = sd_G .* sd_G;</span></span>
-<span id="cb55-92"><a href="using-stan-in-r.html#cb55-92" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_E = sd_E .* sd_E;</span></span>
-<span id="cb55-93"><a href="using-stan-in-r.html#cb55-93" aria-hidden="true" tabindex="-1"></a><span class="st">real V_R = sd_R * sd_R;</span></span>
-<span id="cb55-94"><a href="using-stan-in-r.html#cb55-94" aria-hidden="true" tabindex="-1"></a><span class="st">}&quot;</span>, <span class="st">&quot;mod1_QG.stan&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="using-stan-in-r.html#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(<span class="st">&quot;</span></span>
+<span id="cb54-2"><a href="using-stan-in-r.html#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
+<span id="cb54-3"><a href="using-stan-in-r.html#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; N; </span></span>
+<span id="cb54-4"><a href="using-stan-in-r.html#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; I; </span></span>
+<span id="cb54-5"><a href="using-stan-in-r.html#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; id[N]; </span></span>
+<span id="cb54-6"><a href="using-stan-in-r.html#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N] x; </span></span>
+<span id="cb54-7"><a href="using-stan-in-r.html#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N] z;</span></span>
+<span id="cb54-8"><a href="using-stan-in-r.html#cb54-8" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,I] A; //new relatedness matrix</span></span>
+<span id="cb54-9"><a href="using-stan-in-r.html#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb54-10"><a href="using-stan-in-r.html#cb54-10" aria-hidden="true" tabindex="-1"></a><span class="st">transformed data{</span></span>
+<span id="cb54-11"><a href="using-stan-in-r.html#cb54-11" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,I] LA = cholesky_decompose(A); //lower triangle relatedness matrix </span></span>
+<span id="cb54-12"><a href="using-stan-in-r.html#cb54-12" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb54-13"><a href="using-stan-in-r.html#cb54-13" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
+<span id="cb54-14"><a href="using-stan-in-r.html#cb54-14" aria-hidden="true" tabindex="-1"></a><span class="st">  //fixed effects</span></span>
+<span id="cb54-15"><a href="using-stan-in-r.html#cb54-15" aria-hidden="true" tabindex="-1"></a><span class="st">  real mu_0;</span></span>
+<span id="cb54-16"><a href="using-stan-in-r.html#cb54-16" aria-hidden="true" tabindex="-1"></a><span class="st">  real beta_1;</span></span>
+<span id="cb54-17"><a href="using-stan-in-r.html#cb54-17" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb54-18"><a href="using-stan-in-r.html#cb54-18" aria-hidden="true" tabindex="-1"></a><span class="st">  //random effects</span></span>
+<span id="cb54-19"><a href="using-stan-in-r.html#cb54-19" aria-hidden="true" tabindex="-1"></a><span class="st">  cholesky_factor_corr[2] LGcor; //additive genetic cor matrix</span></span>
+<span id="cb54-20"><a href="using-stan-in-r.html#cb54-20" aria-hidden="true" tabindex="-1"></a><span class="st">  cholesky_factor_corr[2] LEcor; //permanent environmental cor matrix</span></span>
+<span id="cb54-21"><a href="using-stan-in-r.html#cb54-21" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0&gt;[2] sd_P; //total phenotypic SD (removed distinct G and E SDs)</span></span>
+<span id="cb54-22"><a href="using-stan-in-r.html#cb54-22" aria-hidden="true" tabindex="-1"></a><span class="st">  real&lt;lower=0&gt; sd_R;</span></span>
+<span id="cb54-23"><a href="using-stan-in-r.html#cb54-23" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] std_G; //matrix of standard normals for G effects</span></span>
+<span id="cb54-24"><a href="using-stan-in-r.html#cb54-24" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] std_E; //matrix of standard normals for E effects</span></span>
+<span id="cb54-25"><a href="using-stan-in-r.html#cb54-25" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb54-26"><a href="using-stan-in-r.html#cb54-26" aria-hidden="true" tabindex="-1"></a><span class="st">  //RN heritability (proportion between 0 and 1)</span></span>
+<span id="cb54-27"><a href="using-stan-in-r.html#cb54-27" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0,upper=1&gt;[2] RN_h2;</span></span>
+<span id="cb54-28"><a href="using-stan-in-r.html#cb54-28" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb54-29"><a href="using-stan-in-r.html#cb54-29" aria-hidden="true" tabindex="-1"></a><span class="st">transformed parameters {</span></span>
+<span id="cb54-30"><a href="using-stan-in-r.html#cb54-30" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0&gt;[2] sd_G; //SDs of G effects</span></span>
+<span id="cb54-31"><a href="using-stan-in-r.html#cb54-31" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0&gt;[2] sd_E; //SDs of E effects</span></span>
+<span id="cb54-32"><a href="using-stan-in-r.html#cb54-32" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] re_G; //scaled G random effects</span></span>
+<span id="cb54-33"><a href="using-stan-in-r.html#cb54-33" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] re_E;  //scaled E random effects</span></span>
+<span id="cb54-34"><a href="using-stan-in-r.html#cb54-34" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[I] mu; //phenotypic individual intercepts</span></span>
+<span id="cb54-35"><a href="using-stan-in-r.html#cb54-35" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[I] beta; //phenotypic individual slopes</span></span>
+<span id="cb54-36"><a href="using-stan-in-r.html#cb54-36" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb54-37"><a href="using-stan-in-r.html#cb54-37" aria-hidden="true" tabindex="-1"></a><span class="st">  //SDs of genetic effects, sqrt(phenotypic variance * h2)</span></span>
+<span id="cb54-38"><a href="using-stan-in-r.html#cb54-38" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_G[1] = sd_P[1] * sqrt(RN_h2[1]); //genetic SD for ind intercepts </span></span>
+<span id="cb54-39"><a href="using-stan-in-r.html#cb54-39" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_G[2] = sd_P[2] * sqrt(RN_h2[2]);  //genetic SD for ind slopes</span></span>
+<span id="cb54-40"><a href="using-stan-in-r.html#cb54-40" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb54-41"><a href="using-stan-in-r.html#cb54-41" aria-hidden="true" tabindex="-1"></a><span class="st">  //SDs of environmental effects, sqrt(phenotypic variance * [1-h2])</span></span>
+<span id="cb54-42"><a href="using-stan-in-r.html#cb54-42" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_E[1] = sd_P[1] * sqrt(1 - RN_h2[1]); //environment SD for ind intercepts </span></span>
+<span id="cb54-43"><a href="using-stan-in-r.html#cb54-43" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_E[2] = sd_P[2] * sqrt(1 - RN_h2[2]); //environment SD for ind slopes </span></span>
+<span id="cb54-44"><a href="using-stan-in-r.html#cb54-44" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb54-45"><a href="using-stan-in-r.html#cb54-45" aria-hidden="true" tabindex="-1"></a><span class="st">  //matrix normal parameterization</span></span>
+<span id="cb54-46"><a href="using-stan-in-r.html#cb54-46" aria-hidden="true" tabindex="-1"></a><span class="st">  re_G =  LA * std_G * diag_pre_multiply(sd_G, LGcor)&#39; ; </span></span>
+<span id="cb54-47"><a href="using-stan-in-r.html#cb54-47" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb54-48"><a href="using-stan-in-r.html#cb54-48" aria-hidden="true" tabindex="-1"></a><span class="st">  //non-centered parameterization</span></span>
+<span id="cb54-49"><a href="using-stan-in-r.html#cb54-49" aria-hidden="true" tabindex="-1"></a><span class="st">  re_E = std_E * diag_pre_multiply(sd_E, LEcor)&#39; ;</span></span>
+<span id="cb54-50"><a href="using-stan-in-r.html#cb54-50" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb54-51"><a href="using-stan-in-r.html#cb54-51" aria-hidden="true" tabindex="-1"></a><span class="st">  //separate intercepts and slopes</span></span>
+<span id="cb54-52"><a href="using-stan-in-r.html#cb54-52" aria-hidden="true" tabindex="-1"></a><span class="st">  mu = col(re_G, 1) + col(re_E, 1); //P = G + E</span></span>
+<span id="cb54-53"><a href="using-stan-in-r.html#cb54-53" aria-hidden="true" tabindex="-1"></a><span class="st">  beta = col(re_G, 2) + col(re_E, 2); //P = G + E</span></span>
+<span id="cb54-54"><a href="using-stan-in-r.html#cb54-54" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb54-55"><a href="using-stan-in-r.html#cb54-55" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb54-56"><a href="using-stan-in-r.html#cb54-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-57"><a href="using-stan-in-r.html#cb54-57" aria-hidden="true" tabindex="-1"></a><span class="st">  //model likelihood</span></span>
+<span id="cb54-58"><a href="using-stan-in-r.html#cb54-58" aria-hidden="true" tabindex="-1"></a><span class="st">  z ~ normal(mu_0 + mu[id] + (beta_1 + beta[id]).*x, sd_R);</span></span>
+<span id="cb54-59"><a href="using-stan-in-r.html#cb54-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-60"><a href="using-stan-in-r.html#cb54-60" aria-hidden="true" tabindex="-1"></a><span class="st">  //priors</span></span>
+<span id="cb54-61"><a href="using-stan-in-r.html#cb54-61" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb54-62"><a href="using-stan-in-r.html#cb54-62" aria-hidden="true" tabindex="-1"></a><span class="st">  //fixed effects</span></span>
+<span id="cb54-63"><a href="using-stan-in-r.html#cb54-63" aria-hidden="true" tabindex="-1"></a><span class="st">  mu_0 ~ normal(0,1);</span></span>
+<span id="cb54-64"><a href="using-stan-in-r.html#cb54-64" aria-hidden="true" tabindex="-1"></a><span class="st">  beta_1 ~ normal(0,1);</span></span>
+<span id="cb54-65"><a href="using-stan-in-r.html#cb54-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-66"><a href="using-stan-in-r.html#cb54-66" aria-hidden="true" tabindex="-1"></a><span class="st">  //random effects</span></span>
+<span id="cb54-67"><a href="using-stan-in-r.html#cb54-67" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(std_G) ~ std_normal(); //genetic std normal deviates</span></span>
+<span id="cb54-68"><a href="using-stan-in-r.html#cb54-68" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(std_E) ~ std_normal(); //environmental std normal deviates</span></span>
+<span id="cb54-69"><a href="using-stan-in-r.html#cb54-69" aria-hidden="true" tabindex="-1"></a><span class="st">  LGcor ~ lkj_corr_cholesky(2); //genetic correlations</span></span>
+<span id="cb54-70"><a href="using-stan-in-r.html#cb54-70" aria-hidden="true" tabindex="-1"></a><span class="st">  LEcor ~ lkj_corr_cholesky(2); //environmental correlations</span></span>
+<span id="cb54-71"><a href="using-stan-in-r.html#cb54-71" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb54-72"><a href="using-stan-in-r.html#cb54-72" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(sd_P) ~ cauchy(0,1); //only phenotypic scale</span></span>
+<span id="cb54-73"><a href="using-stan-in-r.html#cb54-73" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_R ~ cauchy(0,1);</span></span>
+<span id="cb54-74"><a href="using-stan-in-r.html#cb54-74" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb54-75"><a href="using-stan-in-r.html#cb54-75" aria-hidden="true" tabindex="-1"></a><span class="st">  //reaction norm heritability</span></span>
+<span id="cb54-76"><a href="using-stan-in-r.html#cb54-76" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(RN_h2) ~  beta(1.2,1.2);</span></span>
+<span id="cb54-77"><a href="using-stan-in-r.html#cb54-77" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb54-78"><a href="using-stan-in-r.html#cb54-78" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb54-79"><a href="using-stan-in-r.html#cb54-79" aria-hidden="true" tabindex="-1"></a><span class="st">generated quantities {</span></span>
+<span id="cb54-80"><a href="using-stan-in-r.html#cb54-80" aria-hidden="true" tabindex="-1"></a><span class="st">corr_matrix[2] Gcor = LGcor * LGcor&#39;; //genetic cor</span></span>
+<span id="cb54-81"><a href="using-stan-in-r.html#cb54-81" aria-hidden="true" tabindex="-1"></a><span class="st">corr_matrix[2] Ecor = LEcor * LEcor&#39;; //environmental cor</span></span>
+<span id="cb54-82"><a href="using-stan-in-r.html#cb54-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-83"><a href="using-stan-in-r.html#cb54-83" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Gcov = diag_matrix(sd_G)*Gcor*diag_matrix(sd_G); //genetic cov</span></span>
+<span id="cb54-84"><a href="using-stan-in-r.html#cb54-84" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Ecov = diag_matrix(sd_E)*Ecor*diag_matrix(sd_E); //environmental cov</span></span>
+<span id="cb54-85"><a href="using-stan-in-r.html#cb54-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-86"><a href="using-stan-in-r.html#cb54-86" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Pcov = Gcov + Ecov; //phenotypic covariance (assuming independent effects)</span></span>
+<span id="cb54-87"><a href="using-stan-in-r.html#cb54-87" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Pcor = inverse(diag_matrix(sd_P))*Pcov*inverse(diag_matrix(sd_P)); //phenotypic cor</span></span>
+<span id="cb54-88"><a href="using-stan-in-r.html#cb54-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-89"><a href="using-stan-in-r.html#cb54-89" aria-hidden="true" tabindex="-1"></a><span class="st">//variances</span></span>
+<span id="cb54-90"><a href="using-stan-in-r.html#cb54-90" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_P = sd_P .* sd_P;</span></span>
+<span id="cb54-91"><a href="using-stan-in-r.html#cb54-91" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_G = sd_G .* sd_G;</span></span>
+<span id="cb54-92"><a href="using-stan-in-r.html#cb54-92" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_E = sd_E .* sd_E;</span></span>
+<span id="cb54-93"><a href="using-stan-in-r.html#cb54-93" aria-hidden="true" tabindex="-1"></a><span class="st">real V_R = sd_R * sd_R;</span></span>
+<span id="cb54-94"><a href="using-stan-in-r.html#cb54-94" aria-hidden="true" tabindex="-1"></a><span class="st">}&quot;</span>, <span class="st">&quot;mod1_QG.stan&quot;</span>)</span></code></pre></div>
 <p>Note that because we specify phenotypic SDs <code>sd_P</code>, the genetic SDs <code>sd_G</code> are calculated as <span class="math inline">\(\mathrm{sqrt} ({\mathrm{Var}(\boldsymbol{\mu_{\mathrm{}}})}h_{\mu}^{2})= {\mathrm{SD}(\boldsymbol{\mu_{\mathrm{}}})}\mathrm{sqrt}(h_{\mu}^{2})\)</span> and <span class="math inline">\(\mathrm{sqrt} ({\mathrm{Var}(\boldsymbol{\beta_{\mathrm{}}})}h_{\beta}^{2})= {\mathrm{SD}(\boldsymbol{\beta_{\mathrm{}}})}\mathrm{sqrt}(h_{\beta}^{2})\)</span>, with the same approach taken for the proportion of environmental effects <span class="math inline">\(1- h_{\mu}^{2}\)</span> and <span class="math inline">\(1-h_{\beta}^{2}\)</span>. A weakly regularizing <span class="math inline">\(\mathrm{Beta}(1.2,1.2)\)</span> prior is placed on the reaction norm heritability parameters, which are constrained between 0 and 1. This and any other prior can be easily visualized in R by randomly sampling from the relevant distribution.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="using-stan-in-r.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>( <span class="fu">rbeta</span>(<span class="fl">1e5</span>, <span class="fl">1.2</span>, <span class="fl">1.2</span>), <span class="at">prob =</span> <span class="cn">TRUE</span> )</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="using-stan-in-r.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>( <span class="fu">rbeta</span>(<span class="fl">1e5</span>, <span class="fl">1.2</span>, <span class="fl">1.2</span>), <span class="at">prob =</span> <span class="cn">TRUE</span> )</span></code></pre></div>
 <p><img src="SAMs_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
 <p>This prior is therefore relatively flat and uninformative over the range of plausible values, but provides very weak regularization by giving lower relative probability at the extreme ends approaching 0 (no genetic effect) and 1 (complete genetic effect). With more than two individual-level random effects, such as when specifying multiple matrices of individual autocorrelation <span class="citation">(<a href="resources.html#ref-Thomson2018" role="doc-biblioref">Thomson et al. 2018</a>)</span>, SDs and variances can instead be parameterized as scaled <a href="https://mc-stan.org/docs/2_19/reference-manual/vector-and-matrix-data-types.html">simplexes</a>.</p>
 <p>We can now estimate our animal model in Stan.</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="using-stan-in-r.html#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
-<span id="cb57-2"><a href="using-stan-in-r.html#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-3"><a href="using-stan-in-r.html#cb57-3" aria-hidden="true" tabindex="-1"></a>mod1_QG <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="st">&quot;mod1_QG.stan&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="using-stan-in-r.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
+<span id="cb56-2"><a href="using-stan-in-r.html#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="using-stan-in-r.html#cb56-3" aria-hidden="true" tabindex="-1"></a>mod1_QG <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="st">&quot;mod1_QG.stan&quot;</span>)</span></code></pre></div>
 <pre><code>## Warning in system(paste(CXX, ARGS), ignore.stdout = TRUE, ignore.stderr = TRUE): &#39;C:/rtools40/usr/mingw_/bin/g++&#39; not found</code></pre>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="using-stan-in-r.html#cb59-1" aria-hidden="true" tabindex="-1"></a>stan_resultsQG <span class="ot">&lt;-</span> <span class="fu">sampling</span>(mod1_QG, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">4500</span>,</span>
-<span id="cb59-2"><a href="using-stan-in-r.html#cb59-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span>
-<span id="cb59-3"><a href="using-stan-in-r.html#cb59-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-4"><a href="using-stan-in-r.html#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="co">#extracts posterior estimates</span></span>
-<span id="cb59-5"><a href="using-stan-in-r.html#cb59-5" aria-hidden="true" tabindex="-1"></a>post <span class="ot">=</span>  <span class="fu">extract</span>(stan_resultsQG)</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="using-stan-in-r.html#cb58-1" aria-hidden="true" tabindex="-1"></a>stan_resultsQG <span class="ot">&lt;-</span> <span class="fu">sampling</span>(mod1_QG, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">4500</span>,</span>
+<span id="cb58-2"><a href="using-stan-in-r.html#cb58-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span>
+<span id="cb58-3"><a href="using-stan-in-r.html#cb58-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-4"><a href="using-stan-in-r.html#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="co">#extracts posterior estimates</span></span>
+<span id="cb58-5"><a href="using-stan-in-r.html#cb58-5" aria-hidden="true" tabindex="-1"></a>post <span class="ot">=</span>  <span class="fu">extract</span>(stan_resultsQG)</span></code></pre></div>
 <p>Let’s see how well we recovered the genetic and environmental (co)variances of the reaction norm parameters. Due to random sampling and our relatively small sample size, we should anticipate noisy estimates.</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="using-stan-in-r.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co">#RN intercepts [1] and slopes [2]</span></span>
-<span id="cb60-2"><a href="using-stan-in-r.html#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(post<span class="sc">$</span>V_P, <span class="dv">2</span>, median) <span class="co">#phenotypic variance</span></span></code></pre></div>
-<pre><code>## [1] 0.4115474 0.4327114</code></pre>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="using-stan-in-r.html#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(post<span class="sc">$</span>V_G, <span class="dv">2</span>, median) <span class="co">#genetic variance</span></span></code></pre></div>
-<pre><code>## [1] 0.1074438 0.1339697</code></pre>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="using-stan-in-r.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(post<span class="sc">$</span>V_E, <span class="dv">2</span>, median) <span class="co">#environmental variance</span></span></code></pre></div>
-<pre><code>## [1] 0.2896880 0.2852085</code></pre>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="using-stan-in-r.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co">#RN intercept and slope correlation</span></span>
-<span id="cb66-2"><a href="using-stan-in-r.html#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post<span class="sc">$</span>Pcor[,<span class="dv">1</span>,<span class="dv">2</span>]) <span class="co">#phenotypic corr</span></span></code></pre></div>
-<pre><code>## [1] 0.01900341</code></pre>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="using-stan-in-r.html#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post<span class="sc">$</span>Gcor[,<span class="dv">1</span>,<span class="dv">2</span>]) <span class="co">#genetic corr</span></span></code></pre></div>
-<pre><code>## [1] 0.111419</code></pre>
-<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="using-stan-in-r.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post<span class="sc">$</span>Ecor[,<span class="dv">1</span>,<span class="dv">2</span>]) <span class="co">#environmental corr</span></span></code></pre></div>
-<pre><code>## [1] -0.02207858</code></pre>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="using-stan-in-r.html#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co">#RN intercepts [1] and slopes [2]</span></span>
+<span id="cb59-2"><a href="using-stan-in-r.html#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(post<span class="sc">$</span>V_P, <span class="dv">2</span>, median) <span class="co">#phenotypic variance</span></span></code></pre></div>
+<pre><code>## [1] 0.5326005 0.5311542</code></pre>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="using-stan-in-r.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(post<span class="sc">$</span>V_G, <span class="dv">2</span>, median) <span class="co">#genetic variance</span></span></code></pre></div>
+<pre><code>## [1] 0.3082899 0.1811979</code></pre>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="using-stan-in-r.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(post<span class="sc">$</span>V_E, <span class="dv">2</span>, median) <span class="co">#environmental variance</span></span></code></pre></div>
+<pre><code>## [1] 0.2143257 0.3371752</code></pre>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="using-stan-in-r.html#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co">#RN intercept and slope correlation</span></span>
+<span id="cb65-2"><a href="using-stan-in-r.html#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post<span class="sc">$</span>Pcor[,<span class="dv">1</span>,<span class="dv">2</span>]) <span class="co">#phenotypic corr</span></span></code></pre></div>
+<pre><code>## [1] 0.04665658</code></pre>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="using-stan-in-r.html#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post<span class="sc">$</span>Gcor[,<span class="dv">1</span>,<span class="dv">2</span>]) <span class="co">#genetic corr</span></span></code></pre></div>
+<pre><code>## [1] 0.4430511</code></pre>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="using-stan-in-r.html#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(post<span class="sc">$</span>Ecor[,<span class="dv">1</span>,<span class="dv">2</span>]) <span class="co">#environmental corr</span></span></code></pre></div>
+<pre><code>## [1] -0.2975654</code></pre>
 
 </div>
 </div>
