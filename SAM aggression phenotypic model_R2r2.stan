@@ -26,8 +26,7 @@ parameters {
   real alpha_0; //aggression global intercept
   real nu_0; //fitness global intercept
   real psi_1; //expected interaction coefficient
-  real beta_B1; //average partner SRN intercept
-  real beta_B2; //average partner SRN slopes
+  real beta_B; //average partner SRN intercept
   real beta_N1; //selection gradients
   real beta_N2;
   real beta_S1;
@@ -87,8 +86,8 @@ model{
   vector[N_sex] eta_Wm; //within-individual centered male SRN trait value 
   vector[N_sex] eta_Wf; //within-individual centered female SRN trait value
   
-  vector[N_sex] meaneta_m; //individual male SRN trait value toward average partner 
-  vector[N_sex] meaneta_f; //individual female SRN trait toward average partner
+  vector[N_sex] eta_Bm; //individual male SRN trait value toward average partner 
+  vector[N_sex] eta_Bf; //individual female SRN trait toward average partner
   vector[N_sex] eta_meanm; //average SRN partner values for males
   vector[N_sex] eta_meanf; //average SRN partner values for females
   
@@ -115,10 +114,10 @@ model{
         
         //average individual eta
         //male eta[t=1] = mu_j + psi_j*mu_k
-        meaneta_m[n] = mu_m[idm[n]] +    (psi_1 + psi_m[idm[n]])*mu_meanm[idm[n]];
+        eta_Bm[n] =   (psi_1 + psi_m[idm[n]])*mu_meanm[idm[n]];
         
         //female eta[t=1] = mu_k + psi_k*mu_j
-        meaneta_f[n] = mu_f[idf[n]] +   (psi_1 + psi_f[idf[n]])*mu_meanf[idf[n]];
+        eta_Bf[n] =   (psi_1 + psi_f[idf[n]])*mu_meanf[idf[n]];
         
         //average partner eta[t=1]
         //average eta males' partners [t=1] = mu_meanK + psi_meanK*mu_j
@@ -138,22 +137,22 @@ model{
         
         //average individual eta
         //male average eta[t=2] = mu_j + psi_j*eta_meanK[t=1]
-        meaneta_m[n] = mu_m[idm[n]] +    (psi_1 + psi_m[idm[n]])*eta_meanm[n-1];
+        eta_Bm[n] =  (psi_1 + psi_m[idm[n]])*eta_meanm[n-1];
         
         //female average eta[t=2] = mu_k + psi_k*eta_meanJ[t=1]
-        meaneta_f[n] = mu_f[idf[n]] +   (psi_1 + psi_f[idf[n]])*eta_meanf[n-1];
+        eta_Bf[n] =  (psi_1 + psi_f[idf[n]])*eta_meanf[n-1];
         
         //average eta males' partners [t=1] = mu_meanK + psi_meanK*mean eta_j[t-1]
-        eta_meanm[n] = mu_meanm[idm[n]] +  (psi_1 + psi_meanm[idm[n]])*meaneta_m[n-1];
+        eta_meanm[n] = mu_meanm[idm[n]] +  (psi_1 + psi_meanm[idm[n]])*(mu_m[idm[n]] + eta_Bm[n-1]);
         
         //female average partner eta
-        eta_meanf[n] = mu_meanf[idf[n]] +  (psi_1 + psi_meanf[idf[n]])*meaneta_f[n-1]; 
+        eta_meanf[n] = mu_meanf[idf[n]] +  (psi_1 + psi_meanf[idf[n]])*(mu_f[idf[n]] +   eta_Bf[n-1]); 
       }
     
     //add global intercept and between-individual parameters to linear predictor
     //other fixed effects can also be added here
-    linpred_m[n] = alpha_0 + eta_Wm[n] + beta_B1*mu_meanm[idm[n]] + beta_B2*psi_meanm[idm[n]];
-    linpred_f[n] = alpha_0 + eta_Wf[n] + beta_B1*mu_meanf[idf[n]] + beta_B2*psi_meanf[idf[n]];
+    linpred_m[n] = alpha_0 + eta_Wm[n] + beta_B*eta_Bm[n]; //+beta_B*eta_Bm[n]
+    linpred_f[n] = alpha_0 + eta_Wf[n] + beta_B*eta_Bf[n]; //+beta_B*eta_Bf[n]
 
     //residual trait values
     if(time[n]==1)
@@ -186,8 +185,7 @@ model{
   alpha_0 ~ std_normal();
   nu_0 ~ std_normal();
   psi_1 ~ std_normal();
-  beta_B1 ~ std_normal();
-  beta_B2 ~ std_normal();
+  beta_B ~ std_normal();
   beta_N1 ~ std_normal();
   beta_N2 ~ std_normal();
   beta_S1 ~ std_normal();

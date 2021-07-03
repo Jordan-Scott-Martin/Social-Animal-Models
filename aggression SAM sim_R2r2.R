@@ -21,7 +21,7 @@ rstan::rstan_options(auto_write = TRUE)
 options(mc.cores = parallel::detectCores())
 
 #set directory for saving results
-setwd("C:/Users/jormar/Dropbox/JEB revision 2/agg simulation/phenotypic")
+setwd("C:/Users/jormar/Dropbox/JEB revision 2/agg simulation/after acceptance edits")
 
 #####################################################################
 #Parameter values
@@ -38,6 +38,7 @@ beta_s2 = -0.3
 beta_d1 = -0.3
 beta_d2 = -0.3
 phi = 0.3 #residual feedback parameter
+
 
 #variance
 V = 0.3 #variance random effects
@@ -80,7 +81,7 @@ pedfun<-function(popmin, popmax, ngenerations,
     id<-ID[which(genern==i)]
     dam<-rep(NA, nids[i])
     sire<-rep(NA, nids[i])
-
+    
     # randomly allocates sex (0 = male, 1 = female)
     sex<-sample(c(0,1), length(id), replace=TRUE)
     
@@ -88,7 +89,7 @@ pedfun<-function(popmin, popmax, ngenerations,
     # so remain NA
     
     if(i==1){
-
+      
       # combine into single data frame
       pedigree<-data.frame(id=id, dam=dam, sire=sire, 
                            generation=i, sex=sex)
@@ -96,7 +97,7 @@ pedfun<-function(popmin, popmax, ngenerations,
     }
     
     else if(i>1){
-   
+      
       # for all generations after first
       # list of all possible dams and sires
       # from previous generation
@@ -166,7 +167,7 @@ pedfun<-function(popmin, popmax, ngenerations,
       pedigree<-rbind(pedigree, addped)
     }
     
-    }
+  }
   
   ped <- pedigree
   
@@ -177,7 +178,7 @@ pedfun<-function(popmin, popmax, ngenerations,
   ped$id<-as.character(ped$id)
   ped$dam<-as.character(ped$dam)
   ped$sire<-as.character(ped$sire)
-
+  
   IDs <- sample(ped[ped$generation==ngenerations, "id"], I, replace=FALSE)
   ped <- MCMCglmm::prunePed(ped, keep = IDs, make.base=TRUE)
   inv.phylo <- MCMCglmm::inverseA(ped[,c("id","dam","sire")])
@@ -250,7 +251,7 @@ simSAM<-function(){
   #####################################################################
   #Partner assortment within each breeding season
   #####################################################################
-
+  
   pairs = list()
   for (j in 1:I_partner){
     #male additive genetic RN slopes (x I_partner for multiple lifetime partners)
@@ -354,32 +355,55 @@ simSAM<-function(){
   
   #average male social environment at time = 1
   pair_df[pair_df$turn==1,"meaneta_m"] =  pair_df[pair_df$turn==1,"meanP0m"] + 
-                                         (psi_1 + pair_df[pair_df$turn==1,"meanP1m"])*(pair_df[pair_df$turn==1,"P0m"])
+    (psi_1 + pair_df[pair_df$turn==1,"meanP1m"])*(pair_df[pair_df$turn==1,"P0m"])
   
   #average female social environment at time = 1
   pair_df[pair_df$turn==1,"meaneta_f"] =  pair_df[pair_df$turn==1,"meanP0f"] + 
-                                         (psi_1 + pair_df[pair_df$turn==1,"meanP1f"])*(pair_df[pair_df$turn==1,"P0f"])
+    (psi_1 + pair_df[pair_df$turn==1,"meanP1f"])*(pair_df[pair_df$turn==1,"P0f"])
+  
   
   #individual prediction at t = 1
   
   #males
   #eta_j{t=1} = mu_j + psi_j*(mu_k - mu_meanK)
   pair_df[pair_df$turn==1,"eta_m"] = pair_df[pair_df$turn==1,"P0m"] + 
-                                       (psi_1 + pair_df[pair_df$turn==1,"P1m"])*(pair_df[pair_df$turn==1,"P0f"]-pair_df[pair_df$turn==1,"meanP0m"])
+    (psi_1 + pair_df[pair_df$turn==1,"P1m"])*(pair_df[pair_df$turn==1,"P0f"]-pair_df[pair_df$turn==1,"meanP0m"])
   #females
   #eta_k{t=1} = mu_k + psi_k*(mu_j - mu_meanJ)                                                                                                                
   pair_df[pair_df$turn==1,"eta_f"] = pair_df[pair_df$turn==1,"P0f"] + 
-                                        (psi_1 + pair_df[pair_df$turn==1,"P1f"])*(pair_df[pair_df$turn==1,"P0m"]-pair_df[pair_df$turn==1,"meanP0f"])
+    (psi_1 + pair_df[pair_df$turn==1,"P1f"])*(pair_df[pair_df$turn==1,"P0m"]-pair_df[pair_df$turn==1,"meanP0f"])
   
   #individual prediction at t = 2
   
   #eta_j{t=2} = mu_j + psi_j*(eta_k{t=1} - eta_meanK{t=1})
   pair_df[pair_df$turn==2,"eta_m"] = pair_df[pair_df$turn==2,"P0m"] +
-                                        (psi_1 + pair_df[pair_df$turn==2,"P1m"])*(pair_df[pair_df$turn==1,"eta_f"]-pair_df[pair_df$turn==1,"meaneta_m"])
-                                     
+    (psi_1 + pair_df[pair_df$turn==2,"P1m"])*(pair_df[pair_df$turn==1,"eta_f"]-pair_df[pair_df$turn==1,"meaneta_m"])
+  
   #females
   pair_df[pair_df$turn==2,"eta_f"] = pair_df[pair_df$turn==2,"P0f"] + 
-                                        (psi_1 + pair_df[pair_df$turn==2,"P1f"])*(pair_df[pair_df$turn==1,"eta_m"]-pair_df[pair_df$turn==1,"meaneta_f"])
+    (psi_1 + pair_df[pair_df$turn==2,"P1f"])*(pair_df[pair_df$turn==1,"eta_m"]-pair_df[pair_df$turn==1,"meaneta_f"])
+  
+  #individual prediction at t = 1
+  
+  #males
+  #eta_j{t=1} = mu_j + psi_j*(mu_k - mu_meanK)
+  pair_df[pair_df$turn==1,"eta_m"] = pair_df[pair_df$turn==1,"P0m"] + 
+    (psi_1 + pair_df[pair_df$turn==1,"P1m"])*(pair_df[pair_df$turn==1,"P0f"])
+  #females
+  #eta_k{t=1} = mu_k + psi_k*(mu_j - mu_meanJ)                                                                                                                
+  pair_df[pair_df$turn==1,"eta_f"] = pair_df[pair_df$turn==1,"P0f"] + 
+    (psi_1 + pair_df[pair_df$turn==1,"P1f"])*(pair_df[pair_df$turn==1,"P0m"])
+  
+  #individual prediction at t = 2
+  
+  #eta_j{t=2} = mu_j + psi_j*(eta_k{t=1} - eta_meanK{t=1})
+  pair_df[pair_df$turn==2,"eta_m"] = pair_df[pair_df$turn==2,"P0m"] +
+    (psi_1 + pair_df[pair_df$turn==2,"P1m"])*(pair_df[pair_df$turn==1,"eta_f"])
+  
+  #females
+  pair_df[pair_df$turn==2,"eta_f"] = pair_df[pair_df$turn==2,"P0f"] + 
+    (psi_1 + pair_df[pair_df$turn==2,"P1f"])*(pair_df[pair_df$turn==1,"eta_m"])
+  
   
   #add intercept and residual
   pair_df$AG_m = alpha_0 + pair_df$eta_m + pair_df$resAGm
@@ -388,13 +412,13 @@ simSAM<-function(){
   #add residual feedback
   pair_df[pair_df$turn==2,"AG_m"] = pair_df[pair_df$turn==2,"AG_m"] + phi * pair_df[pair_df$turn==1,"resAGf"]
   pair_df[pair_df$turn==2,"AG_f"] = pair_df[pair_df$turn==2,"AG_f"] + phi * pair_df[pair_df$turn==1,"resAGm"]
-
+  
   
   #####################################################################
   
   #dyad fitness (nu_0 = 1 so that w is relative fitness w = W/W_mean for the unbiased population mean fitness)
   pair_df$w_mu = nu_0 + beta_n1*pair_df$P0m + beta_n2*pair_df$P1m + beta_s1*pair_df$P0f + beta_s2*pair_df$P1f +
-                              beta_d1*(pair_df$P0m*pair_df$P0f) + beta_d2*(pair_df$P1m*pair_df$P1f)
+    beta_d1*(pair_df$P0m*pair_df$P0f) + beta_d2*(pair_df$P1m*pair_df$P1f)
   
   w_mu<-pair_df[seq(1, nrow(pair_df), by=I_obs),"w_mu"]
   
@@ -415,13 +439,13 @@ simSAM<-function(){
   
   #partner IDs for male individuals
   partners_m<-data.frame(idfocal = rep(1:(I/2)), #all partners ID
-                   partner1 = NA, partner2 = NA, partner3 = NA, partner4 = NA)
-                   for(i in 1:(I/2)){partners_m[i,c(2:5)] <-partner.id[partner.id$ID_m==i,"ID_f"]}
+                         partner1 = NA, partner2 = NA, partner3 = NA, partner4 = NA)
+  for(i in 1:(I/2)){partners_m[i,c(2:5)] <-partner.id[partner.id$ID_m==i,"ID_f"]}
   
   #partner IDs for female individuals
   partners_f<-data.frame(idfocal = rep((I/2+1):I), #all partners ID
-                   partner1 = NA, partner2 = NA, partner3 = NA, partner4 = NA)
-                   for(i in (I/2+1):I){partners_f[i-(I/2),c(2:5)] <-partner.id[partner.id$ID_f==i,"ID_m"]}
+                         partner1 = NA, partner2 = NA, partner3 = NA, partner4 = NA)
+  for(i in (I/2+1):I){partners_f[i-(I/2),c(2:5)] <-partner.id[partner.id$ID_f==i,"ID_m"]}
   
   ######################
   
@@ -469,6 +493,7 @@ Im = I/2 #total males
 If = I/2 #total females
 N <- I*I_sample
 N_sex <- N/2
+
 for (i in 1:(nD)) {
   data2[[i]] = simSAM() }
 
@@ -477,6 +502,7 @@ Im = I/2 #total males
 If = I/2 #total females
 N <- I*I_sample 
 N_sex <- N/2 
+
 for (i in 1:(nD)) {
   data3[[i]] = simSAM() }
 
@@ -495,7 +521,7 @@ n_warm <- 1000
 n_chains <- 4
 
 #compile model
-SAM <- rstan::stan_model(file="SAM aggression phenotypic model_R2.stan")
+SAM <- rstan::stan_model(file="SAM aggression QG model_R3.stan")
 
 #number of datasets/data file to analyze
 run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
@@ -507,12 +533,12 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
   data1<-readRDS("data1.RDS")
   
   #initialize lists for results
-  time1p <- vector("list", length=run)
-  median1p <- vector("list", length=run)
-  bias1p <- vector("list", length=run)
-  UC1p <- vector("list", length=run)
-  PP1p <- vector("list", length=run)
-  Rhat1p <- vector("list", length=run)
+  time1 <- vector("list", length=run)
+  median1 <- vector("list", length=run)
+  bias1 <- vector("list", length=run)
+  UC1 <- vector("list", length=run)
+  PP1 <- vector("list", length=run)
+  Rhat1 <- vector("list", length=run)
 
   #run SAM across datasets (this will take awhile)
   counter = 0 #track progress
@@ -527,10 +553,8 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
                              chains=n_chains, cores=n_chains, control=list(adapt_delta=0.95, max_treedepth=10 ))
     end_time <- Sys.time()
     
-    summary(SAM_m)
-    
     #computation time
-    time1p[[i]] = as.numeric(end_time - start_time)
+    time1[[i]] = as.numeric(end_time - start_time)
     
     ###############################################################
     #Calculate additional posterior quantities
@@ -587,6 +611,7 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
     Beta_N = matrix(c(post$beta_N1,post$beta_N2),ncol=2)
     Beta_S = matrix(c(post$beta_S1,post$beta_S2),ncol=2)
     P = post$Pcov
+    G = post$Gcov
 
     #selection differential
 
@@ -597,10 +622,23 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
     for(j in 1:nrow(P)){
       s_SRN[j,] = P[j,,] %*% t(t(Beta_N[j,])) + diag(diag(P[j,,]),2,) %*% Beta_alpha[[j]] %*% t(t(Beta_S[j,])) }
     
+    #response to selection
+
+    #initialize dataframe
+    response_SRN = data.frame(delta_mu= rep(NA,nrow(Beta_N)), delta_psi = rep(NA,nrow(Beta_N)))
+
+    #populate with response to selection
+    for(j in 1:nrow(G)){
+    response_SRN[j,] = G[j,,] %*% t(t(Beta_N[j,])) + diag(diag(G[j,,]),2,) %*% Beta_alpha[[j]] %*% t(t(Beta_S[j,]))  }
+      
     #organize posterior for ease of use
     postl <-
       list(P0V = post$V_P[,1],
            P1V = post$V_P[,2],
+           G0V = post$V_G[,1],
+           G1V = post$V_G[,2],
+           E0V = post$V_E[,1],
+           E1V = post$V_E[,2],
            RmV = post$V_R[,1],
            RfV = post$V_R[,2],
            Rcor = post$Rcor[,2,1],
@@ -614,12 +652,18 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
            bD2 = post$beta_D2,
            s_mu = s_SRN$s_mu,
            s_psi = s_SRN$s_psi,
+           delta_mu = response_SRN$delta_mu,
+           delta_psi = response_SRN$delta_psi,
            phi = post$phi)
     
     #median estimates
-    median1p[[i]]<-list(
+    median1[[i]]<-list(
       P0V_med = median(postl$P0V),
       P1V_med = median(postl$P1V),
+      G0V_med = median(postl$G0V), 
+      G1V_med = median(postl$G1V),
+      E0V_med = median(postl$E0V), 
+      E1V_med = median(postl$E1V),
       RmV_med = median(postl$RmV),
       RfV_med = median(postl$RfV),
       Rcor_med = median(postl$Rcor),
@@ -633,13 +677,19 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
       bD2_med = median(postl$bD2),
       s_mu_med = median(postl$s_mu),
       s_psi_med = median(postl$s_psi),
-      phi_med = median(postl$phi) )
+      delta_mu_med = median(postl$delta_mu),
+      delta_psi_med = median(postl$delta_psi),
+      phi_med = median(postl$phi))
     
     
     #bias
-    bias1p[[i]]<-list(
+    bias1[[i]]<-list(
       P0V_bias = (median(postl$P0V) - V*2) / (V*2) ,
       P1V_bias = (median(postl$P1V) - V*2) / (V*2) ,
+      G0V_bias = (median(postl$G0V) - V) / (V),
+      G1V_bias = (median(postl$G1V) - V) / (V),
+      E0V_bias = (median(postl$E0V) - V) / (V), 
+      E1V_bias = (median(postl$E1V) - V) / (V),
       RmV_bias = (median(postl$RmV) - res_V) / (res_V),
       RfV_bias = (median(postl$RfV) - res_V) / (res_V),
       Rcor_bias = (median(postl$Rcor) - r_R ) / (r_R),
@@ -653,12 +703,18 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
       bD2_bias = (median(postl$bD2) - beta_d2 ) / (beta_d2 ),
       s_mu_bias = (median(postl$s_mu) - true_differential[1] ) / (true_differential[1] ),
       s_psi_bias = (median(postl$s_psi) - true_differential[2]) / (true_differential[2] ),
+      delta_mu_bias = (median(postl$delta_mu) - true_response[1]) / (true_response[1] ),
+      delta_psi_bias = (median(postl$delta_psi) - true_response[2]) / (true_response[2] ),
       phi_bias = (median(postl$phi) - phi) / phi )
     
     #Uncertainty
-    UC1p[[i]]<-list(
+    UC1[[i]]<-list(
       P0V_uc = mad(postl$P0V)/median(postl$P0V),
       P1V_uc = mad(postl$P1V)/median(postl$P1V),
+      G0V_uc = mad(postl$G0V)/median(postl$G0V),
+      G1V_uc = mad(postl$G1V)/median(postl$G1V),
+      E0V_uc = mad(postl$E0V)/median(postl$E0V),
+      E1V_uc = mad(postl$E1V)/median(postl$E1V),
       RmV_uc = mad(postl$RmV)/median(postl$RmV),
       RfV_uc = mad(postl$RfV)/median(postl$RfV),
       Rcor_uc = mad(postl$Rcor)/median(postl$Rcor),
@@ -672,10 +728,12 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
       bD2_uc = mad(postl$bD2)/median(postl$bD2),
       s_mu_uc = mad(postl$s_mu)/median(postl$s_mu),
       s_psi_uc = mad(postl$s_psi)/median(postl$s_psi),
+      delta_mu_uc = mad(postl$delta_mu)/median(postl$delta_mu),
+      delta_psi_uc = mad(postl$delta_psi)/median(postl$delta_psi),
       phi_uc = (mad(postl$phi)/median(phi)) )
     
     #PP
-    PP1p[[i]]<- list(
+    PP1[[i]]<- list(
       Rcor_pp = sum(postl$Rcor>0)/length(postl$Rcor),
       psi_pp = sum(postl$psi>0)/length(postl$psi),
       Beta_psi_pp = sum(postl$Beta_psi>0)/length(postl$Beta_psi),
@@ -687,21 +745,23 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
       bD2_pp = sum(postl$bD2<0)/length(postl$bD2),
       s_mu_pp = sum(postl$s_mu>0)/length(postl$s_mu),
       s_psi_pp = sum(postl$s_psi<0)/length(postl$s_psi),
+      delta_mu_pp = sum(postl$delta_mu>0)/length(postl$delta_mu),
+      delta_psi_pp = sum(postl$delta_psi<0)/length(postl$delta_psi),
       phi_pp = sum(postl$phi>0)/length(postl$phi) )
     
     #Rhat
     summary = summary(SAM_m)$summary
     parnames <- c("alpha_0","nu_0","psi_1", "beta_N1", "beta_N2", "beta_S1", "beta_S2", "beta_D1", "beta_D2", 
-                  "V_P[1]","V_P[2]", "V_R[1]", "V_R[2]","Rcor[1,2]", "phi")
+                  "V_G[1]","V_G[2]", "V_E[1]", "V_E[2]", "V_R[1]", "V_R[2]","Rcor[1,2]", "phi")
     
-    Rhat1p[[i]] = summary[parnames,"Rhat"]
+    Rhat1[[i]] = summary[parnames,"Rhat"]
     
-    saveRDS(time1p, "time1p.RDS")
-    saveRDS(median1p, "median1p.RDS")
-    saveRDS(bias1p, "bias1p.RDS")
-    saveRDS(UC1p, "UC1p.RDS")
-    saveRDS(PP1p, "PP1p.RDS")
-    saveRDS(Rhat1p, "Rhat1p.RDS")
+    saveRDS(time1, "time1.RDS")
+    saveRDS(median1, "median1.RDS")
+    saveRDS(bias1, "bias1.RDS")
+    saveRDS(UC1, "UC1.RDS")
+    saveRDS(PP1, "PP1.RDS")
+    saveRDS(Rhat1, "Rhat1.RDS")
     
     counter <- counter + 1; 
     print(paste(counter/run*100, "% has been processed"))
@@ -714,12 +774,12 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
   data2<-readRDS("data2.RDS")
   
   #initialize lists for results
-  time2p <- vector("list", length=run)
-  median2p <- vector("list", length=run)
-  bias2p <- vector("list", length=run)
-  UC2p <- vector("list", length=run)
-  PP2p <- vector("list", length=run)
-  Rhat2p <- vector("list", length=run)
+  time2 <- vector("list", length=run)
+  median2 <- vector("list", length=run)
+  bias2 <- vector("list", length=run)
+  UC2 <- vector("list", length=run)
+  PP2 <- vector("list", length=run)
+  Rhat2 <- vector("list", length=run)
 
   #run SAM across datasets (this will take awhile)
   counter = 0 #track progress
@@ -735,212 +795,7 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
     end_time <- Sys.time()
     
     #computation time
-    time2p[[i]] = as.numeric(end_time - start_time)
-    
-    ###############################################################
-    #Calculate additional posterior quantities
-    ###############################################################
-    
-        #extract posteriors
-    post <- rstan::extract(SAM_m)
-    
-    #temporary vectors for assortment coefficients
-    SRN_PV = post$V_P
-    SRN_Psd = post$sd_P
-    SRN_PVmean = post$V_P / I_partner #expected variance for mean of partners
-    SRN_Psdmean = sqrt(SRN_PVmean) #expected SD for mean of partners
-    SRN_focal1 <- post$SRN_P[,,1] #individual intercepts
-    SRN_focal2 <- post$SRN_P[,,2] #individual slopes
-    SRN_partner1 <- cbind(post$partner_meanm[,,1], post$partner_meanf[,,1])
-    SRN_partner2 <- cbind(post$partner_meanm[,,2], post$partner_meanf[,,2])
-    
-    #scale mean partner variance to variance of single partner
-    #see appendix SI for details
-    
-    SRN_partner1s = SRN_partner1
-    for(j in 1:nrow(SRN_partner1))
-    {SRN_partner1s[j,] = ( SRN_partner1[j,] / SRN_Psdmean[j,1] ) * SRN_Psd[j,1] }
-   
-    SRN_partner2s = SRN_partner2
-    for(j in 1:nrow(SRN_partner2))
-    {SRN_partner2s[j,] = ( SRN_partner2[j,] / SRN_Psdmean[j,2] ) * SRN_Psd[j,2] }
-    
-    #assortment matrix
-    Beta_alpha = list()
-    
-    #generate matrices across each posterior sample
-    for(j in 1:nrow(SRN_focal1))
-    {
-            Beta_mat = matrix(NA,2,2)
-            
-            #mu' ~ mu
-            Beta_mat[1,1] =  cov(SRN_focal1[j,], SRN_partner1s[j,])/var(SRN_focal1[j,])
-            #mu' ~ psi
-            Beta_mat[2,1] =  cov(SRN_focal2[j,], SRN_partner1s[j,])/var(SRN_focal2[j,])
-            #psi' ~ mu                                                        
-            Beta_mat[1,2] =  cov(SRN_focal1[j,], SRN_partner2s[j,])/var(SRN_focal1[j,])
-            #psi' ~ psi
-            Beta_mat[2,2] =  cov(SRN_focal2[j,], SRN_partner2s[j,])/var(SRN_focal2[j,])
-            
-            Beta_alpha[[j]] = Beta_mat
-    } 
-    
-    #extract beta_psi'psi (assortment on social plasticity)
-    Beta_psi = unlist(lapply(Beta_alpha, function(x) x[2,2]))
-    
-    #generate other relevant matrices
-    Beta_N = matrix(c(post$beta_N1,post$beta_N2),ncol=2)
-    Beta_S = matrix(c(post$beta_S1,post$beta_S2),ncol=2)
-    P = post$Pcov
-
-    #selection differential
-
-    #initialize dataframe
-    s_SRN = data.frame(s_mu = rep(NA,nrow(Beta_N)), s_psi = rep(NA,nrow(Beta_N)))
-
-    #populate with selection differentials
-    for(j in 1:nrow(P)){
-      s_SRN[j,] = P[j,,] %*% t(t(Beta_N[j,])) + diag(diag(P[j,,]),2,) %*% Beta_alpha[[j]] %*% t(t(Beta_S[j,])) }
-    
-    #organize posterior for ease of use
-    postl <-
-      list(P0V = post$V_P[,1],
-           P1V = post$V_P[,2],
-           RmV = post$V_R[,1],
-           RfV = post$V_R[,2],
-           Rcor = post$Rcor[,2,1],
-           psi = post$psi_1,
-           Beta_psi = Beta_psi,
-           bN1 = post$beta_N1,
-           bN2 = post$beta_N2,
-           bS1 = post$beta_S1,
-           bS2 = post$beta_S2,
-           bD1 = post$beta_D1,
-           bD2 = post$beta_D2,
-           s_mu = s_SRN$s_mu,
-           s_psi = s_SRN$s_psi,
-           phi = post$phi )
-    
-    #median estimates
-    median2p[[i]]<-list(
-      P0V_med = median(postl$P0V),
-      P1V_med = median(postl$P1V),
-      RmV_med = median(postl$RmV),
-      RfV_med = median(postl$RfV),
-      Rcor_med = median(postl$Rcor),
-      psi_med = median(postl$psi),
-      Beta_psi_med = median(postl$Beta_psi),
-      bN1_med = median(postl$bN1),
-      bN2_med = median(postl$bN2),
-      bS1_med = median(postl$bS1),
-      bS2_med = median(postl$bS2),
-      bD1_med = median(postl$bD1),
-      bD2_med = median(postl$bD2),
-      s_mu_med = median(postl$s_mu),
-      s_psi_med = median(postl$s_psi),
-      phi_med = median(postl$phi) )
-    
-    
-    #bias
-    bias2p[[i]]<-list(
-      P0V_bias = (median(postl$P0V) - V*2) / (V*2) ,
-      P1V_bias = (median(postl$P1V) - V*2) / (V*2) ,
-      RmV_bias = (median(postl$RmV) - res_V) / (res_V),
-      RfV_bias = (median(postl$RfV) - res_V) / (res_V),
-      Rcor_bias = (median(postl$Rcor) - r_R ) / (r_R),
-      psi_bias = (median(postl$psi) - psi_1 ) / (psi_1),
-      Beta_psi_bias = (median(postl$Beta_psi) - r_alpha) / (r_alpha),
-      bN1_bias = (median(postl$bN1) - beta_n1 ) / (beta_n1 ),
-      bN2_bias = (median(postl$bN2) - beta_n2 ) / (beta_n2 ),
-      bS1_bias = (median(postl$bS1) - beta_s1 ) / (beta_s1 ),
-      bS2_bias = (median(postl$bS2) - beta_s2 ) / (beta_s2 ),
-      bD1_bias = (median(postl$bD1) - beta_d1 ) / (beta_d1 ),
-      bD2_bias = (median(postl$bD2) - beta_d2 ) / (beta_d2 ),
-      s_mu_bias = (median(postl$s_mu) - true_differential[1] ) / (true_differential[1] ),
-      s_psi_bias = (median(postl$s_psi) - true_differential[2]) / (true_differential[2] ),
-      phi_bias = (median(postl$phi) - phi) / phi )
-    
-    #Uncertainty
-    UC2p[[i]]<-list(
-      P0V_uc = mad(postl$P0V)/median(postl$P0V),
-      P1V_uc = mad(postl$P1V)/median(postl$P1V),
-      RmV_uc = mad(postl$RmV)/median(postl$RmV),
-      RfV_uc = mad(postl$RfV)/median(postl$RfV),
-      Rcor_uc = mad(postl$Rcor)/median(postl$Rcor),
-      psi_uc = mad(postl$psi)/median(postl$psi),
-      Beta_psi_uc = mad(postl$Beta_psi)/median(postl$Beta_psi),
-      bN1_uc = mad(postl$bN1)/median(postl$bN1),
-      bN2_uc = mad(postl$bN2)/median(postl$bN2),
-      bS1_uc = mad(postl$bS1)/median(postl$bS1),
-      bS2_uc = mad(postl$bS2)/median(postl$bS2),
-      bD1_uc = mad(postl$bD1)/median(postl$bD1),
-      bD2_uc = mad(postl$bD2)/median(postl$bD2),
-      s_mu_uc = mad(postl$s_mu)/median(postl$s_mu),
-      s_psi_uc = mad(postl$s_psi)/median(postl$s_psi),
-      phi_uc = (mad(postl$phi)/median(phi)) )
-    
-    #PP
-    PP2p[[i]]<- list(
-      Rcor_pp = sum(postl$Rcor>0)/length(postl$Rcor),
-      psi_pp = sum(postl$psi>0)/length(postl$psi),
-      Beta_psi_pp = sum(postl$Beta_psi>0)/length(postl$Beta_psi),
-      bN1_pp = sum(postl$bN1>0)/length(postl$bN1),
-      bN2_pp = sum(postl$bN2<0)/length(postl$bN2),
-      bS1_pp = sum(postl$bS1>0)/length(postl$bS1),
-      bS2_pp = sum(postl$bS2<0)/length(postl$bS2),
-      bD1_pp = sum(postl$bD1<0)/length(postl$bD1),
-      bD2_pp = sum(postl$bD2<0)/length(postl$bD2),
-      s_mu_pp = sum(postl$s_mu>0)/length(postl$s_mu),
-      s_psi_pp = sum(postl$s_psi<0)/length(postl$s_psi),
-      phi_pp = sum(postl$phi>0)/length(postl$phi) )
-    
-    #Rhat
-    summary = summary(SAM_m)$summary
-    parnames <- c("alpha_0","nu_0","psi_1", "beta_N1", "beta_N2", "beta_S1", "beta_S2", "beta_D1", "beta_D2", 
-                  "V_P[1]","V_P[2]", "V_R[1]", "V_R[2]","Rcor[1,2]", "phi")
-    
-    Rhat2p[[i]] = summary[parnames,"Rhat"]
-    
-    saveRDS(time2p, "time2p.RDS")
-    saveRDS(median2p, "median2p.RDS")
-    saveRDS(bias2p, "bias2p.RDS")
-    saveRDS(UC2p, "UC2p.RDS")
-    saveRDS(PP2p, "PP2p.RDS")
-    saveRDS(Rhat2p, "Rhat2p.RDS")
-    
-    counter <- counter + 1; 
-    print(paste(counter/run*100, "% has been processed"))
-  }
-
-#####################################################################
-#Data 3
-
-  #load simulated datasets
-  data3<-readRDS("data3.RDS")
-  
-  #initialize lists for results
-  time3p <- vector("list", length=run)
-  median3p <- vector("list", length=run)
-  bias3p <- vector("list", length=run)
-  UC3p <-vector("list", length=run)
-  PP3p <- vector("list", length=run)
-  Rhat3p <- vector("list", length=run)
-
-  #run SAM across datasets (this will take awhile)
-  counter = 0 #track progress
-  for(i in 1:run){
-    
-    #single dataset
-    df = data3[[i]]
-    
-    #run model
-    start_time <- Sys.time()
-    SAM_m <- rstan::sampling(SAM, data=df, init="0", iter=n_iter, warmup=n_warm, seed = i,
-                             chains=n_chains, cores=n_chains, control=list(adapt_delta=0.95, max_treedepth=10 ))
-    end_time <- Sys.time()
-    
-    #computation time
-    time3p[[i]] = as.numeric(end_time - start_time)
+    time2[[i]] = as.numeric(end_time - start_time)
     
     ###############################################################
     #Calculate additional posterior quantities
@@ -997,20 +852,34 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
     Beta_N = matrix(c(post$beta_N1,post$beta_N2),ncol=2)
     Beta_S = matrix(c(post$beta_S1,post$beta_S2),ncol=2)
     P = post$Pcov
+    G = post$Gcov
 
     #selection differential
 
     #initialize dataframe
     s_SRN = data.frame(s_mu = rep(NA,nrow(Beta_N)), s_psi = rep(NA,nrow(Beta_N)))
-    
+
     #populate with selection differentials
     for(j in 1:nrow(P)){
       s_SRN[j,] = P[j,,] %*% t(t(Beta_N[j,])) + diag(diag(P[j,,]),2,) %*% Beta_alpha[[j]] %*% t(t(Beta_S[j,])) }
     
+    #response to selection
+
+    #initialize dataframe
+    response_SRN = data.frame(delta_mu= rep(NA,nrow(Beta_N)), delta_psi = rep(NA,nrow(Beta_N)))
+
+    #populate with response to selection
+    for(j in 1:nrow(G)){
+    response_SRN[j,] = G[j,,] %*% t(t(Beta_N[j,])) + diag(diag(G[j,,]),2,) %*% Beta_alpha[[j]] %*% t(t(Beta_S[j,]))  }
+      
     #organize posterior for ease of use
     postl <-
       list(P0V = post$V_P[,1],
            P1V = post$V_P[,2],
+           G0V = post$V_G[,1],
+           G1V = post$V_G[,2],
+           E0V = post$V_E[,1],
+           E1V = post$V_E[,2],
            RmV = post$V_R[,1],
            RfV = post$V_R[,2],
            Rcor = post$Rcor[,2,1],
@@ -1024,12 +893,18 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
            bD2 = post$beta_D2,
            s_mu = s_SRN$s_mu,
            s_psi = s_SRN$s_psi,
-           phi = post$phi )
+           delta_mu = response_SRN$delta_mu,
+           delta_psi = response_SRN$delta_psi,
+           phi = post$phi)
     
     #median estimates
-    median3p[[i]]<-list(
+    median2[[i]]<-list(
       P0V_med = median(postl$P0V),
       P1V_med = median(postl$P1V),
+      G0V_med = median(postl$G0V), 
+      G1V_med = median(postl$G1V),
+      E0V_med = median(postl$E0V), 
+      E1V_med = median(postl$E1V),
       RmV_med = median(postl$RmV),
       RfV_med = median(postl$RfV),
       Rcor_med = median(postl$Rcor),
@@ -1042,14 +917,20 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
       bD1_med = median(postl$bD1),
       bD2_med = median(postl$bD2),
       s_mu_med = median(postl$s_mu),
-      s_psi_med = median(postl$s_psi), 
-      phi_med = median(postl$phi))
+      s_psi_med = median(postl$s_psi),
+      delta_mu_med = median(postl$delta_mu),
+      delta_psi_med = median(postl$delta_psi),
+      phi_med = median(postl$phi) )
     
     
     #bias
-    bias3p[[i]]<-list(
+    bias2[[i]]<-list(
       P0V_bias = (median(postl$P0V) - V*2) / (V*2) ,
       P1V_bias = (median(postl$P1V) - V*2) / (V*2) ,
+      G0V_bias = (median(postl$G0V) - V) / (V),
+      G1V_bias = (median(postl$G1V) - V) / (V),
+      E0V_bias = (median(postl$E0V) - V) / (V), 
+      E1V_bias = (median(postl$E1V) - V) / (V),
       RmV_bias = (median(postl$RmV) - res_V) / (res_V),
       RfV_bias = (median(postl$RfV) - res_V) / (res_V),
       Rcor_bias = (median(postl$Rcor) - r_R ) / (r_R),
@@ -1063,12 +944,18 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
       bD2_bias = (median(postl$bD2) - beta_d2 ) / (beta_d2 ),
       s_mu_bias = (median(postl$s_mu) - true_differential[1] ) / (true_differential[1] ),
       s_psi_bias = (median(postl$s_psi) - true_differential[2]) / (true_differential[2] ),
+      delta_mu_bias = (median(postl$delta_mu) - true_response[1]) / (true_response[1] ),
+      delta_psi_bias = (median(postl$delta_psi) - true_response[2]) / (true_response[2] ),
       phi_bias = (median(postl$phi) - phi) / phi )
     
     #Uncertainty
-    UC3p[[i]]<-list(
+    UC2[[i]]<-list(
       P0V_uc = mad(postl$P0V)/median(postl$P0V),
       P1V_uc = mad(postl$P1V)/median(postl$P1V),
+      G0V_uc = mad(postl$G0V)/median(postl$G0V),
+      G1V_uc = mad(postl$G1V)/median(postl$G1V),
+      E0V_uc = mad(postl$E0V)/median(postl$E0V),
+      E1V_uc = mad(postl$E1V)/median(postl$E1V),
       RmV_uc = mad(postl$RmV)/median(postl$RmV),
       RfV_uc = mad(postl$RfV)/median(postl$RfV),
       Rcor_uc = mad(postl$Rcor)/median(postl$Rcor),
@@ -1082,10 +969,12 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
       bD2_uc = mad(postl$bD2)/median(postl$bD2),
       s_mu_uc = mad(postl$s_mu)/median(postl$s_mu),
       s_psi_uc = mad(postl$s_psi)/median(postl$s_psi),
+      delta_mu_uc = mad(postl$delta_mu)/median(postl$delta_mu),
+      delta_psi_uc = mad(postl$delta_psi)/median(postl$delta_psi),
       phi_uc = (mad(postl$phi)/median(phi)) )
     
     #PP
-    PP3p[[i]]<- list(
+    PP2[[i]]<- list(
       Rcor_pp = sum(postl$Rcor>0)/length(postl$Rcor),
       psi_pp = sum(postl$psi>0)/length(postl$psi),
       Beta_psi_pp = sum(postl$Beta_psi>0)/length(postl$Beta_psi),
@@ -1097,21 +986,264 @@ run = 200 #nD #i.e. all datasets per data file; set to 1 for demonstration
       bD2_pp = sum(postl$bD2<0)/length(postl$bD2),
       s_mu_pp = sum(postl$s_mu>0)/length(postl$s_mu),
       s_psi_pp = sum(postl$s_psi<0)/length(postl$s_psi),
+      delta_mu_pp = sum(postl$delta_mu>0)/length(postl$delta_mu),
+      delta_psi_pp = sum(postl$delta_psi<0)/length(postl$delta_psi),
       phi_pp = sum(postl$phi>0)/length(postl$phi) )
     
     #Rhat
     summary = summary(SAM_m)$summary
     parnames <- c("alpha_0","nu_0","psi_1", "beta_N1", "beta_N2", "beta_S1", "beta_S2", "beta_D1", "beta_D2", 
-                  "V_P[1]","V_P[2]", "V_R[1]", "V_R[2]","Rcor[1,2]", "phi")
+                  "V_G[1]","V_G[2]", "V_E[1]", "V_E[2]", "V_R[1]", "V_R[2]","Rcor[1,2]", "phi")
+    
+    Rhat2[[i]] = summary[parnames,"Rhat"]
+    
+    saveRDS(time2, "time2.RDS")
+    saveRDS(median2, "median2.RDS")
+    saveRDS(bias2, "bias2.RDS")
+    saveRDS(UC2, "UC2.RDS")
+    saveRDS(PP2, "PP2.RDS")
+    saveRDS(Rhat2, "Rhat2.RDS")
+    
+    counter <- counter + 1; 
+    print(paste(counter/run*100, "% has been processed"))
+  }
+
+#####################################################################
+#Data 3
+
+  #load simulated datasets
+  data3<-readRDS("data3.RDS")
+  
+  #initialize lists for results
+  time3 <- vector("list", length=run)
+  median3 <- vector("list", length=run)
+  bias3 <- vector("list", length=run)
+  UC3 <-vector("list", length=run)
+  PP3 <- vector("list", length=run)
+  Rhat3 <- vector("list", length=run)
+
+  #run SAM across datasets (this will take awhile)
+  counter = 0 #track progress
+  for(i in 1:run){
+    
+    #single dataset
+    df = data3[[i]]
+    
+    #run model
+    start_time <- Sys.time()
+    SAM_m <- rstan::sampling(SAM, data=df, init="0", iter=n_iter, warmup=n_warm, seed = i,
+                             chains=n_chains, cores=n_chains, control=list(adapt_delta=0.95, max_treedepth=10 ))
+    end_time <- Sys.time()
+    
+    #computation time
+    time3[[i]] = as.numeric(end_time - start_time)
+    
+    ###############################################################
+    #Calculate additional posterior quantities
+    ###############################################################
+    
+    #extract posteriors
+    post <- rstan::extract(SAM_m)
+    
+    #temporary vectors for assortment coefficients
+    SRN_PV = post$V_P
+    SRN_Psd = post$sd_P
+    SRN_PVmean = post$V_P / I_partner #expected variance for mean of partners
+    SRN_Psdmean = sqrt(SRN_PVmean) #expected SD for mean of partners
+    SRN_focal1 <- post$SRN_P[,,1] #individual intercepts
+    SRN_focal2 <- post$SRN_P[,,2] #individual slopes
+    SRN_partner1 <- cbind(post$partner_meanm[,,1], post$partner_meanf[,,1])
+    SRN_partner2 <- cbind(post$partner_meanm[,,2], post$partner_meanf[,,2])
+    
+    #scale mean partner variance to variance of single partner
+    #see appendix SI for details
+    
+    SRN_partner1s = SRN_partner1
+    for(j in 1:nrow(SRN_partner1))
+    {SRN_partner1s[j,] = ( SRN_partner1[j,] / SRN_Psdmean[j,1] ) * SRN_Psd[j,1] }
+   
+    SRN_partner2s = SRN_partner2
+    for(j in 1:nrow(SRN_partner2))
+    {SRN_partner2s[j,] = ( SRN_partner2[j,] / SRN_Psdmean[j,2] ) * SRN_Psd[j,2] }
+    
+    #assortment matrix
+    Beta_alpha = list()
+    
+    #generate matrices across each posterior sample
+    for(j in 1:nrow(SRN_focal1))
+    {
+            Beta_mat = matrix(NA,2,2)
+            
+            #mu' ~ mu
+            Beta_mat[1,1] =  cov(SRN_focal1[j,], SRN_partner1s[j,])/var(SRN_focal1[j,])
+            #mu' ~ psi
+            Beta_mat[2,1] =  cov(SRN_focal2[j,], SRN_partner1s[j,])/var(SRN_focal2[j,])
+            #psi' ~ mu                                                        
+            Beta_mat[1,2] =  cov(SRN_focal1[j,], SRN_partner2s[j,])/var(SRN_focal1[j,])
+            #psi' ~ psi
+            Beta_mat[2,2] =  cov(SRN_focal2[j,], SRN_partner2s[j,])/var(SRN_focal2[j,])
+            
+            Beta_alpha[[j]] = Beta_mat
+    } 
+    
+    #extract beta_psi'psi (assortment on social plasticity)
+    Beta_psi = unlist(lapply(Beta_alpha, function(x) x[2,2]))
+    
+    #generate other relevant matrices
+    Beta_N = matrix(c(post$beta_N1,post$beta_N2),ncol=2)
+    Beta_S = matrix(c(post$beta_S1,post$beta_S2),ncol=2)
+    P = post$Pcov
+    G = post$Gcov
+
+    #selection differential
+
+    #initialize dataframe
+    s_SRN = data.frame(s_mu = rep(NA,nrow(Beta_N)), s_psi = rep(NA,nrow(Beta_N)))
+    
+    #populate with selection differentials
+    for(j in 1:nrow(P)){
+      s_SRN[j,] = P[j,,] %*% t(t(Beta_N[j,])) + diag(diag(P[j,,]),2,) %*% Beta_alpha[[j]] %*% t(t(Beta_S[j,])) }
+    
+    #response to selection
+
+    #initialize dataframe
+    response_SRN = data.frame(delta_mu= rep(NA,nrow(Beta_N)), delta_psi = rep(NA,nrow(Beta_N)))
+
+    #populate with response to selection
+    for(j in 1:nrow(G)){
+    response_SRN[j,] = G[j,,] %*% t(t(Beta_N[j,])) + diag(diag(G[j,,]),2,) %*% Beta_alpha[[j]] %*% t(t(Beta_S[j,]))  }
+      
+    #organize posterior for ease of use
+    postl <-
+      list(P0V = post$V_P[,1],
+           P1V = post$V_P[,2],
+           G0V = post$V_G[,1],
+           G1V = post$V_G[,2],
+           E0V = post$V_E[,1],
+           E1V = post$V_E[,2],
+           RmV = post$V_R[,1],
+           RfV = post$V_R[,2],
+           Rcor = post$Rcor[,2,1],
+           psi = post$psi_1,
+           Beta_psi = Beta_psi,
+           bN1 = post$beta_N1,
+           bN2 = post$beta_N2,
+           bS1 = post$beta_S1,
+           bS2 = post$beta_S2,
+           bD1 = post$beta_D1,
+           bD2 = post$beta_D2,
+           s_mu = s_SRN$s_mu,
+           s_psi = s_SRN$s_psi,
+           delta_mu = response_SRN$delta_mu,
+           delta_psi = response_SRN$delta_psi,
+           phi = post$phi)
+    
+    #median estimates
+    median3[[i]]<-list(
+      P0V_med = median(postl$P0V),
+      P1V_med = median(postl$P1V),
+      G0V_med = median(postl$G0V), 
+      G1V_med = median(postl$G1V),
+      E0V_med = median(postl$E0V), 
+      E1V_med = median(postl$E1V),
+      RmV_med = median(postl$RmV),
+      RfV_med = median(postl$RfV),
+      Rcor_med = median(postl$Rcor),
+      psi_med = median(postl$psi),
+      Beta_psi_med = median(postl$Beta_psi),
+      bN1_med = median(postl$bN1),
+      bN2_med = median(postl$bN2),
+      bS1_med = median(postl$bS1),
+      bS2_med = median(postl$bS2),
+      bD1_med = median(postl$bD1),
+      bD2_med = median(postl$bD2),
+      s_mu_med = median(postl$s_mu),
+      s_psi_med = median(postl$s_psi),
+      delta_mu_med = median(postl$delta_mu),
+      delta_psi_med = median(postl$delta_psi),
+      phi_med = median(postl$phi) )
+    
+    
+    #bias
+    bias3[[i]]<-list(
+      P0V_bias = (median(postl$P0V) - V*2) / (V*2) ,
+      P1V_bias = (median(postl$P1V) - V*2) / (V*2) ,
+      G0V_bias = (median(postl$G0V) - V) / (V),
+      G1V_bias = (median(postl$G1V) - V) / (V),
+      E0V_bias = (median(postl$E0V) - V) / (V), 
+      E1V_bias = (median(postl$E1V) - V) / (V),
+      RmV_bias = (median(postl$RmV) - res_V) / (res_V),
+      RfV_bias = (median(postl$RfV) - res_V) / (res_V),
+      Rcor_bias = (median(postl$Rcor) - r_R ) / (r_R),
+      psi_bias = (median(postl$psi) - psi_1 ) / (psi_1),
+      Beta_psi_bias = (median(postl$Beta_psi) - r_alpha) / (r_alpha),
+      bN1_bias = (median(postl$bN1) - beta_n1 ) / (beta_n1 ),
+      bN2_bias = (median(postl$bN2) - beta_n2 ) / (beta_n2 ),
+      bS1_bias = (median(postl$bS1) - beta_s1 ) / (beta_s1 ),
+      bS2_bias = (median(postl$bS2) - beta_s2 ) / (beta_s2 ),
+      bD1_bias = (median(postl$bD1) - beta_d1 ) / (beta_d1 ),
+      bD2_bias = (median(postl$bD2) - beta_d2 ) / (beta_d2 ),
+      s_mu_bias = (median(postl$s_mu) - true_differential[1] ) / (true_differential[1] ),
+      s_psi_bias = (median(postl$s_psi) - true_differential[2]) / (true_differential[2] ),
+      delta_mu_bias = (median(postl$delta_mu) - true_response[1]) / (true_response[1] ),
+      delta_psi_bias = (median(postl$delta_psi) - true_response[2]) / (true_response[2] ),
+      phi_bias = (median(postl$phi) - phi) / phi )
+    
+    #Uncertainty
+    UC3[[i]]<-list(
+      P0V_uc = mad(postl$P0V)/median(postl$P0V),
+      P1V_uc = mad(postl$P1V)/median(postl$P1V),
+      G0V_uc = mad(postl$G0V)/median(postl$G0V),
+      G1V_uc = mad(postl$G1V)/median(postl$G1V),
+      E0V_uc = mad(postl$E0V)/median(postl$E0V),
+      E1V_uc = mad(postl$E1V)/median(postl$E1V),
+      RmV_uc = mad(postl$RmV)/median(postl$RmV),
+      RfV_uc = mad(postl$RfV)/median(postl$RfV),
+      Rcor_uc = mad(postl$Rcor)/median(postl$Rcor),
+      psi_uc = mad(postl$psi)/median(postl$psi),
+      Beta_psi_uc = mad(postl$Beta_psi)/median(postl$Beta_psi),
+      bN1_uc = mad(postl$bN1)/median(postl$bN1),
+      bN2_uc = mad(postl$bN2)/median(postl$bN2),
+      bS1_uc = mad(postl$bS1)/median(postl$bS1),
+      bS2_uc = mad(postl$bS2)/median(postl$bS2),
+      bD1_uc = mad(postl$bD1)/median(postl$bD1),
+      bD2_uc = mad(postl$bD2)/median(postl$bD2),
+      s_mu_uc = mad(postl$s_mu)/median(postl$s_mu),
+      s_psi_uc = mad(postl$s_psi)/median(postl$s_psi),
+      delta_mu_uc = mad(postl$delta_mu)/median(postl$delta_mu),
+      delta_psi_uc = mad(postl$delta_psi)/median(postl$delta_psi),
+      phi_uc = (mad(postl$phi)/median(phi)) )
+    
+    #PP
+    PP3[[i]]<- list(
+      Rcor_pp = sum(postl$Rcor>0)/length(postl$Rcor),
+      psi_pp = sum(postl$psi>0)/length(postl$psi),
+      Beta_psi_pp = sum(postl$Beta_psi>0)/length(postl$Beta_psi),
+      bN1_pp = sum(postl$bN1>0)/length(postl$bN1),
+      bN2_pp = sum(postl$bN2<0)/length(postl$bN2),
+      bS1_pp = sum(postl$bS1>0)/length(postl$bS1),
+      bS2_pp = sum(postl$bS2<0)/length(postl$bS2),
+      bD1_pp = sum(postl$bD1<0)/length(postl$bD1),
+      bD2_pp = sum(postl$bD2<0)/length(postl$bD2),
+      s_mu_pp = sum(postl$s_mu>0)/length(postl$s_mu),
+      s_psi_pp = sum(postl$s_psi<0)/length(postl$s_psi),
+      delta_mu_pp = sum(postl$delta_mu>0)/length(postl$delta_mu),
+      delta_psi_pp = sum(postl$delta_psi<0)/length(postl$delta_psi),
+      phi_pp = sum(postl$phi>0)/length(postl$phi) )
+    
+    #Rhat
+    summary = summary(SAM_m)$summary
+    parnames <- c("alpha_0","nu_0","psi_1", "beta_N1", "beta_N2", "beta_S1", "beta_S2", "beta_D1", "beta_D2", 
+                  "V_G[1]","V_G[2]", "V_E[1]", "V_E[2]", "V_R[1]", "V_R[2]","Rcor[1,2]", "phi")
     
     Rhat3[[i]] = summary[parnames,"Rhat"]
     
-    saveRDS(time3p, "time3p.RDS")
-    saveRDS(median3p, "median3p.RDS")
-    saveRDS(bias3p, "bias3p.RDS")
-    saveRDS(UC3p, "UC3p.RDS")
-    saveRDS(PP3p, "PP3p.RDS")
-    saveRDS(Rhat3p, "Rhat3p.RDS")
+    saveRDS(time3, "time3.RDS")
+    saveRDS(median3, "median3.RDS")
+    saveRDS(bias3, "bias3.RDS")
+    saveRDS(UC3, "UC3.RDS")
+    saveRDS(PP3, "PP3.RDS")
+    saveRDS(Rhat3, "Rhat3.RDS")
     
     counter <- counter + 1; 
     print(paste(counter/run*100, "% has been processed"))
@@ -1129,14 +1261,15 @@ library(bayestestR)
 library(plyr)
 library(tidyr)
 
+
 #####################################################################
 
 #Median
 
 #load PP lists
-med1 <- readRDS("median1p.RDS")
-med2 <- readRDS("median2p.RDS")
-med3 <- readRDS("median3p.RDS")
+med1 <- readRDS("median1.RDS")
+med2 <- readRDS("median2.RDS")
+med3 <- readRDS("median3.RDS")
 
 #unlist to dataframe
 med1<-ldply (med1, data.frame)
@@ -1152,16 +1285,16 @@ apply(med2,2,median); apply(med2,2,quantile, c(0.05,0.95) )
 apply(med3,2,median); apply(med3,2,quantile, c(0.05,0.95) )
 
 #save
-saveRDS(med, "medp.RDS")
+saveRDS(med, "med.RDS")
 
 #####################################################################
 
 #bias 
 
 #load bias lists
-bias1 <- readRDS("bias1p.RDS")
-bias2 <- readRDS("bias2p.RDS")
-bias3 <- readRDS("bias3p.RDS")
+bias1 <- readRDS("bias1.RDS")
+bias2 <- readRDS("bias2.RDS")
+bias3 <- readRDS("bias3.RDS")
 
 #unlist to dataframe
 bias1<-ldply (bias1, data.frame)
@@ -1173,34 +1306,37 @@ bias<-rbind(bias1,bias2,bias3)
 
 #summarize
 apply(bias1,2,median); apply(bias1,2,hdi, 0.9, allowSplit=FALSE)
-apply(bias2,2,median); apply(bias1,2,hdi, 0.9, allowSplit=FALSE)
-apply(bias3,2,median); apply(bias1,2,hdi, 0.9, allowSplit=FALSE)
+apply(bias2,2,median); apply(bias2,2,hdi, 0.9, allowSplit=FALSE)
+apply(bias3,2,median); apply(bias3,2,hdi, 0.9, allowSplit=FALSE)
 
 #save
-saveRDS(bias, "biasp.RDS")
+saveRDS(bias, "bias.RDS")
 
 #save full results
-b100 = data.frame( name = colnames(bias1), med = apply(bias1,2,median),
-            hdil = gsub("[^0-9 .-]", "", as.character(apply(bias1,2,hdi, 0.9, allowSplit=FALSE)) ) )
-write.csv(b100, "bias100p.csv")
+ci = matrix(unlist(apply(bias1,2,hdi, 0.9, allowSplit=FALSE)), ncol = 3, byrow =TRUE)
+b100 = data.frame( name = colnames(bias1), med = round(apply(bias1,2,median),2),
+            hdil = paste0(round(ci[,2],2),", ", round(ci[,3],2) ) )
 
-b200 = data.frame( name = colnames(bias2), med = apply(bias2,2,median),
-            hdil = gsub("[^0-9 .-]", "", as.character(apply(bias2,2,hdi, 0.9, allowSplit=FALSE)) ) )
-write.csv(b200, "bias200p.csv")
+write.csv(b100, "bias100.csv")
 
-b300 = data.frame( name = colnames(bias3), med = apply(bias3,2,median),
-            hdil = gsub("[^0-9 .-]", "", as.character(apply(bias3,2,hdi, 0.9, allowSplit=FALSE)) ) )
-write.csv(b300, "bias300p.csv")
+ci = matrix(unlist(apply(bias2,2,hdi, 0.9, allowSplit=FALSE)), ncol = 3, byrow =TRUE)
+b200 = data.frame( name = colnames(bias2),med = round(apply(bias2,2,median),2),
+            hdil = paste0(round(ci[,2],2),", ", round(ci[,3],2) ) )
+write.csv(b200, "bias200.csv")
 
+ci = matrix(unlist(apply(bias3,2,hdi, 0.9, allowSplit=FALSE)), ncol = 3, byrow =TRUE)
+b300 = data.frame( name = colnames(bias3),  med = round(apply(bias3,2,median),2),
+            hdil = paste0(round(ci[,2],2),", ", round(ci[,3],2) ) )
+write.csv(b300, "bias300.csv")
 
 #####################################################################
 
 #UC
 
 #load PP lists
-UC1 <- readRDS("UC1p.RDS")
-UC2 <- readRDS("UC2p.RDS")
-UC3 <- readRDS("UC3p.RDS")
+UC1 <- readRDS("UC1.RDS")
+UC2 <- readRDS("UC2.RDS")
+UC3 <- readRDS("UC3.RDS")
 
 #unlist to dataframe
 UC1<-ldply (UC1, data.frame)
@@ -1216,29 +1352,32 @@ apply(UC2,2,median); apply(UC1,2,hdi, 0.9, allowSplit=FALSE)
 apply(UC3,2,median); apply(UC1,2,hdi, 0.9, allowSplit=FALSE)
 
 #save
-saveRDS(UC, "UCp.RDS")
+saveRDS(UC, "UC.RDS")
 
 #save full results
-uc100 = data.frame( name = colnames(UC1), med = apply(abs(UC1),2,median),
-            hdil = gsub("[^0-9 .-]", "", as.character(apply(abs(UC1),2,hdi, 0.9, allowSplit=FALSE)) ) )
-write.csv(uc100, "UC100p.csv")
+ci = matrix(unlist(apply(abs(UC1),2,hdi, 0.9, allowSplit=FALSE)), ncol = 3, byrow =TRUE)
+uc100 = data.frame( name = colnames(UC1), med = round(apply(abs(UC1),2,median),2),
+            hdil = paste0(round(ci[,2],2),", ", round(ci[,3],2) ) )
+write.csv(uc100, "UC100.csv")
 
-uc200 = data.frame( name = colnames(UC2), med = apply(abs(UC2),2,median),
-            hdil = gsub("[^0-9 .-]", "", as.character(apply(abs(UC2),2,hdi, 0.9, allowSplit=FALSE)) ) )
-write.csv(uc200, "UC200p.csv")
+ci = matrix(unlist(apply(abs(UC2),2,hdi, 0.9, allowSplit=FALSE)), ncol = 3, byrow =TRUE)
+uc200 = data.frame( name = colnames(UC2), med = round(apply(abs(UC2),2,median),2),
+            hdil = paste0(round(ci[,2],2),", ", round(ci[,3],2) ) )
+write.csv(uc200, "UC200.csv")
 
-uc300 = data.frame( name = colnames(UC3), med = apply(abs(UC3),2,median),
-            hdil = gsub("[^0-9 .-]", "", as.character(apply(abs(UC3),2,hdi, 0.9, allowSplit=FALSE)) ) )
-write.csv(uc300, "UC300p.csv")
+ci = matrix(unlist(apply(abs(UC3),2,hdi, 0.9, allowSplit=FALSE)), ncol = 3, byrow =TRUE)
+uc300 = data.frame( name = colnames(UC3), med = round(apply(abs(UC3),2,median),2),
+            hdil = paste0(round(ci[,2],2),", ", round(ci[,3],2) ) )
+write.csv(uc300, "UC300.csv")
 
 #####################################################################
 
 #PP
 
 #load PP lists
-PP1 <- readRDS("PP1p.RDS")
-PP2 <- readRDS("PP2p.RDS")
-PP3 <- readRDS("PP3p.RDS")
+PP1 <- readRDS("PP1.RDS")
+PP2 <- readRDS("PP2.RDS")
+PP3 <- readRDS("PP3.RDS")
 
 #unlist to dataframe
 PP1<-ldply (PP1, data.frame)
@@ -1254,20 +1393,23 @@ apply(PP2,2,median); apply(PP1,2,hdi, 0.9, allowSplit=FALSE)
 apply(PP3,2,median); apply(PP1,2,hdi, 0.9, allowSplit=FALSE)
 
 #save
-saveRDS(PP, "PPp.RDS")
+saveRDS(PP, "PP.RDS")
 
 #save full organized results
-PP100 = data.frame( name = colnames(PP1), med = apply(PP1,2,median),
-            hdil = gsub("[^0-9 .-]", "", as.character(apply(PP1,2,hdi, 0.9, allowSplit=FALSE)) ) )
-write.csv(PP100, "PP100p.csv")
+ci = matrix(unlist(apply(abs(PP1),2,hdi, 0.9, allowSplit=FALSE)), ncol = 3, byrow =TRUE)
+PP100 = data.frame( name = colnames(PP1), med = round(apply(PP1,2,median),2),
+            hdil = paste0(round(ci[,2],2),", ", round(ci[,3],2) ) )
+write.csv(PP100, "PP100.csv")
 
-PP200 = data.frame( name = colnames(PP2), med = apply(PP2,2,median),
-            hdil = gsub("[^0-9 .-]", "", as.character(apply(PP2,2,hdi, 0.9, allowSplit=FALSE)) ) )
-write.csv(PP200, "PP200p.csv")
+ci = matrix(unlist(apply(abs(PP2),2,hdi, 0.9, allowSplit=FALSE)), ncol = 3, byrow =TRUE)
+PP200 = data.frame( name = colnames(PP2), med = round(apply(PP2,2,median),2),
+            hdil = paste0(round(ci[,2],2),", ", round(ci[,3],2) ) )
+write.csv(PP200, "PP200.csv")
 
-PP300 = data.frame( name = colnames(PP3), med = apply(PP3,2,median),
-            hdil = gsub("[^0-9 .-]", "", as.character(apply(PP3,2,hdi, 0.9, allowSplit=FALSE)) ) )
-write.csv(PP300, "PP300p.csv")
+ci = matrix(unlist(apply(abs(PP3),2,hdi, 0.9, allowSplit=FALSE)), ncol = 3, byrow =TRUE)
+PP300 = data.frame( name = colnames(PP3), med = round(apply(PP3,2,median),2),
+            hdil = paste0(round(ci[,2],2),", ", round(ci[,3],2) ) )
+write.csv(PP300, "PP300.csv")
 
 #####################################################################
 #Summarize and plot results
@@ -1280,10 +1422,10 @@ setwd()
 library(ggplot2); library(tidybayes); library(tidyr); library(cowplot)
 
 #load results
-med = readRDS("medp.RDS")
-bias = readRDS("biasp.RDS")
-UC = readRDS("UCp.RDS")
-PP = readRDS("PPp.RDS")
+med = readRDS("med.RDS")
+bias = readRDS("bias.RDS")
+UC = readRDS("UC.RDS")
+PP = readRDS("PP.RDS")
 
 #absolute uncertainty
 UC = abs(UC)
@@ -1304,13 +1446,13 @@ PP.l$size = rep( rep(c(100,200,300), each = (nrow(PP))/3), ncol(PP))
 #####################################################################
 
 med.s = med.l[med.l$parameter %in% 
-         paste0(c("psi_","Beta_psi_", "s_mu_","s_psi_"), "med") , ]
+         paste0(c("psi_","Beta_psi_", "s_mu_","s_psi_","delta_mu_","delta_psi_"), "med") , ]
 bias.s = bias.l[bias.l$parameter %in% #derived from med
-         paste0(c("psi_","Beta_psi_", "s_mu_","s_psi_"), "bias") , ]
+         paste0(c("psi_","Beta_psi_", "s_mu_","s_psi_","delta_mu_","delta_psi_"), "bias") , ]
 UC.s = UC.l[UC.l$parameter %in% 
-         paste0(c("psi_","Beta_psi_", "s_mu_","s_psi_"), "uc") , ]
+         paste0(c("psi_","Beta_psi_", "s_mu_","s_psi_","delta_mu_","delta_psi_"), "uc") , ]
 PP.s = PP.l[PP.l$parameter %in% 
-         paste0(c("psi_","Beta_psi_", "s_mu_","s_psi_"), "pp") , ]
+         paste0(c("psi_","Beta_psi_", "s_mu_","s_psi_","delta_mu_","delta_psi_"), "pp") , ]
 
 #set factor level order
 med.s$parameter =factor(med.s$parameter, levels= unique(med.s$parameter) )
@@ -1325,8 +1467,10 @@ param_label =
 c(
   parse(text=TeX('$\\psi_{1}$')),
   parse(text=TeX('$\\beta_{\\bar{\\psi}^{\\prime}\\psi}$')),
- parse(text=TeX('$s_{\\bar{\\mu}}$')),
-  parse(text=TeX('$s_{\\bar{\\psi}}$'))
+  parse(text=TeX('$s_{\\bar{\\mu}}$')),
+  parse(text=TeX('$s_{\\bar{\\psi}}$')),
+  parse(text=TeX('$\\Delta_{\\bar{\\mu}}$')),
+  parse(text=TeX('$\\Delta_{\\bar{\\psi}}$'))
   ) 
 
 
@@ -1337,7 +1481,7 @@ levels(PP.s$parameter) = param_label
 
 ######################################################################
 #bias
-bias.plotp = 
+bias.plot = 
 ggplot(bias.s, aes(x = bias, y = factor(size,levels=c(300,200,100)),
                    group = factor(size,levels=c(300,200,100)), 
                    color = factor(size,levels=c(300,200,100)),
@@ -1348,8 +1492,10 @@ stat_pointinterval(alpha = 0.45, point_interval = median_hdci,
   facet_wrap(.~factor(parameter,levels=(levels(parameter))), ncol=6,
              labeller=label_parsed)+
   coord_cartesian(xlim = c(-1,1))+
-  geom_vline(xintercept = c(-0.2,0.2),  linetype="dashed")+ 
-    geom_vline(xintercept = 0, linetype=c("solid"))+
+  geom_vline(xintercept = c(-0.2,0.2), 
+             linetype=c("dashed"))+
+  geom_vline(xintercept = 0, 
+             linetype=c("solid"))+
   scale_x_continuous(breaks = c(-1,0,1))+
   scale_color_manual(values = c("#b91d73","#e378b3","#f953c6"))+
   xlab("Bias\n")+
@@ -1372,13 +1518,12 @@ stat_pointinterval(alpha = 0.45, point_interval = median_hdci,
         guides(fill=FALSE, color=FALSE)
 
 #save
-save_plot("Fig 3i1.tiff", bias.plot, compression="lzw",
-              dpi=600, base_height=2, base_width=7 )
+save_plot("Fig 3ii1.tiff", bias.plot, compression="lzw",
+              dpi=600, base_height=1.5, base_width=7 )
 
 ######################################################################
 #uncertainty
-
-UC.plotp = 
+UC.plot = 
 ggplot(UC.s, aes(x = uc, y = factor(size,levels=c(300,200,100)),
                    group = factor(size,levels=c(300,200,100)), 
                    color = factor(size,levels=c(300,200,100)),
@@ -1390,8 +1535,8 @@ stat_pointinterval(alpha = 0.45, point_interval = median_hdci,
   facet_wrap(.~factor(parameter,levels=(levels(parameter))), ncol=6,
              labeller=label_parsed)+
   coord_cartesian(xlim = c(-0.1,2.1))+ 
-  geom_vline(xintercept = c(0.5),  linetype="dashed")+ 
-    geom_vline(xintercept = 0, linetype=c("solid"))+
+  geom_vline(xintercept = 0.5,  linetype="dashed")+ 
+  geom_vline(xintercept = 0,  linetype="solid")+ 
   scale_x_continuous(breaks = c(0,1,2), expand=c(0,0))+
   scale_fill_manual(values = c("#1751ad","#4e9ed9", "#94d2ff"))+
   xlab("Uncertainty\n")+
@@ -1414,13 +1559,12 @@ stat_pointinterval(alpha = 0.45, point_interval = median_hdci,
         guides(fill=FALSE, color=FALSE)
 
 #save
-save_plot("Fig 3i2.tiff", UC.plot, compression="lzw",
+save_plot("Fig 3ii2.tiff", UC.plot, compression="lzw",
               dpi=600, base_height=2, base_width=7 )
 
 ######################################################################
-#uncertainty
-
-PP.plotp = 
+#power
+PP.plot = 
 ggplot(PP.s, aes(x = pp, y = factor(size,levels=c(300,200,100)),
                    group = factor(size,levels=c(300,200,100)), 
                    color = factor(size,levels=c(300,200,100)),
@@ -1454,45 +1598,22 @@ ggplot(PP.s, aes(x = pp, y = factor(size,levels=c(300,200,100)),
         guides(fill=FALSE, color=FALSE)
 
 #save
-save_plot("Fig 3i3.tiff", PP.plot, compression="lzw",
+save_plot("Fig 3ii3.tiff", PP.plot, compression="lzw",
               dpi=600, base_height=2, base_width=7 )
 
 ######################################################################
 #group plots
 library(cowplot)
 
-p.gridp <-
-  plot_grid(bias.plotp, UC.plotp, PP.plotp, ncol=1, nrow=3,  align="h")
-
-#save
-save_plot("Fig 3i.tiff", p.gridp, compression="lzw",
-              dpi=600, base_height=5.5, base_width=6.2)
-
-
-saveRDS(bias.plotp, "bias_plotp.RDS")
-saveRDS(UC.plotp, "uc_plotp.RDS")
-saveRDS(PP.plotp, "pp_plotp.RDS")
-
-######################################################################
-#group with QG results
-setwd("C:/Users/jormar/Dropbox/JEB revision 2/agg simulation/QG")
-bias.plot = readRDS("bias_plot.RDS")
-UC.plot = readRDS("uc_plot.RDS")
-PP.plot = readRDS("pp_plot.RDS")
-
 p.grid <-
   plot_grid(bias.plot, UC.plot, PP.plot, ncol=1, nrow=3,  align="h")
 
-p.comb <-
-  plot_grid(NULL, p.gridp, p.grid, nrow = 2 )
-
 #save
-save_plot("Fig 3.tiff", p.comb, compression="lzw",
-              dpi=600, base_height=10, base_width=9)
+save_plot("Fig 3ii.tiff", p.grid, compression="lzw",
+              dpi=600, base_height=5.5, base_width=9)
+  
+saveRDS(bias.plot, "bias_plot.RDS")
+saveRDS(UC.plot, "uc_plot.RDS")
+saveRDS(PP.plot, "pp_plot.RDS")
 
-
-
-
-
-
-
+######################################################################
