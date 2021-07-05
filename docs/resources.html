@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Resources | Estimating Social Animal Models in Stan</title>
   <meta name="description" content="Resources | Estimating Social Animal Models in Stan" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Resources | Estimating Social Animal Models in Stan" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Jordan S. Martin &amp; Adrian V. Jaeggi" />
 
 
-<meta name="date" content="2021-05-27" />
+<meta name="date" content="2021-07-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="extending-sams.html"/>
 
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -51,12 +51,15 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
@@ -117,6 +120,29 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -163,8 +189,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.6" data-path="within-partner-sam.html"><a href="within-partner-sam.html#failure-to-detect-assortment"><i class="fa fa-check"></i><b>2.6</b> Failure to detect assortment</a></li>
 <li class="chapter" data-level="2.7" data-path="within-partner-sam.html"><a href="within-partner-sam.html#phenotypic-model"><i class="fa fa-check"></i><b>2.7</b> Phenotypic model</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="between-partner-sam.html"><a href="between-partner-sam.html"><i class="fa fa-check"></i><b>3</b> Between partner SAM</a></li>
-<li class="chapter" data-level="4" data-path="between-and-within-partner-sam.html"><a href="between-and-within-partner-sam.html"><i class="fa fa-check"></i><b>4</b> Between-and-within partner SAM</a></li>
+<li class="chapter" data-level="3" data-path="between-partner-sam.html"><a href="between-partner-sam.html"><i class="fa fa-check"></i><b>3</b> Between partner SAM</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="between-partner-sam.html"><a href="between-partner-sam.html#simulate-data-2"><i class="fa fa-check"></i><b>3.1</b> Simulate data</a></li>
+<li class="chapter" data-level="3.2" data-path="between-partner-sam.html"><a href="between-partner-sam.html#estimate-the-model"><i class="fa fa-check"></i><b>3.2</b> Estimate the model</a></li>
+<li class="chapter" data-level="3.3" data-path="between-partner-sam.html"><a href="between-partner-sam.html#estimating-assortment"><i class="fa fa-check"></i><b>3.3</b> Estimating assortment</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="between-and-within-partner-sam.html"><a href="between-and-within-partner-sam.html"><i class="fa fa-check"></i><b>4</b> Between-and-within partner SAM</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="between-and-within-partner-sam.html"><a href="between-and-within-partner-sam.html#simulate-data-3"><i class="fa fa-check"></i><b>4.1</b> Simulate data</a></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="extending-sams.html"><a href="extending-sams.html"><i class="fa fa-check"></i><b>5</b> Extending SAMs</a></li>
 <li class="chapter" data-level="" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i>Resources</a></li>
 </ul>
@@ -188,40 +222,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1>Resources</h1>
 
 <div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-ASREML" class="csl-entry">
+<div class="csl-entry">
 Butler, D. G., B. R. Cullis, A. R. Gilmour, B. J. Gogel, and R. Thompson. 2018. <em>ASReml-r Reference Manual</em> (version 4). Hemel Hempstead, UK: VSN International Ltd. <a href="https://asreml.kb.vsni.co.uk/wp-content/uploads/sites/3/2018/02/ASReml-R-Reference-Manual-4.pdf">https://asreml.kb.vsni.co.uk/wp-content/uploads/sites/3/2018/02/ASReml-R-Reference-Manual-4.pdf</a>.
 </div>
-<div id="ref-Stan" class="csl-entry">
+<div class="csl-entry">
 Carpenter, B., A. Gelman, M. D. Hoffman, D. Lee, B. Goodrich, M. Betancourt, and... A. Riddell. 2017. <span>“Stan: A Probabilistic Programming Language.”</span> <em>Journal of Statistical Software</em> 74. <a href="https://www.jstatsoft.org/article/view/v076i01">https://www.jstatsoft.org/article/view/v076i01</a>.
 </div>
-<div id="ref-Gelman2020" class="csl-entry">
+<div class="csl-entry">
 Gelman, A., A. Vehtari, D. Simpson, C. C. Margossian, B. Carpenter, Y. Yao, and... M. Modrák. 2020. <span>“Bayesian Workflow.”</span> <em>arXiv Preprint</em> arXiv:2011.01808. <a href="https://arxiv.org/abs/2011.01808">https://arxiv.org/abs/2011.01808</a>.
 </div>
-<div id="ref-Gupta2018" class="csl-entry">
+<div class="csl-entry">
 Gupta, A. K., and D. K. Nagar. 2018. <em>Matrix Variate Distributions</em>. CRC Press. <a href="https://www.routledge.com/Matrix-Variate-Distributions/Gupta-Nagar/p/book/9781584880462">https://www.routledge.com/Matrix-Variate-Distributions/Gupta-Nagar/p/book/9781584880462</a>.
 </div>
-<div id="ref-MCMCglmm" class="csl-entry">
+<div class="csl-entry">
 Hadfield, J. D. 2010. <span>“MCMC Methods for Multi-Response Generalized Linear Mixed Models: The MCMCglmm r Package.”</span> <em>Journal of Statistical Software</em> 33. <a href="https://mran.microsoft.com/snapshot/2016-10-12/web/packages/MCMCglmm/vignettes/Overview.pdf">https://mran.microsoft.com/snapshot/2016-10-12/web/packages/MCMCglmm/vignettes/Overview.pdf</a>.
 </div>
-<div id="ref-Lemoine2019" class="csl-entry">
+<div class="csl-entry">
 Lemoine, N. P. 2019. <span>“Moving Beyond Noninformative Priors: Why and How to Choose Weakly Informative Priors in Bayesian Analyses.”</span> <em>Oikos</em> 128. <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/oik.05985">https://onlinelibrary.wiley.com/doi/full/10.1111/oik.05985</a>.
 </div>
-<div id="ref-SAM" class="csl-entry">
+<div class="csl-entry">
 Martin, J. S., and A. V. Jaeggi. 2021. <span>“Social Animal Models for Quantifying Plasticity, Assortment, and Selection on Interacting Phenotypes.”</span> <em>Under Review</em> XX. <a href="https://XX">XX</a>.
 </div>
-<div id="ref-Rethinking" class="csl-entry">
+<div class="csl-entry">
 McElreath, R. 2020. <em>Statistical Rethinking: A Bayesian Course with Examples in r and Stan</em>. 2nd ed. CRC Press. <a href="https://xcelab.net/rm/statistical-rethinking/">https://xcelab.net/rm/statistical-rethinking/</a>.
 </div>
-<div id="ref-MCMCperf" class="csl-entry">
+<div class="csl-entry">
 Nishio, M., and A. Arakawa. 2019. <span>“Performance of Hamiltonian Monte Carlo and No-u-Turn Sampler for Estimating Genetic Parameters and Breeding Values.”</span> <em>Genetics Selection Evolution</em> 51. <a href="https://gsejournal.biomedcentral.com/articles/10.1186/s12711-019-0515-1">https://gsejournal.biomedcentral.com/articles/10.1186/s12711-019-0515-1</a>.
 </div>
-<div id="ref-Rbase" class="csl-entry">
+<div class="csl-entry">
 R Core Team. 2020. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org">https://www.R-project.org</a>.
 </div>
-<div id="ref-Stinchcombe2014" class="csl-entry">
+<div class="csl-entry">
 Stinchcombe, J. R., A. K. Simonsen, and M. W. Blows. 2014. <span>“Estimating Uncertainty in Multivariate Responses to Selection.”</span> <em>Evolution</em> 68. <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/evo.12321">https://onlinelibrary.wiley.com/doi/full/10.1111/evo.12321</a>.
 </div>
-<div id="ref-Thomson2018" class="csl-entry">
+<div class="csl-entry">
 Thomson, C. E., I. S. Winney, O. C. Salles, and B. Pujol. 2018. <span>“A Guide to Using a Multiple-Matrix Animal Model to Disentangle Genetic and Nongenetic Causes of Phenotypic Variance.”</span> <em>PloS One</em> 13. <a href="https://journals.plos.org/plosone/article/comments?id=10.1371/journal.pone.0197720">https://journals.plos.org/plosone/article/comments?id=10.1371/journal.pone.0197720</a>.
 </div>
 </div>
@@ -255,6 +289,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {

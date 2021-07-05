@@ -21,5 +21,9 @@ estimating-the-model
 failure-to-detect-assortment
 phenotypic-model
 between-partner-sam
+simulate-data-2
+estimate-the-model
+estimating-assortment
 between-and-within-partner-sam
+simulate-data-3
 extending-sams

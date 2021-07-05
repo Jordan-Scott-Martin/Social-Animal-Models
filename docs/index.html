@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Estimating Social Animal Models in Stan</title>
   <meta name="description" content="Estimating Social Animal Models in Stan" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Estimating Social Animal Models in Stan" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Jordan S. Martin &amp; Adrian V. Jaeggi" />
 
 
-<meta name="date" content="2021-05-27" />
+<meta name="date" content="2021-07-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 
 <link rel="next" href="using-stan-in-r.html"/>
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -51,12 +51,15 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
@@ -117,6 +120,29 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
@@ -163,8 +189,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.6" data-path="within-partner-sam.html"><a href="within-partner-sam.html#failure-to-detect-assortment"><i class="fa fa-check"></i><b>2.6</b> Failure to detect assortment</a></li>
 <li class="chapter" data-level="2.7" data-path="within-partner-sam.html"><a href="within-partner-sam.html#phenotypic-model"><i class="fa fa-check"></i><b>2.7</b> Phenotypic model</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="between-partner-sam.html"><a href="between-partner-sam.html"><i class="fa fa-check"></i><b>3</b> Between partner SAM</a></li>
-<li class="chapter" data-level="4" data-path="between-and-within-partner-sam.html"><a href="between-and-within-partner-sam.html"><i class="fa fa-check"></i><b>4</b> Between-and-within partner SAM</a></li>
+<li class="chapter" data-level="3" data-path="between-partner-sam.html"><a href="between-partner-sam.html"><i class="fa fa-check"></i><b>3</b> Between partner SAM</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="between-partner-sam.html"><a href="between-partner-sam.html#simulate-data-2"><i class="fa fa-check"></i><b>3.1</b> Simulate data</a></li>
+<li class="chapter" data-level="3.2" data-path="between-partner-sam.html"><a href="between-partner-sam.html#estimate-the-model"><i class="fa fa-check"></i><b>3.2</b> Estimate the model</a></li>
+<li class="chapter" data-level="3.3" data-path="between-partner-sam.html"><a href="between-partner-sam.html#estimating-assortment"><i class="fa fa-check"></i><b>3.3</b> Estimating assortment</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="between-and-within-partner-sam.html"><a href="between-and-within-partner-sam.html"><i class="fa fa-check"></i><b>4</b> Between-and-within partner SAM</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="between-and-within-partner-sam.html"><a href="between-and-within-partner-sam.html#simulate-data-3"><i class="fa fa-check"></i><b>4.1</b> Simulate data</a></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="extending-sams.html"><a href="extending-sams.html"><i class="fa fa-check"></i><b>5</b> Extending SAMs</a></li>
 <li class="chapter" data-level="" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i>Resources</a></li>
 </ul>
@@ -187,7 +221,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Estimating Social Animal Models in Stan</h1>
 <p class="author"><em>Jordan S. Martin &amp; Adrian V. Jaeggi</em></p>
-<p class="date"><em>2021-05-27</em></p>
+<p class="date" style="margin-top: 1.5em;"><em>2021-07-05</em></p>
 </div>
 <div id="introduction" class="section level1 unnumbered">
 <h1>Introduction</h1>
@@ -196,9 +230,21 @@ body {
 text-align: justify}
 </style>
 <p><img src="Figure%201%20R2.png" /></p>
-<p>This guidebook provides a comprehensive overview of how to estimate social animal models (SAMs) with the Stan statistical programming language <span class="citation">(<a href="resources.html#ref-Stan" role="doc-biblioref">Carpenter et al. 2017</a>)</span> in R <span class="citation">(<a href="resources.html#ref-Rbase" role="doc-biblioref">R Core Team 2020</a>)</span>. A detailed theoretical treatment of SAMs and their empirical motivation can be found in the forthcoming paper <span class="citation">(<a href="resources.html#ref-SAM" role="doc-biblioref">Martin and Jaeggi 2021</a>)</span> “Social animal models for quantifying plasticity, assortment, and selection on interacting phenotypes.” This guide focuses on various issues related to coding SAMs in Stan for varying study designs and more complex trait interactions. The overarching goal of the guidebook is to aid researchers in flexibly and appropriately applying SAMs to their own empirical datasets. Therefore, in addition to basic coding tutorials, we also intend to add worked examples relevant to specific challenges such as modeling spatial autocorrelation or hierarchical phenotypes.</p>
+<p>This guidebook provides a comprehensive overview of how to estimate social animal models (SAMs) with the Stan statistical programming language <span class="citation">(<a href="#ref-Stan" role="doc-biblioref">Carpenter et al. 2017</a>)</span> in R <span class="citation">(<a href="#ref-Rbase" role="doc-biblioref">R Core Team 2020</a>)</span>. A detailed theoretical treatment of SAMs and their empirical motivation can be found in the forthcoming paper <span class="citation">(<a href="#ref-SAM" role="doc-biblioref">Martin and Jaeggi 2021</a>)</span> “Social animal models for quantifying plasticity, assortment, and selection on interacting phenotypes.” This guide focuses on various issues related to coding SAMs in Stan for varying study designs and more complex trait interactions. The overarching goal of the guidebook is to aid researchers in flexibly and appropriately applying SAMs to their own empirical datasets. Therefore, in addition to basic coding tutorials, we also intend to add worked examples relevant to specific challenges such as modeling spatial autocorrelation or hierarchical phenotypes.</p>
 <p>Please contact <a href="mailto:jordan.martin@iem.uzh.ch?">Jordan Scott Martin</a> if you have any questions, as well as if you’d like to suggest a worked example of interest to your own research. The guidebook is a work in progress and will be updated over time.</p>
 
+</div>
+<h3>Resources</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Stan" class="csl-entry">
+Carpenter, B., A. Gelman, M. D. Hoffman, D. Lee, B. Goodrich, M. Betancourt, and... A. Riddell. 2017. <span>“Stan: A Probabilistic Programming Language.”</span> <em>Journal of Statistical Software</em> 74. <a href="https://www.jstatsoft.org/article/view/v076i01">https://www.jstatsoft.org/article/view/v076i01</a>.
+</div>
+<div id="ref-SAM" class="csl-entry">
+Martin, J. S., and A. V. Jaeggi. 2021. <span>“Social Animal Models for Quantifying Plasticity, Assortment, and Selection on Interacting Phenotypes.”</span> <em>Under Review</em> XX. <a href="https://XX">XX</a>.
+</div>
+<div id="ref-Rbase" class="csl-entry">
+R Core Team. 2020. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org">https://www.R-project.org</a>.
+</div>
 </div>
             </section>
 
@@ -229,6 +275,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
