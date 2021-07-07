@@ -24,6 +24,10 @@ between-partner-sam
 simulate-data-2
 estimate-the-model
 estimating-assortment
-between-and-within-partner-sam
+phenotypic-model-1
+within-and-between-partner-sam
 simulate-data-3
+estimate-the-model-1
+estimating-assortment-1
+phenotypic-model-2
 extending-sams

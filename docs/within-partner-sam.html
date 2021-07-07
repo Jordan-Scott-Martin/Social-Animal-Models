@@ -24,7 +24,7 @@
 <meta name="author" content="Jordan S. Martin &amp; Adrian V. Jaeggi" />
 
 
-<meta name="date" content="2021-07-05" />
+<meta name="date" content="2021-07-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -194,10 +194,14 @@ div.csl-indent {
 <li class="chapter" data-level="3.1" data-path="between-partner-sam.html"><a href="between-partner-sam.html#simulate-data-2"><i class="fa fa-check"></i><b>3.1</b> Simulate data</a></li>
 <li class="chapter" data-level="3.2" data-path="between-partner-sam.html"><a href="between-partner-sam.html#estimate-the-model"><i class="fa fa-check"></i><b>3.2</b> Estimate the model</a></li>
 <li class="chapter" data-level="3.3" data-path="between-partner-sam.html"><a href="between-partner-sam.html#estimating-assortment"><i class="fa fa-check"></i><b>3.3</b> Estimating assortment</a></li>
+<li class="chapter" data-level="3.4" data-path="between-partner-sam.html"><a href="between-partner-sam.html#phenotypic-model-1"><i class="fa fa-check"></i><b>3.4</b> Phenotypic model</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="between-and-within-partner-sam.html"><a href="between-and-within-partner-sam.html"><i class="fa fa-check"></i><b>4</b> Between-and-within partner SAM</a>
+<li class="chapter" data-level="4" data-path="within-and-between-partner-sam.html"><a href="within-and-between-partner-sam.html"><i class="fa fa-check"></i><b>4</b> Within-and-between partner SAM</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="between-and-within-partner-sam.html"><a href="between-and-within-partner-sam.html#simulate-data-3"><i class="fa fa-check"></i><b>4.1</b> Simulate data</a></li>
+<li class="chapter" data-level="4.1" data-path="within-and-between-partner-sam.html"><a href="within-and-between-partner-sam.html#simulate-data-3"><i class="fa fa-check"></i><b>4.1</b> Simulate data</a></li>
+<li class="chapter" data-level="4.2" data-path="within-and-between-partner-sam.html"><a href="within-and-between-partner-sam.html#estimate-the-model-1"><i class="fa fa-check"></i><b>4.2</b> Estimate the model</a></li>
+<li class="chapter" data-level="4.3" data-path="within-and-between-partner-sam.html"><a href="within-and-between-partner-sam.html#estimating-assortment-1"><i class="fa fa-check"></i><b>4.3</b> Estimating assortment</a></li>
+<li class="chapter" data-level="4.4" data-path="within-and-between-partner-sam.html"><a href="within-and-between-partner-sam.html#phenotypic-model-2"><i class="fa fa-check"></i><b>4.4</b> Phenotypic model</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="extending-sams.html"><a href="extending-sams.html"><i class="fa fa-check"></i><b>5</b> Extending SAMs</a></li>
 <li class="chapter" data-level="" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i>Resources</a></li>
@@ -231,8 +235,8 @@ div.csl-indent {
 \mu_j + \left( \psi_1 + \psi_j \right)\eta_{kt-1}&#39; &amp; \mathrm{else}
 \end{Bmatrix} \]</span></p>
 <p><span class="math display">\[\xi_{jt} = \begin{Bmatrix}
-\epsilon_j &amp; \mathrm{if} \ t = 1 \\ 
-\epsilon_j + \phi\epsilon_{kt-1}&#39; &amp; \mathrm{else}
+\epsilon_{jt} &amp; \mathrm{if} \ t = 1 \\ 
+\epsilon_{jt} + \phi\epsilon_{kt-1}&#39; &amp; \mathrm{else}
 \end{Bmatrix} \]</span></p>
 <p><span class="math display">\[\mu_j = \mu_{\mathrm{A}j} + \mu_{\mathrm{E}j}, \quad  \psi_j = \psi_{\mathrm{A}j} + \psi_{\mathrm{E}j}\]</span>
 with the equivalent specification for the social partner’s aggression measure <span class="math inline">\(z_{kt}&#39;\)</span></p>
@@ -242,8 +246,8 @@ with the equivalent specification for the social partner’s aggression measure 
 \mu_k&#39; + \left( \psi_1 + \psi_k&#39; \right)\eta_{jt-1} &amp; \mathrm{else}
 \end{Bmatrix} \]</span></p>
 <p><span class="math display">\[\xi_{kt}&#39; = \begin{Bmatrix}
-\epsilon_k&#39; &amp; \mathrm{if} \ t = 1 \\ 
-\epsilon_k&#39; + \phi\epsilon_{jt-1} &amp; \mathrm{else}
+\epsilon_{kt}&#39; &amp; \mathrm{if} \ t = 1 \\ 
+\epsilon_{kt}&#39; + \phi\epsilon_{jt-1} &amp; \mathrm{else}
 \end{Bmatrix} \]</span></p>
 <p><span class="math display">\[\mu_k&#39; = \mu_{\mathrm{A}k}&#39; + \mu_{\mathrm{E}j}&#39;, \quad  \psi_k&#39; = \psi_{\mathrm{A}k}&#39; + \psi_{\mathrm{E}k}&#39;\]</span>
 The random effects are assumed to be well-described by multivariate normal distributions.</p>
@@ -375,14 +379,14 @@ Priors can also be placed on the genetic and permanent environmental correlation
 <span id="cb71-47"><a href="within-partner-sam.html#cb71-47" aria-hidden="true" tabindex="-1"></a>G_val <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(Gvalues, <span class="at">nrow=</span>I, <span class="at">ncol=</span><span class="dv">2</span>))</span>
 <span id="cb71-48"><a href="within-partner-sam.html#cb71-48" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(G_val)</span></code></pre></div>
 <pre><code>##           X1        X2
-## X1 1.0000000 0.3531415
-## X2 0.3531415 1.0000000</code></pre>
+## X1 1.0000000 0.3501241
+## X2 0.3501241 1.0000000</code></pre>
 <div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="within-partner-sam.html#cb73-1" aria-hidden="true" tabindex="-1"></a>Evalues <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="fu">rep</span>(<span class="dv">0</span>,I<span class="sc">*</span><span class="dv">2</span>), <span class="at">sigma=</span>E_block)</span>
 <span id="cb73-2"><a href="within-partner-sam.html#cb73-2" aria-hidden="true" tabindex="-1"></a>E_val <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(Evalues, <span class="at">nrow=</span>I, <span class="at">ncol=</span><span class="dv">2</span>))</span>
 <span id="cb73-3"><a href="within-partner-sam.html#cb73-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(E_val)</span></code></pre></div>
 <pre><code>##           X1        X2
-## X1 1.0000000 0.3619927
-## X2 0.3619927 1.0000000</code></pre>
+## X1 1.0000000 0.3753003
+## X2 0.3753003 1.0000000</code></pre>
 <div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="within-partner-sam.html#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co">#combine temporary object for all SRN parameters</span></span>
 <span id="cb75-2"><a href="within-partner-sam.html#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="co">#use shorthand mu = 0, psi = 1</span></span>
 <span id="cb75-3"><a href="within-partner-sam.html#cb75-3" aria-hidden="true" tabindex="-1"></a>P <span class="ot">=</span> <span class="fu">cbind</span>(G_val,E_val)</span>
@@ -421,7 +425,7 @@ Priors can also be placed on the genetic and permanent environmental correlation
 <span id="cb76-20"><a href="within-partner-sam.html#cb76-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb76-21"><a href="within-partner-sam.html#cb76-21" aria-hidden="true" tabindex="-1"></a><span class="co">#induce cor through rank-ordering of RN vectors</span></span>
 <span id="cb76-22"><a href="within-partner-sam.html#cb76-22" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(sort.m<span class="sc">$</span>P0_m[rm], sort.f<span class="sc">$</span>P0_f[rf])</span></code></pre></div>
-<pre><code>## [1] 0.3042742</code></pre>
+<pre><code>## [1] 0.3052259</code></pre>
 <div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="within-partner-sam.html#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co">#sort partner ids into dataframe (order on male ID)</span></span>
 <span id="cb78-2"><a href="within-partner-sam.html#cb78-2" aria-hidden="true" tabindex="-1"></a>partner.id <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">ID_m =</span> sort.m<span class="sc">$</span>ID_m[rm], <span class="at">ID_f =</span> sort.f<span class="sc">$</span>ID_f[rf])</span>
 <span id="cb78-3"><a href="within-partner-sam.html#cb78-3" aria-hidden="true" tabindex="-1"></a>partner.id <span class="ot">=</span> partner.id[<span class="fu">order</span>(partner.id[,<span class="st">&quot;ID_m&quot;</span>]),]</span></code></pre></div>
@@ -447,23 +451,16 @@ Priors can also be placed on the genetic and permanent environmental correlation
 <span id="cb79-19"><a href="within-partner-sam.html#cb79-19" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb79-20"><a href="within-partner-sam.html#cb79-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">#check correlation again</span></span>
 <span id="cb79-21"><a href="within-partner-sam.html#cb79-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(partner.id<span class="sc">$</span>P0m, partner.id<span class="sc">$</span>P0f)</span></code></pre></div>
-<pre><code>## [1] 0.3042742</code></pre>
+<pre><code>## [1] 0.3052259</code></pre>
 <div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="within-partner-sam.html#cb81-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#check data structure</span></span>
 <span id="cb81-2"><a href="within-partner-sam.html#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(partner.id)</span></code></pre></div>
-<pre><code>##     ID_m ID_f dyadn         P0m        P0f       P1m         P1f          A0m        A0f         A1m         A1f         E0m         E0f
-## 76     1  233     1  0.04889291  0.5979844 0.8115738  0.20617763  0.834399286  0.5394806  0.41273323  0.46172682 -0.78550638  0.05850375
-## 114    2  182     2 -0.98513252 -0.8127530 0.2520087 -0.01120805 -0.180195982 -0.9797406  0.91008937 -0.87524415 -0.80493654  0.16698759
-## 112    3  153     3  0.47571662 -1.6378813 0.1887864  0.13795966  0.199430540 -0.5582588 -0.23670218  0.34085271  0.27628608 -1.07962247
-## 25     4  154     4  1.48874648  0.8046392 1.3043387  1.25853032  0.514971441  0.3375736 -0.03480879  0.08097446  0.97377504  0.46706560
-## 6      5  208     5  0.02215289  0.2502796 0.3205187 -0.60148740 -0.006161162  0.3214420  0.14438437  0.14741645  0.02831405 -0.07116239
-## 35     6  163     6  0.49748953 -0.7285392 0.5617328 -0.31421287  0.065604953 -0.6478749 -0.02400831 -0.94264714  0.43188458 -0.08066425
-##            E1m        E1f
-## 76   0.3988406 -0.2555492
-## 114 -0.6580807  0.8640361
-## 112  0.4254886 -0.2028930
-## 25   1.3391475  1.1775559
-## 6    0.1761343 -0.7489039
-## 35   0.5857411  0.6284343</code></pre>
+<pre><code>##     ID_m ID_f dyadn         P0m        P0f        P1m        P1f         A0m         A0f         A1m        A1f        E0m        E0f         E1m        E1f
+## 83     1  158     1 -0.60447737  0.3002294  0.1381750  0.9197807  0.08242542  0.42929926  0.07483432  0.7503359 -0.6869028 -0.1290699  0.06334066  0.1694448
+## 128    2  234     2  0.44516978 -0.1251509  0.4758293 -0.8039042  0.14478761 -1.23563991 -0.09839661 -0.4920228  0.3003822  1.1104890  0.57422587 -0.3118813
+## 79     3  272     3  0.29663393 -1.3752583 -0.1079828 -0.9338810  0.46308917 -0.99745270  0.67619892 -0.8060799 -0.1664552 -0.3778056 -0.78418171 -0.1278011
+## 130    4  215     4  0.65868965  2.0620621  0.7574922  1.1235457  0.02848557  0.78063584  0.58771664 -0.2054451  0.6302041  1.2814263  0.16977559  1.3289908
+## 119    5  206     5  0.95374875  0.2837430  1.2076925  0.9229270  1.22823523  0.48233291  1.06921250  0.3376829 -0.2744865 -0.1985899  0.13847997  0.5852441
+## 62     6  190     6  0.07910526  1.0907414 -0.4165885  0.3179899 -0.04883328  0.07890664 -0.58289345 -0.5501955  0.1279385  1.0118348  0.16630497  0.8681854</code></pre>
 </div>
 <div id="repeated-measurements-within-the-partner" class="section level3" number="2.3.3">
 <h3><span class="header-section-number">2.3.3</span> Repeated measurements within the partner</h3>
@@ -908,27 +905,15 @@ vector&lt;lower=0&gt;[2] V_R = sd_R .* sd_R;
 <span id="cb95-3"><a href="within-partner-sam.html#cb95-3" aria-hidden="true" tabindex="-1"></a>sam_3<span class="fl">.1</span> <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="st">&quot;sam3_1.stan&quot;</span>)</span></code></pre></div>
 <pre><code>## Warning in system(paste(CXX, ARGS), ignore.stdout = TRUE, ignore.stderr = TRUE): &#39;C:/rtools40/usr/mingw_/bin/g++&#39; not found</code></pre>
 <div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="within-partner-sam.html#cb97-1" aria-hidden="true" tabindex="-1"></a>stan_results3<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">sampling</span>(sam_3<span class="fl">.1</span>, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">6000</span>,</span>
-<span id="cb97-2"><a href="within-partner-sam.html#cb97-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span></code></pre></div>
-<pre><code>## Warning: There were 1 divergent transitions after warmup. See
-## http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-## to find out why this is a problem and how to eliminate them.</code></pre>
-<pre><code>## Warning: Examine the pairs() plot to diagnose sampling problems</code></pre>
-<pre><code>## Warning: The largest R-hat is NA, indicating chains have not mixed.
-## Running the chains for more iterations may help. See
-## http://mc-stan.org/misc/warnings.html#r-hat</code></pre>
-<pre><code>## Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
-## Running the chains for more iterations may help. See
-## http://mc-stan.org/misc/warnings.html#bulk-ess</code></pre>
-<pre><code>## Warning: Tail Effective Samples Size (ESS) is too low, indicating posterior variances and tail quantiles may be unreliable.
-## Running the chains for more iterations may help. See
-## http://mc-stan.org/misc/warnings.html#tail-ess</code></pre>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="within-partner-sam.html#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bayesplot)</span></code></pre></div>
+<span id="cb97-2"><a href="within-partner-sam.html#cb97-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span>
+<span id="cb97-3"><a href="within-partner-sam.html#cb97-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-4"><a href="within-partner-sam.html#cb97-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bayesplot)</span></code></pre></div>
 <pre><code>## This is bayesplot version 1.8.0</code></pre>
 <pre><code>## - Online documentation and vignettes at mc-stan.org/bayesplot</code></pre>
 <pre><code>## - bayesplot theme set to bayesplot::theme_default()</code></pre>
 <pre><code>##    * Does _not_ affect other ggplot2 plots</code></pre>
 <pre><code>##    * See ?bayesplot_theme_set for details on theme setting</code></pre>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="within-partner-sam.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_areas</span>(stan_results3<span class="fl">.1</span>, <span class="at">pars =</span> <span class="fu">c</span>( <span class="st">&quot;psi_1&quot;</span>, <span class="st">&quot;phi&quot;</span>, <span class="st">&quot;V_P[1]&quot;</span>, <span class="st">&quot;V_P[2]&quot;</span>, <span class="st">&quot;Gcor[2,1]&quot;</span>, <span class="st">&quot;Ecor[2,1]&quot;</span>, <span class="st">&quot;Rcor[2,1]&quot;</span>,  <span class="st">&quot;Pcor[2,1]&quot;</span> ), <span class="at">prob =</span> <span class="fl">0.9</span> )</span></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="within-partner-sam.html#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_areas</span>(stan_results3<span class="fl">.1</span>, <span class="at">pars =</span> <span class="fu">c</span>( <span class="st">&quot;psi_1&quot;</span>, <span class="st">&quot;phi&quot;</span>, <span class="st">&quot;V_P[1]&quot;</span>, <span class="st">&quot;V_P[2]&quot;</span>, <span class="st">&quot;Gcor[2,1]&quot;</span>, <span class="st">&quot;Ecor[2,1]&quot;</span>, <span class="st">&quot;Rcor[2,1]&quot;</span>,  <span class="st">&quot;Pcor[2,1]&quot;</span> ), <span class="at">prob =</span> <span class="fl">0.9</span> )</span></code></pre></div>
 <p><img src="SAMs_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
 <p>Despite the modest sample size for a quantitative genetic study, the SAM does a good job of detecting the opposing directional effects of SRN and residual feedback, as well as of residual and intrinsic trait value correlations. It is also noticeable that, despite the greater uncertainty in the genetic and permanent environmental correlations, the overall phenotypic variance is more precisely estimated. Thus, even when pedigrees are not sufficiently informative to confidently infer genetic effects, SAMs can still be used to estimate evolutionary parameters on phenotypes.</p>
 </div>
@@ -941,185 +926,185 @@ The posterior of the full assortment coefficient matrix is</p>
 <p><span class="math display">\[\boldsymbol{ \mathrm{B}_{\alpha}} = \Pr \left (  \begin{bmatrix}  \beta_{\bar{\mu&#39;}\mu} &amp;  \beta_{\bar{\psi&#39;}\mu} \\  \beta_{\bar{\mu&#39;}\psi} &amp;  \beta_{\bar{\psi&#39;}\psi} \end{bmatrix}
 \mid \boldsymbol{z},  \boldsymbol{z&#39;},  \boldsymbol{\Theta}  \right ) \]</span></p>
 <p>We can manually calculate this posterior matrix by post-processing the MCMC samples from our model. In this case, we only need to organize the male and female responses together and calculate the appropriate (co)variances, as each individual has a single partner. We therefore arbitrarily treat males as focal individuals, as the coefficient is equivalent in this case for both sexes.</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="within-partner-sam.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="co">#extract posteriors</span></span>
-<span id="cb110-2"><a href="within-partner-sam.html#cb110-2" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">extract</span>(stan_results3<span class="fl">.1</span>)</span>
-<span id="cb110-3"><a href="within-partner-sam.html#cb110-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb110-4"><a href="within-partner-sam.html#cb110-4" aria-hidden="true" tabindex="-1"></a>SRN_focal1 <span class="ot">&lt;-</span> post<span class="sc">$</span>SRN_P[,(<span class="dv">1</span><span class="sc">:</span>Im),<span class="dv">1</span>] <span class="co">#male intercepts</span></span>
-<span id="cb110-5"><a href="within-partner-sam.html#cb110-5" aria-hidden="true" tabindex="-1"></a>SRN_focal2 <span class="ot">&lt;-</span> post<span class="sc">$</span>SRN_P[,(<span class="dv">1</span><span class="sc">:</span>Im),<span class="dv">2</span>] <span class="co">#male slopes</span></span>
-<span id="cb110-6"><a href="within-partner-sam.html#cb110-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb110-7"><a href="within-partner-sam.html#cb110-7" aria-hidden="true" tabindex="-1"></a>SRN_partner1 <span class="ot">&lt;-</span>  post<span class="sc">$</span>SRN_P[,(Im <span class="sc">+</span> <span class="fu">unique</span>(idf)),<span class="dv">1</span>] <span class="co">#female intercepts </span></span>
-<span id="cb110-8"><a href="within-partner-sam.html#cb110-8" aria-hidden="true" tabindex="-1"></a>SRN_partner2 <span class="ot">&lt;-</span>  post<span class="sc">$</span>SRN_P[,(Im <span class="sc">+</span> <span class="fu">unique</span>(idf)),<span class="dv">2</span>] <span class="co">#female intercepts</span></span>
-<span id="cb110-9"><a href="within-partner-sam.html#cb110-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb110-10"><a href="within-partner-sam.html#cb110-10" aria-hidden="true" tabindex="-1"></a><span class="co">#assortment matrix</span></span>
-<span id="cb110-11"><a href="within-partner-sam.html#cb110-11" aria-hidden="true" tabindex="-1"></a>Beta_alpha <span class="ot">=</span> <span class="fu">list</span>()</span>
-<span id="cb110-12"><a href="within-partner-sam.html#cb110-12" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb110-13"><a href="within-partner-sam.html#cb110-13" aria-hidden="true" tabindex="-1"></a><span class="co">#generate matrices across each posterior sample</span></span>
-<span id="cb110-14"><a href="within-partner-sam.html#cb110-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(SRN_focal1))</span>
-<span id="cb110-15"><a href="within-partner-sam.html#cb110-15" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb110-16"><a href="within-partner-sam.html#cb110-16" aria-hidden="true" tabindex="-1"></a>            Beta_mat <span class="ot">=</span> <span class="fu">matrix</span>(<span class="cn">NA</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
-<span id="cb110-17"><a href="within-partner-sam.html#cb110-17" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb110-18"><a href="within-partner-sam.html#cb110-18" aria-hidden="true" tabindex="-1"></a>            <span class="co">#mu&#39; ~ mu</span></span>
-<span id="cb110-19"><a href="within-partner-sam.html#cb110-19" aria-hidden="true" tabindex="-1"></a>            Beta_mat[<span class="dv">1</span>,<span class="dv">1</span>] <span class="ot">=</span>  <span class="fu">cov</span>(SRN_focal1[j,], SRN_partner1[j,])<span class="sc">/</span><span class="fu">var</span>(SRN_focal1[j,])</span>
-<span id="cb110-20"><a href="within-partner-sam.html#cb110-20" aria-hidden="true" tabindex="-1"></a>            <span class="co">#mu&#39; ~ psi</span></span>
-<span id="cb110-21"><a href="within-partner-sam.html#cb110-21" aria-hidden="true" tabindex="-1"></a>            Beta_mat[<span class="dv">2</span>,<span class="dv">1</span>] <span class="ot">=</span>  <span class="fu">cov</span>(SRN_focal2[j,], SRN_partner1[j,])<span class="sc">/</span><span class="fu">var</span>(SRN_focal2[j,])</span>
-<span id="cb110-22"><a href="within-partner-sam.html#cb110-22" aria-hidden="true" tabindex="-1"></a>            <span class="co">#psi&#39; ~ mu                                                        </span></span>
-<span id="cb110-23"><a href="within-partner-sam.html#cb110-23" aria-hidden="true" tabindex="-1"></a>            Beta_mat[<span class="dv">1</span>,<span class="dv">2</span>] <span class="ot">=</span>  <span class="fu">cov</span>(SRN_focal1[j,], SRN_partner2[j,])<span class="sc">/</span><span class="fu">var</span>(SRN_focal1[j,])</span>
-<span id="cb110-24"><a href="within-partner-sam.html#cb110-24" aria-hidden="true" tabindex="-1"></a>            <span class="co">#psi&#39; ~ psi</span></span>
-<span id="cb110-25"><a href="within-partner-sam.html#cb110-25" aria-hidden="true" tabindex="-1"></a>            Beta_mat[<span class="dv">2</span>,<span class="dv">2</span>] <span class="ot">=</span>  <span class="fu">cov</span>(SRN_focal2[j,], SRN_partner2[j,])<span class="sc">/</span><span class="fu">var</span>(SRN_focal2[j,])</span>
-<span id="cb110-26"><a href="within-partner-sam.html#cb110-26" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb110-27"><a href="within-partner-sam.html#cb110-27" aria-hidden="true" tabindex="-1"></a>            Beta_alpha[[j]] <span class="ot">=</span> Beta_mat</span>
-<span id="cb110-28"><a href="within-partner-sam.html#cb110-28" aria-hidden="true" tabindex="-1"></a>    } </span>
-<span id="cb110-29"><a href="within-partner-sam.html#cb110-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb110-30"><a href="within-partner-sam.html#cb110-30" aria-hidden="true" tabindex="-1"></a><span class="co">#extract beta_mu&#39;mu (assortment on RN intercepts)</span></span>
-<span id="cb110-31"><a href="within-partner-sam.html#cb110-31" aria-hidden="true" tabindex="-1"></a>Beta_mu <span class="ot">=</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(Beta_alpha, <span class="cf">function</span>(x) x[<span class="dv">1</span>,<span class="dv">1</span>]))</span>
-<span id="cb110-32"><a href="within-partner-sam.html#cb110-32" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(Beta_mu)</span></code></pre></div>
-<pre><code>## [1] 0.04696138</code></pre>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="within-partner-sam.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(Beta_mu)</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="within-partner-sam.html#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co">#extract posteriors</span></span>
+<span id="cb104-2"><a href="within-partner-sam.html#cb104-2" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">extract</span>(stan_results3<span class="fl">.1</span>)</span>
+<span id="cb104-3"><a href="within-partner-sam.html#cb104-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-4"><a href="within-partner-sam.html#cb104-4" aria-hidden="true" tabindex="-1"></a>SRN_focal1 <span class="ot">&lt;-</span> post<span class="sc">$</span>SRN_P[,(<span class="dv">1</span><span class="sc">:</span>Im),<span class="dv">1</span>] <span class="co">#male intercepts</span></span>
+<span id="cb104-5"><a href="within-partner-sam.html#cb104-5" aria-hidden="true" tabindex="-1"></a>SRN_focal2 <span class="ot">&lt;-</span> post<span class="sc">$</span>SRN_P[,(<span class="dv">1</span><span class="sc">:</span>Im),<span class="dv">2</span>] <span class="co">#male slopes</span></span>
+<span id="cb104-6"><a href="within-partner-sam.html#cb104-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-7"><a href="within-partner-sam.html#cb104-7" aria-hidden="true" tabindex="-1"></a>SRN_partner1 <span class="ot">&lt;-</span>  post<span class="sc">$</span>SRN_P[,(Im <span class="sc">+</span> <span class="fu">unique</span>(idf)),<span class="dv">1</span>] <span class="co">#female intercepts </span></span>
+<span id="cb104-8"><a href="within-partner-sam.html#cb104-8" aria-hidden="true" tabindex="-1"></a>SRN_partner2 <span class="ot">&lt;-</span>  post<span class="sc">$</span>SRN_P[,(Im <span class="sc">+</span> <span class="fu">unique</span>(idf)),<span class="dv">2</span>] <span class="co">#female intercepts</span></span>
+<span id="cb104-9"><a href="within-partner-sam.html#cb104-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-10"><a href="within-partner-sam.html#cb104-10" aria-hidden="true" tabindex="-1"></a><span class="co">#assortment matrix</span></span>
+<span id="cb104-11"><a href="within-partner-sam.html#cb104-11" aria-hidden="true" tabindex="-1"></a>Beta_alpha <span class="ot">=</span> <span class="fu">list</span>()</span>
+<span id="cb104-12"><a href="within-partner-sam.html#cb104-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb104-13"><a href="within-partner-sam.html#cb104-13" aria-hidden="true" tabindex="-1"></a><span class="co">#generate matrices across each posterior sample</span></span>
+<span id="cb104-14"><a href="within-partner-sam.html#cb104-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(SRN_focal1))</span>
+<span id="cb104-15"><a href="within-partner-sam.html#cb104-15" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb104-16"><a href="within-partner-sam.html#cb104-16" aria-hidden="true" tabindex="-1"></a>            Beta_mat <span class="ot">=</span> <span class="fu">matrix</span>(<span class="cn">NA</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb104-17"><a href="within-partner-sam.html#cb104-17" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb104-18"><a href="within-partner-sam.html#cb104-18" aria-hidden="true" tabindex="-1"></a>            <span class="co">#mu&#39; ~ mu</span></span>
+<span id="cb104-19"><a href="within-partner-sam.html#cb104-19" aria-hidden="true" tabindex="-1"></a>            Beta_mat[<span class="dv">1</span>,<span class="dv">1</span>] <span class="ot">=</span>  <span class="fu">cov</span>(SRN_focal1[j,], SRN_partner1[j,])<span class="sc">/</span><span class="fu">var</span>(SRN_focal1[j,])</span>
+<span id="cb104-20"><a href="within-partner-sam.html#cb104-20" aria-hidden="true" tabindex="-1"></a>            <span class="co">#mu&#39; ~ psi</span></span>
+<span id="cb104-21"><a href="within-partner-sam.html#cb104-21" aria-hidden="true" tabindex="-1"></a>            Beta_mat[<span class="dv">2</span>,<span class="dv">1</span>] <span class="ot">=</span>  <span class="fu">cov</span>(SRN_focal2[j,], SRN_partner1[j,])<span class="sc">/</span><span class="fu">var</span>(SRN_focal2[j,])</span>
+<span id="cb104-22"><a href="within-partner-sam.html#cb104-22" aria-hidden="true" tabindex="-1"></a>            <span class="co">#psi&#39; ~ mu                                                        </span></span>
+<span id="cb104-23"><a href="within-partner-sam.html#cb104-23" aria-hidden="true" tabindex="-1"></a>            Beta_mat[<span class="dv">1</span>,<span class="dv">2</span>] <span class="ot">=</span>  <span class="fu">cov</span>(SRN_focal1[j,], SRN_partner2[j,])<span class="sc">/</span><span class="fu">var</span>(SRN_focal1[j,])</span>
+<span id="cb104-24"><a href="within-partner-sam.html#cb104-24" aria-hidden="true" tabindex="-1"></a>            <span class="co">#psi&#39; ~ psi</span></span>
+<span id="cb104-25"><a href="within-partner-sam.html#cb104-25" aria-hidden="true" tabindex="-1"></a>            Beta_mat[<span class="dv">2</span>,<span class="dv">2</span>] <span class="ot">=</span>  <span class="fu">cov</span>(SRN_focal2[j,], SRN_partner2[j,])<span class="sc">/</span><span class="fu">var</span>(SRN_focal2[j,])</span>
+<span id="cb104-26"><a href="within-partner-sam.html#cb104-26" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb104-27"><a href="within-partner-sam.html#cb104-27" aria-hidden="true" tabindex="-1"></a>            Beta_alpha[[j]] <span class="ot">=</span> Beta_mat</span>
+<span id="cb104-28"><a href="within-partner-sam.html#cb104-28" aria-hidden="true" tabindex="-1"></a>    } </span>
+<span id="cb104-29"><a href="within-partner-sam.html#cb104-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-30"><a href="within-partner-sam.html#cb104-30" aria-hidden="true" tabindex="-1"></a><span class="co">#extract beta_mu&#39;mu (assortment on RN intercepts)</span></span>
+<span id="cb104-31"><a href="within-partner-sam.html#cb104-31" aria-hidden="true" tabindex="-1"></a>Beta_mu <span class="ot">=</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(Beta_alpha, <span class="cf">function</span>(x) x[<span class="dv">1</span>,<span class="dv">1</span>]))</span>
+<span id="cb104-32"><a href="within-partner-sam.html#cb104-32" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(Beta_mu)</span></code></pre></div>
+<pre><code>## [1] 0.06894314</code></pre>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="within-partner-sam.html#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(Beta_mu)</span></code></pre></div>
 <p><img src="SAMs_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p>
 <p>Perhaps surprisingly, we see that the model is not doing a good job of detecting the positive assortment between partners’ SRN intercepts (r = 0.3), instead centering the assortment coefficient on zero. Given our sample and effect size, it is unlikely that this would be caused by conservative model priors, and we’ve seen above that the model is doing a good job of estimating the other population parameters such as the interaction coefficient/SRN slope. Why would this be the case, given that this same approach is effective for estimating assortment in the between partner (<strong>??</strong>) and within-and-between partner SAMs (<strong>??</strong>)? In these latter models, variation across partners can be used to differentiate within-partner plasticity (SRN slopes) from between-partner assortment using within-individual centering. This leads to appropriate recovery of the assortment coefficient from the posterior SRN parameters, as individuals’ SRN parameters are accurately adjusted for between-individual heterogeneity in the social environment. However, in the within partner model, individuals only have a single social partner, and we’re unable to partition and adjust the random effect accordingly. For this reason, although the within partner model can provide accurate estimates of social plasticity and other population parameters, assortment is better estimated with multiple partner designs and within-individual centering.</p>
 </div>
 <div id="phenotypic-model" class="section level2" number="2.7">
 <h2><span class="header-section-number">2.7</span> Phenotypic model</h2>
 <p>Note that a phenotypic version of this within partner model can easily be specified by simplifying the random effects to a single set of phenotypic SRN intercepts and slopes.</p>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="within-partner-sam.html#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(<span class="st">&quot;</span></span>
-<span id="cb113-2"><a href="within-partner-sam.html#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
-<span id="cb113-3"><a href="within-partner-sam.html#cb113-3" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb113-4"><a href="within-partner-sam.html#cb113-4" aria-hidden="true" tabindex="-1"></a><span class="st">  //indices and scalars used for model specification</span></span>
-<span id="cb113-5"><a href="within-partner-sam.html#cb113-5" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; N_sex; //total aggression observations per sex (I/2 * 2 repeated measures)</span></span>
-<span id="cb113-6"><a href="within-partner-sam.html#cb113-6" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; I; //total individuals (M + F)</span></span>
-<span id="cb113-7"><a href="within-partner-sam.html#cb113-7" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; Im; //number of males</span></span>
-<span id="cb113-8"><a href="within-partner-sam.html#cb113-8" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; If; //number of females</span></span>
-<span id="cb113-9"><a href="within-partner-sam.html#cb113-9" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; idm[N_sex]; //index of male AG observations (of length N_sex)</span></span>
-<span id="cb113-10"><a href="within-partner-sam.html#cb113-10" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; idf[N_sex]; //index of female AG observations</span></span>
-<span id="cb113-11"><a href="within-partner-sam.html#cb113-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-12"><a href="within-partner-sam.html#cb113-12" aria-hidden="true" tabindex="-1"></a><span class="st">  //empirical data</span></span>
-<span id="cb113-13"><a href="within-partner-sam.html#cb113-13" aria-hidden="true" tabindex="-1"></a><span class="st">  real AG_m[N_sex]; //male aggression measurements</span></span>
-<span id="cb113-14"><a href="within-partner-sam.html#cb113-14" aria-hidden="true" tabindex="-1"></a><span class="st">  real AG_f[N_sex]; //female aggression measurements</span></span>
-<span id="cb113-15"><a href="within-partner-sam.html#cb113-15" aria-hidden="true" tabindex="-1"></a><span class="st">  real time[N_sex]; //time index (1,2 per individual)</span></span>
-<span id="cb113-16"><a href="within-partner-sam.html#cb113-16" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb113-17"><a href="within-partner-sam.html#cb113-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-18"><a href="within-partner-sam.html#cb113-18" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
-<span id="cb113-19"><a href="within-partner-sam.html#cb113-19" aria-hidden="true" tabindex="-1"></a><span class="st">  //population effects</span></span>
-<span id="cb113-20"><a href="within-partner-sam.html#cb113-20" aria-hidden="true" tabindex="-1"></a><span class="st">  real alpha_0; //aggression global intercept</span></span>
-<span id="cb113-21"><a href="within-partner-sam.html#cb113-21" aria-hidden="true" tabindex="-1"></a><span class="st">  real psi_1; //expected interaction coefficient</span></span>
-<span id="cb113-22"><a href="within-partner-sam.html#cb113-22" aria-hidden="true" tabindex="-1"></a><span class="st">  real&lt;lower=-1,upper=1&gt; phi; //(-1,1) ensures unique solution</span></span>
-<span id="cb113-23"><a href="within-partner-sam.html#cb113-23" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb113-24"><a href="within-partner-sam.html#cb113-24" aria-hidden="true" tabindex="-1"></a><span class="st">  //random effects (standard deviations)</span></span>
-<span id="cb113-25"><a href="within-partner-sam.html#cb113-25" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0, upper = 1&gt;[2] sd_P; //phenotypic SRN mu &amp; psi SDs</span></span>
-<span id="cb113-26"><a href="within-partner-sam.html#cb113-26" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0, upper = 1&gt;[2] sd_R; //male &amp; female residual SDs</span></span>
-<span id="cb113-27"><a href="within-partner-sam.html#cb113-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-28"><a href="within-partner-sam.html#cb113-28" aria-hidden="true" tabindex="-1"></a><span class="st">  cholesky_factor_corr[2] LP; //P SRN correlations</span></span>
-<span id="cb113-29"><a href="within-partner-sam.html#cb113-29" aria-hidden="true" tabindex="-1"></a><span class="st">  cholesky_factor_corr[2] LR; //sex-specific residual correlations</span></span>
-<span id="cb113-30"><a href="within-partner-sam.html#cb113-30" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb113-31"><a href="within-partner-sam.html#cb113-31" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] std_devP; //individual-level unscaled P SRN deviations</span></span>
-<span id="cb113-32"><a href="within-partner-sam.html#cb113-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-33"><a href="within-partner-sam.html#cb113-33" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb113-34"><a href="within-partner-sam.html#cb113-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-35"><a href="within-partner-sam.html#cb113-35" aria-hidden="true" tabindex="-1"></a><span class="st">transformed parameters {</span></span>
-<span id="cb113-36"><a href="within-partner-sam.html#cb113-36" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb113-37"><a href="within-partner-sam.html#cb113-37" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] SRN_P; //scaled P SRN parameter deviations</span></span>
-<span id="cb113-38"><a href="within-partner-sam.html#cb113-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-39"><a href="within-partner-sam.html#cb113-39" aria-hidden="true" tabindex="-1"></a><span class="st">  //non-centered parameterization of permanent environmental effects</span></span>
-<span id="cb113-40"><a href="within-partner-sam.html#cb113-40" aria-hidden="true" tabindex="-1"></a><span class="st">  SRN_P = std_devP * diag_pre_multiply(sd_P, LP)&#39;;</span></span>
-<span id="cb113-41"><a href="within-partner-sam.html#cb113-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-42"><a href="within-partner-sam.html#cb113-42" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb113-43"><a href="within-partner-sam.html#cb113-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-44"><a href="within-partner-sam.html#cb113-44" aria-hidden="true" tabindex="-1"></a><span class="st">model{</span></span>
-<span id="cb113-45"><a href="within-partner-sam.html#cb113-45" aria-hidden="true" tabindex="-1"></a><span class="st">  //separate male and female vectors for efficiency</span></span>
-<span id="cb113-46"><a href="within-partner-sam.html#cb113-46" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[Im,2] SRN_Pm = SRN_P[1:Im]; //male SRN phenotypic deviations</span></span>
-<span id="cb113-47"><a href="within-partner-sam.html#cb113-47" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[If,2] SRN_Pf = SRN_P[(Im+1):I]; //female SRN phenotypic deviations</span></span>
-<span id="cb113-48"><a href="within-partner-sam.html#cb113-48" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb113-49"><a href="within-partner-sam.html#cb113-49" aria-hidden="true" tabindex="-1"></a><span class="st">  //separate SRN intercepts and slopes (phenotypic deviations)</span></span>
-<span id="cb113-50"><a href="within-partner-sam.html#cb113-50" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[Im] mu_m = col(SRN_Pm,1); //SRN intercepts</span></span>
-<span id="cb113-51"><a href="within-partner-sam.html#cb113-51" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[If] mu_f = col(SRN_Pf,1); </span></span>
-<span id="cb113-52"><a href="within-partner-sam.html#cb113-52" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[Im] psi_m = col(SRN_Pm,2); //SRN slopes</span></span>
-<span id="cb113-53"><a href="within-partner-sam.html#cb113-53" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[If] psi_f = col(SRN_Pf,2); </span></span>
-<span id="cb113-54"><a href="within-partner-sam.html#cb113-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-55"><a href="within-partner-sam.html#cb113-55" aria-hidden="true" tabindex="-1"></a><span class="st">  //initialize vectors for constructing individual-centered linear predictors</span></span>
-<span id="cb113-56"><a href="within-partner-sam.html#cb113-56" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] eta_m; //male SRN trait value </span></span>
-<span id="cb113-57"><a href="within-partner-sam.html#cb113-57" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] eta_f; //female SRN trait value</span></span>
-<span id="cb113-58"><a href="within-partner-sam.html#cb113-58" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] linpred_m; //total expected value for male responses</span></span>
-<span id="cb113-59"><a href="within-partner-sam.html#cb113-59" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] linpred_f; //total expected value for female responses</span></span>
-<span id="cb113-60"><a href="within-partner-sam.html#cb113-60" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] epsilon_m; //residual for male responses</span></span>
-<span id="cb113-61"><a href="within-partner-sam.html#cb113-61" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] epsilon_f; //residual for female responses</span></span>
-<span id="cb113-62"><a href="within-partner-sam.html#cb113-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-63"><a href="within-partner-sam.html#cb113-63" aria-hidden="true" tabindex="-1"></a><span class="st">  //Male and female aggression response model</span></span>
-<span id="cb113-64"><a href="within-partner-sam.html#cb113-64" aria-hidden="true" tabindex="-1"></a><span class="st">  for (n in 1:N_sex) {</span></span>
-<span id="cb113-65"><a href="within-partner-sam.html#cb113-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-66"><a href="within-partner-sam.html#cb113-66" aria-hidden="true" tabindex="-1"></a><span class="st">  //SRN trait values</span></span>
-<span id="cb113-67"><a href="within-partner-sam.html#cb113-67" aria-hidden="true" tabindex="-1"></a><span class="st">  //assumes that n = 1 in the context of an ongoing social interaction</span></span>
-<span id="cb113-68"><a href="within-partner-sam.html#cb113-68" aria-hidden="true" tabindex="-1"></a><span class="st">  //if n = 1 prior to social context, then specify eta[t=1] = mu_j instead</span></span>
-<span id="cb113-69"><a href="within-partner-sam.html#cb113-69" aria-hidden="true" tabindex="-1"></a><span class="st">  if (time[n]==1)</span></span>
-<span id="cb113-70"><a href="within-partner-sam.html#cb113-70" aria-hidden="true" tabindex="-1"></a><span class="st">      {</span></span>
-<span id="cb113-71"><a href="within-partner-sam.html#cb113-71" aria-hidden="true" tabindex="-1"></a><span class="st">        //male eta[t=1] = mu_j + (psi + psi_j)*(mu_k)</span></span>
-<span id="cb113-72"><a href="within-partner-sam.html#cb113-72" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_m[n] = mu_m[idm[n]] +  (psi_1 + psi_m[idm[n]])*(mu_f[idf[n]]) ;</span></span>
-<span id="cb113-73"><a href="within-partner-sam.html#cb113-73" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
-<span id="cb113-74"><a href="within-partner-sam.html#cb113-74" aria-hidden="true" tabindex="-1"></a><span class="st">        //female eta[t=1] = mu_k + (psi + psi_k)*(mu_j)</span></span>
-<span id="cb113-75"><a href="within-partner-sam.html#cb113-75" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_f[n] = mu_f[idf[n]] +   (psi_1 + psi_f[idf[n]])*(mu_m[idm[n]]);</span></span>
-<span id="cb113-76"><a href="within-partner-sam.html#cb113-76" aria-hidden="true" tabindex="-1"></a><span class="st">      }    </span></span>
-<span id="cb113-77"><a href="within-partner-sam.html#cb113-77" aria-hidden="true" tabindex="-1"></a><span class="st">    else</span></span>
-<span id="cb113-78"><a href="within-partner-sam.html#cb113-78" aria-hidden="true" tabindex="-1"></a><span class="st">      {</span></span>
-<span id="cb113-79"><a href="within-partner-sam.html#cb113-79" aria-hidden="true" tabindex="-1"></a><span class="st">        //male eta[t=2] = mu_j + (psi + psi_j)*(eta_k[t=1])</span></span>
-<span id="cb113-80"><a href="within-partner-sam.html#cb113-80" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_m[n] = mu_m[idm[n]] +   (psi_1 + psi_m[idm[n]])*(eta_f[n-1]);</span></span>
-<span id="cb113-81"><a href="within-partner-sam.html#cb113-81" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
-<span id="cb113-82"><a href="within-partner-sam.html#cb113-82" aria-hidden="true" tabindex="-1"></a><span class="st">        //female eta[t=2] = mu_k + (psi + psi_k)*(eta_j[t=1])</span></span>
-<span id="cb113-83"><a href="within-partner-sam.html#cb113-83" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_f[n] = mu_f[idf[n]] +   (psi_1 + psi_f[idf[n]])*(eta_m[n-1]);</span></span>
-<span id="cb113-84"><a href="within-partner-sam.html#cb113-84" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
-<span id="cb113-85"><a href="within-partner-sam.html#cb113-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-86"><a href="within-partner-sam.html#cb113-86" aria-hidden="true" tabindex="-1"></a><span class="st">  //add global intercept and between-individual parameters to linear predictor</span></span>
-<span id="cb113-87"><a href="within-partner-sam.html#cb113-87" aria-hidden="true" tabindex="-1"></a><span class="st">  //other fixed effects can also be added here</span></span>
-<span id="cb113-88"><a href="within-partner-sam.html#cb113-88" aria-hidden="true" tabindex="-1"></a><span class="st">   linpred_m[n] = alpha_0 + eta_m[n];</span></span>
-<span id="cb113-89"><a href="within-partner-sam.html#cb113-89" aria-hidden="true" tabindex="-1"></a><span class="st">   linpred_f[n] = alpha_0 + eta_f[n];</span></span>
-<span id="cb113-90"><a href="within-partner-sam.html#cb113-90" aria-hidden="true" tabindex="-1"></a><span class="st">   </span></span>
-<span id="cb113-91"><a href="within-partner-sam.html#cb113-91" aria-hidden="true" tabindex="-1"></a><span class="st">  //residual trait values</span></span>
-<span id="cb113-92"><a href="within-partner-sam.html#cb113-92" aria-hidden="true" tabindex="-1"></a><span class="st">    if(time[n]==1)</span></span>
-<span id="cb113-93"><a href="within-partner-sam.html#cb113-93" aria-hidden="true" tabindex="-1"></a><span class="st">      {</span></span>
-<span id="cb113-94"><a href="within-partner-sam.html#cb113-94" aria-hidden="true" tabindex="-1"></a><span class="st">        epsilon_m [n] = AG_m[n] - linpred_m[n];</span></span>
-<span id="cb113-95"><a href="within-partner-sam.html#cb113-95" aria-hidden="true" tabindex="-1"></a><span class="st">        epsilon_f [n] = AG_f[n] - linpred_f[n];</span></span>
-<span id="cb113-96"><a href="within-partner-sam.html#cb113-96" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
-<span id="cb113-97"><a href="within-partner-sam.html#cb113-97" aria-hidden="true" tabindex="-1"></a><span class="st">    else</span></span>
-<span id="cb113-98"><a href="within-partner-sam.html#cb113-98" aria-hidden="true" tabindex="-1"></a><span class="st">      {</span></span>
-<span id="cb113-99"><a href="within-partner-sam.html#cb113-99" aria-hidden="true" tabindex="-1"></a><span class="st">       linpred_m[n] = linpred_m[n] + phi * epsilon_f[n-1];</span></span>
-<span id="cb113-100"><a href="within-partner-sam.html#cb113-100" aria-hidden="true" tabindex="-1"></a><span class="st">       epsilon_m[n] = AG_m[n] - linpred_m[n]; </span></span>
-<span id="cb113-101"><a href="within-partner-sam.html#cb113-101" aria-hidden="true" tabindex="-1"></a><span class="st">       </span></span>
-<span id="cb113-102"><a href="within-partner-sam.html#cb113-102" aria-hidden="true" tabindex="-1"></a><span class="st">       linpred_f[n] = linpred_f[n] + phi * epsilon_m[n-1];</span></span>
-<span id="cb113-103"><a href="within-partner-sam.html#cb113-103" aria-hidden="true" tabindex="-1"></a><span class="st">       epsilon_f[n] = AG_f[n] - linpred_f[n]; </span></span>
-<span id="cb113-104"><a href="within-partner-sam.html#cb113-104" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
-<span id="cb113-105"><a href="within-partner-sam.html#cb113-105" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb113-106"><a href="within-partner-sam.html#cb113-106" aria-hidden="true" tabindex="-1"></a><span class="st">  //correlated residuals between partners</span></span>
-<span id="cb113-107"><a href="within-partner-sam.html#cb113-107" aria-hidden="true" tabindex="-1"></a><span class="st">   [epsilon_m[n],epsilon_f[n]]&#39; ~ multi_normal_cholesky([0,0], diag_pre_multiply(sd_R, LR));</span></span>
-<span id="cb113-108"><a href="within-partner-sam.html#cb113-108" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
-<span id="cb113-109"><a href="within-partner-sam.html#cb113-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-110"><a href="within-partner-sam.html#cb113-110" aria-hidden="true" tabindex="-1"></a><span class="st">//model priors</span></span>
-<span id="cb113-111"><a href="within-partner-sam.html#cb113-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-112"><a href="within-partner-sam.html#cb113-112" aria-hidden="true" tabindex="-1"></a><span class="st">  //fixed effects</span></span>
-<span id="cb113-113"><a href="within-partner-sam.html#cb113-113" aria-hidden="true" tabindex="-1"></a><span class="st">  alpha_0 ~ std_normal();</span></span>
-<span id="cb113-114"><a href="within-partner-sam.html#cb113-114" aria-hidden="true" tabindex="-1"></a><span class="st">  psi_1 ~ std_normal();</span></span>
-<span id="cb113-115"><a href="within-partner-sam.html#cb113-115" aria-hidden="true" tabindex="-1"></a><span class="st">  phi ~ std_normal();</span></span>
-<span id="cb113-116"><a href="within-partner-sam.html#cb113-116" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb113-117"><a href="within-partner-sam.html#cb113-117" aria-hidden="true" tabindex="-1"></a><span class="st">  //random effects</span></span>
-<span id="cb113-118"><a href="within-partner-sam.html#cb113-118" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(sd_P) ~ cauchy(0,1);</span></span>
-<span id="cb113-119"><a href="within-partner-sam.html#cb113-119" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(sd_R) ~ cauchy(0,1);</span></span>
-<span id="cb113-120"><a href="within-partner-sam.html#cb113-120" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb113-121"><a href="within-partner-sam.html#cb113-121" aria-hidden="true" tabindex="-1"></a><span class="st">  LP ~ lkj_corr_cholesky(2);</span></span>
-<span id="cb113-122"><a href="within-partner-sam.html#cb113-122" aria-hidden="true" tabindex="-1"></a><span class="st">  LR ~ lkj_corr_cholesky(2);</span></span>
-<span id="cb113-123"><a href="within-partner-sam.html#cb113-123" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
-<span id="cb113-124"><a href="within-partner-sam.html#cb113-124" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(std_devP) ~ std_normal();</span></span>
-<span id="cb113-125"><a href="within-partner-sam.html#cb113-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-126"><a href="within-partner-sam.html#cb113-126" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb113-127"><a href="within-partner-sam.html#cb113-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-128"><a href="within-partner-sam.html#cb113-128" aria-hidden="true" tabindex="-1"></a><span class="st">generated quantities{</span></span>
-<span id="cb113-129"><a href="within-partner-sam.html#cb113-129" aria-hidden="true" tabindex="-1"></a><span class="st">//cor and cov matrices of SRN parameters and residuals</span></span>
-<span id="cb113-130"><a href="within-partner-sam.html#cb113-130" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Gcor = LP * LP&#39;; //P SRN correlation matric</span></span>
-<span id="cb113-131"><a href="within-partner-sam.html#cb113-131" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Rcor = LR * LR&#39;; //residual correlation matrix</span></span>
-<span id="cb113-132"><a href="within-partner-sam.html#cb113-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-133"><a href="within-partner-sam.html#cb113-133" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Rcov = diag_matrix(sd_R)*Rcor*diag_matrix(sd_R); //residual covariance</span></span>
-<span id="cb113-134"><a href="within-partner-sam.html#cb113-134" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Gcov = diag_matrix(sd_P)*Pcor*diag_matrix(sd_P); //P SRN covariance</span></span>
-<span id="cb113-135"><a href="within-partner-sam.html#cb113-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-136"><a href="within-partner-sam.html#cb113-136" aria-hidden="true" tabindex="-1"></a><span class="st">//variances</span></span>
-<span id="cb113-137"><a href="within-partner-sam.html#cb113-137" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_P = sd_P .* sd_P</span></span>
-<span id="cb113-138"><a href="within-partner-sam.html#cb113-138" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_R = sd_R .* sd_R;</span></span>
-<span id="cb113-139"><a href="within-partner-sam.html#cb113-139" aria-hidden="true" tabindex="-1"></a><span class="st">}&quot;</span>, <span class="st">&quot;sam3_1P.stan&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="within-partner-sam.html#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(<span class="st">&quot;</span></span>
+<span id="cb107-2"><a href="within-partner-sam.html#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
+<span id="cb107-3"><a href="within-partner-sam.html#cb107-3" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb107-4"><a href="within-partner-sam.html#cb107-4" aria-hidden="true" tabindex="-1"></a><span class="st">  //indices and scalars used for model specification</span></span>
+<span id="cb107-5"><a href="within-partner-sam.html#cb107-5" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; N_sex; //total aggression observations per sex (I/2 * 2 repeated measures)</span></span>
+<span id="cb107-6"><a href="within-partner-sam.html#cb107-6" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; I; //total individuals (M + F)</span></span>
+<span id="cb107-7"><a href="within-partner-sam.html#cb107-7" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; Im; //number of males</span></span>
+<span id="cb107-8"><a href="within-partner-sam.html#cb107-8" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; If; //number of females</span></span>
+<span id="cb107-9"><a href="within-partner-sam.html#cb107-9" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; idm[N_sex]; //index of male AG observations (of length N_sex)</span></span>
+<span id="cb107-10"><a href="within-partner-sam.html#cb107-10" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; idf[N_sex]; //index of female AG observations</span></span>
+<span id="cb107-11"><a href="within-partner-sam.html#cb107-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-12"><a href="within-partner-sam.html#cb107-12" aria-hidden="true" tabindex="-1"></a><span class="st">  //empirical data</span></span>
+<span id="cb107-13"><a href="within-partner-sam.html#cb107-13" aria-hidden="true" tabindex="-1"></a><span class="st">  real AG_m[N_sex]; //male aggression measurements</span></span>
+<span id="cb107-14"><a href="within-partner-sam.html#cb107-14" aria-hidden="true" tabindex="-1"></a><span class="st">  real AG_f[N_sex]; //female aggression measurements</span></span>
+<span id="cb107-15"><a href="within-partner-sam.html#cb107-15" aria-hidden="true" tabindex="-1"></a><span class="st">  real time[N_sex]; //time index (1,2 per individual)</span></span>
+<span id="cb107-16"><a href="within-partner-sam.html#cb107-16" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb107-17"><a href="within-partner-sam.html#cb107-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-18"><a href="within-partner-sam.html#cb107-18" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
+<span id="cb107-19"><a href="within-partner-sam.html#cb107-19" aria-hidden="true" tabindex="-1"></a><span class="st">  //population effects</span></span>
+<span id="cb107-20"><a href="within-partner-sam.html#cb107-20" aria-hidden="true" tabindex="-1"></a><span class="st">  real alpha_0; //aggression global intercept</span></span>
+<span id="cb107-21"><a href="within-partner-sam.html#cb107-21" aria-hidden="true" tabindex="-1"></a><span class="st">  real psi_1; //expected interaction coefficient</span></span>
+<span id="cb107-22"><a href="within-partner-sam.html#cb107-22" aria-hidden="true" tabindex="-1"></a><span class="st">  real&lt;lower=-1,upper=1&gt; phi; //(-1,1) ensures unique solution</span></span>
+<span id="cb107-23"><a href="within-partner-sam.html#cb107-23" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb107-24"><a href="within-partner-sam.html#cb107-24" aria-hidden="true" tabindex="-1"></a><span class="st">  //random effects (standard deviations)</span></span>
+<span id="cb107-25"><a href="within-partner-sam.html#cb107-25" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0, upper = 1&gt;[2] sd_P; //phenotypic SRN mu &amp; psi SDs</span></span>
+<span id="cb107-26"><a href="within-partner-sam.html#cb107-26" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0, upper = 1&gt;[2] sd_R; //male &amp; female residual SDs</span></span>
+<span id="cb107-27"><a href="within-partner-sam.html#cb107-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-28"><a href="within-partner-sam.html#cb107-28" aria-hidden="true" tabindex="-1"></a><span class="st">  cholesky_factor_corr[2] LP; //P SRN correlations</span></span>
+<span id="cb107-29"><a href="within-partner-sam.html#cb107-29" aria-hidden="true" tabindex="-1"></a><span class="st">  cholesky_factor_corr[2] LR; //sex-specific residual correlations</span></span>
+<span id="cb107-30"><a href="within-partner-sam.html#cb107-30" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb107-31"><a href="within-partner-sam.html#cb107-31" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] std_devP; //individual-level unscaled P SRN deviations</span></span>
+<span id="cb107-32"><a href="within-partner-sam.html#cb107-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-33"><a href="within-partner-sam.html#cb107-33" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb107-34"><a href="within-partner-sam.html#cb107-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-35"><a href="within-partner-sam.html#cb107-35" aria-hidden="true" tabindex="-1"></a><span class="st">transformed parameters {</span></span>
+<span id="cb107-36"><a href="within-partner-sam.html#cb107-36" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb107-37"><a href="within-partner-sam.html#cb107-37" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] SRN_P; //scaled P SRN parameter deviations</span></span>
+<span id="cb107-38"><a href="within-partner-sam.html#cb107-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-39"><a href="within-partner-sam.html#cb107-39" aria-hidden="true" tabindex="-1"></a><span class="st">  //non-centered parameterization of permanent environmental effects</span></span>
+<span id="cb107-40"><a href="within-partner-sam.html#cb107-40" aria-hidden="true" tabindex="-1"></a><span class="st">  SRN_P = std_devP * diag_pre_multiply(sd_P, LP)&#39;;</span></span>
+<span id="cb107-41"><a href="within-partner-sam.html#cb107-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-42"><a href="within-partner-sam.html#cb107-42" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb107-43"><a href="within-partner-sam.html#cb107-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-44"><a href="within-partner-sam.html#cb107-44" aria-hidden="true" tabindex="-1"></a><span class="st">model{</span></span>
+<span id="cb107-45"><a href="within-partner-sam.html#cb107-45" aria-hidden="true" tabindex="-1"></a><span class="st">  //separate male and female vectors for efficiency</span></span>
+<span id="cb107-46"><a href="within-partner-sam.html#cb107-46" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[Im,2] SRN_Pm = SRN_P[1:Im]; //male SRN phenotypic deviations</span></span>
+<span id="cb107-47"><a href="within-partner-sam.html#cb107-47" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[If,2] SRN_Pf = SRN_P[(Im+1):I]; //female SRN phenotypic deviations</span></span>
+<span id="cb107-48"><a href="within-partner-sam.html#cb107-48" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb107-49"><a href="within-partner-sam.html#cb107-49" aria-hidden="true" tabindex="-1"></a><span class="st">  //separate SRN intercepts and slopes (phenotypic deviations)</span></span>
+<span id="cb107-50"><a href="within-partner-sam.html#cb107-50" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[Im] mu_m = col(SRN_Pm,1); //SRN intercepts</span></span>
+<span id="cb107-51"><a href="within-partner-sam.html#cb107-51" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[If] mu_f = col(SRN_Pf,1); </span></span>
+<span id="cb107-52"><a href="within-partner-sam.html#cb107-52" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[Im] psi_m = col(SRN_Pm,2); //SRN slopes</span></span>
+<span id="cb107-53"><a href="within-partner-sam.html#cb107-53" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[If] psi_f = col(SRN_Pf,2); </span></span>
+<span id="cb107-54"><a href="within-partner-sam.html#cb107-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-55"><a href="within-partner-sam.html#cb107-55" aria-hidden="true" tabindex="-1"></a><span class="st">  //initialize vectors for constructing individual-centered linear predictors</span></span>
+<span id="cb107-56"><a href="within-partner-sam.html#cb107-56" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] eta_m; //male SRN trait value </span></span>
+<span id="cb107-57"><a href="within-partner-sam.html#cb107-57" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] eta_f; //female SRN trait value</span></span>
+<span id="cb107-58"><a href="within-partner-sam.html#cb107-58" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] linpred_m; //total expected value for male responses</span></span>
+<span id="cb107-59"><a href="within-partner-sam.html#cb107-59" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] linpred_f; //total expected value for female responses</span></span>
+<span id="cb107-60"><a href="within-partner-sam.html#cb107-60" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] epsilon_m; //residual for male responses</span></span>
+<span id="cb107-61"><a href="within-partner-sam.html#cb107-61" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] epsilon_f; //residual for female responses</span></span>
+<span id="cb107-62"><a href="within-partner-sam.html#cb107-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-63"><a href="within-partner-sam.html#cb107-63" aria-hidden="true" tabindex="-1"></a><span class="st">  //Male and female aggression response model</span></span>
+<span id="cb107-64"><a href="within-partner-sam.html#cb107-64" aria-hidden="true" tabindex="-1"></a><span class="st">  for (n in 1:N_sex) {</span></span>
+<span id="cb107-65"><a href="within-partner-sam.html#cb107-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-66"><a href="within-partner-sam.html#cb107-66" aria-hidden="true" tabindex="-1"></a><span class="st">  //SRN trait values</span></span>
+<span id="cb107-67"><a href="within-partner-sam.html#cb107-67" aria-hidden="true" tabindex="-1"></a><span class="st">  //assumes that n = 1 in the context of an ongoing social interaction</span></span>
+<span id="cb107-68"><a href="within-partner-sam.html#cb107-68" aria-hidden="true" tabindex="-1"></a><span class="st">  //if n = 1 prior to social context, then specify eta[t=1] = mu_j instead</span></span>
+<span id="cb107-69"><a href="within-partner-sam.html#cb107-69" aria-hidden="true" tabindex="-1"></a><span class="st">  if (time[n]==1)</span></span>
+<span id="cb107-70"><a href="within-partner-sam.html#cb107-70" aria-hidden="true" tabindex="-1"></a><span class="st">      {</span></span>
+<span id="cb107-71"><a href="within-partner-sam.html#cb107-71" aria-hidden="true" tabindex="-1"></a><span class="st">        //male eta[t=1] = mu_j + (psi + psi_j)*(mu_k)</span></span>
+<span id="cb107-72"><a href="within-partner-sam.html#cb107-72" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_m[n] = mu_m[idm[n]] +  (psi_1 + psi_m[idm[n]])*(mu_f[idf[n]]) ;</span></span>
+<span id="cb107-73"><a href="within-partner-sam.html#cb107-73" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb107-74"><a href="within-partner-sam.html#cb107-74" aria-hidden="true" tabindex="-1"></a><span class="st">        //female eta[t=1] = mu_k + (psi + psi_k)*(mu_j)</span></span>
+<span id="cb107-75"><a href="within-partner-sam.html#cb107-75" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_f[n] = mu_f[idf[n]] +   (psi_1 + psi_f[idf[n]])*(mu_m[idm[n]]);</span></span>
+<span id="cb107-76"><a href="within-partner-sam.html#cb107-76" aria-hidden="true" tabindex="-1"></a><span class="st">      }    </span></span>
+<span id="cb107-77"><a href="within-partner-sam.html#cb107-77" aria-hidden="true" tabindex="-1"></a><span class="st">    else</span></span>
+<span id="cb107-78"><a href="within-partner-sam.html#cb107-78" aria-hidden="true" tabindex="-1"></a><span class="st">      {</span></span>
+<span id="cb107-79"><a href="within-partner-sam.html#cb107-79" aria-hidden="true" tabindex="-1"></a><span class="st">        //male eta[t=2] = mu_j + (psi + psi_j)*(eta_k[t=1])</span></span>
+<span id="cb107-80"><a href="within-partner-sam.html#cb107-80" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_m[n] = mu_m[idm[n]] +   (psi_1 + psi_m[idm[n]])*(eta_f[n-1]);</span></span>
+<span id="cb107-81"><a href="within-partner-sam.html#cb107-81" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb107-82"><a href="within-partner-sam.html#cb107-82" aria-hidden="true" tabindex="-1"></a><span class="st">        //female eta[t=2] = mu_k + (psi + psi_k)*(eta_j[t=1])</span></span>
+<span id="cb107-83"><a href="within-partner-sam.html#cb107-83" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_f[n] = mu_f[idf[n]] +   (psi_1 + psi_f[idf[n]])*(eta_m[n-1]);</span></span>
+<span id="cb107-84"><a href="within-partner-sam.html#cb107-84" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb107-85"><a href="within-partner-sam.html#cb107-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-86"><a href="within-partner-sam.html#cb107-86" aria-hidden="true" tabindex="-1"></a><span class="st">  //add global intercept and between-individual parameters to linear predictor</span></span>
+<span id="cb107-87"><a href="within-partner-sam.html#cb107-87" aria-hidden="true" tabindex="-1"></a><span class="st">  //other fixed effects can also be added here</span></span>
+<span id="cb107-88"><a href="within-partner-sam.html#cb107-88" aria-hidden="true" tabindex="-1"></a><span class="st">   linpred_m[n] = alpha_0 + eta_m[n];</span></span>
+<span id="cb107-89"><a href="within-partner-sam.html#cb107-89" aria-hidden="true" tabindex="-1"></a><span class="st">   linpred_f[n] = alpha_0 + eta_f[n];</span></span>
+<span id="cb107-90"><a href="within-partner-sam.html#cb107-90" aria-hidden="true" tabindex="-1"></a><span class="st">   </span></span>
+<span id="cb107-91"><a href="within-partner-sam.html#cb107-91" aria-hidden="true" tabindex="-1"></a><span class="st">  //residual trait values</span></span>
+<span id="cb107-92"><a href="within-partner-sam.html#cb107-92" aria-hidden="true" tabindex="-1"></a><span class="st">    if(time[n]==1)</span></span>
+<span id="cb107-93"><a href="within-partner-sam.html#cb107-93" aria-hidden="true" tabindex="-1"></a><span class="st">      {</span></span>
+<span id="cb107-94"><a href="within-partner-sam.html#cb107-94" aria-hidden="true" tabindex="-1"></a><span class="st">        epsilon_m [n] = AG_m[n] - linpred_m[n];</span></span>
+<span id="cb107-95"><a href="within-partner-sam.html#cb107-95" aria-hidden="true" tabindex="-1"></a><span class="st">        epsilon_f [n] = AG_f[n] - linpred_f[n];</span></span>
+<span id="cb107-96"><a href="within-partner-sam.html#cb107-96" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb107-97"><a href="within-partner-sam.html#cb107-97" aria-hidden="true" tabindex="-1"></a><span class="st">    else</span></span>
+<span id="cb107-98"><a href="within-partner-sam.html#cb107-98" aria-hidden="true" tabindex="-1"></a><span class="st">      {</span></span>
+<span id="cb107-99"><a href="within-partner-sam.html#cb107-99" aria-hidden="true" tabindex="-1"></a><span class="st">       linpred_m[n] = linpred_m[n] + phi * epsilon_f[n-1];</span></span>
+<span id="cb107-100"><a href="within-partner-sam.html#cb107-100" aria-hidden="true" tabindex="-1"></a><span class="st">       epsilon_m[n] = AG_m[n] - linpred_m[n]; </span></span>
+<span id="cb107-101"><a href="within-partner-sam.html#cb107-101" aria-hidden="true" tabindex="-1"></a><span class="st">       </span></span>
+<span id="cb107-102"><a href="within-partner-sam.html#cb107-102" aria-hidden="true" tabindex="-1"></a><span class="st">       linpred_f[n] = linpred_f[n] + phi * epsilon_m[n-1];</span></span>
+<span id="cb107-103"><a href="within-partner-sam.html#cb107-103" aria-hidden="true" tabindex="-1"></a><span class="st">       epsilon_f[n] = AG_f[n] - linpred_f[n]; </span></span>
+<span id="cb107-104"><a href="within-partner-sam.html#cb107-104" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb107-105"><a href="within-partner-sam.html#cb107-105" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb107-106"><a href="within-partner-sam.html#cb107-106" aria-hidden="true" tabindex="-1"></a><span class="st">  //correlated residuals between partners</span></span>
+<span id="cb107-107"><a href="within-partner-sam.html#cb107-107" aria-hidden="true" tabindex="-1"></a><span class="st">   [epsilon_m[n],epsilon_f[n]]&#39; ~ multi_normal_cholesky([0,0], diag_pre_multiply(sd_R, LR));</span></span>
+<span id="cb107-108"><a href="within-partner-sam.html#cb107-108" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb107-109"><a href="within-partner-sam.html#cb107-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-110"><a href="within-partner-sam.html#cb107-110" aria-hidden="true" tabindex="-1"></a><span class="st">//model priors</span></span>
+<span id="cb107-111"><a href="within-partner-sam.html#cb107-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-112"><a href="within-partner-sam.html#cb107-112" aria-hidden="true" tabindex="-1"></a><span class="st">  //fixed effects</span></span>
+<span id="cb107-113"><a href="within-partner-sam.html#cb107-113" aria-hidden="true" tabindex="-1"></a><span class="st">  alpha_0 ~ std_normal();</span></span>
+<span id="cb107-114"><a href="within-partner-sam.html#cb107-114" aria-hidden="true" tabindex="-1"></a><span class="st">  psi_1 ~ std_normal();</span></span>
+<span id="cb107-115"><a href="within-partner-sam.html#cb107-115" aria-hidden="true" tabindex="-1"></a><span class="st">  phi ~ std_normal();</span></span>
+<span id="cb107-116"><a href="within-partner-sam.html#cb107-116" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb107-117"><a href="within-partner-sam.html#cb107-117" aria-hidden="true" tabindex="-1"></a><span class="st">  //random effects</span></span>
+<span id="cb107-118"><a href="within-partner-sam.html#cb107-118" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(sd_P) ~ cauchy(0,1);</span></span>
+<span id="cb107-119"><a href="within-partner-sam.html#cb107-119" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(sd_R) ~ cauchy(0,1);</span></span>
+<span id="cb107-120"><a href="within-partner-sam.html#cb107-120" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb107-121"><a href="within-partner-sam.html#cb107-121" aria-hidden="true" tabindex="-1"></a><span class="st">  LP ~ lkj_corr_cholesky(2);</span></span>
+<span id="cb107-122"><a href="within-partner-sam.html#cb107-122" aria-hidden="true" tabindex="-1"></a><span class="st">  LR ~ lkj_corr_cholesky(2);</span></span>
+<span id="cb107-123"><a href="within-partner-sam.html#cb107-123" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb107-124"><a href="within-partner-sam.html#cb107-124" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(std_devP) ~ std_normal();</span></span>
+<span id="cb107-125"><a href="within-partner-sam.html#cb107-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-126"><a href="within-partner-sam.html#cb107-126" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb107-127"><a href="within-partner-sam.html#cb107-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-128"><a href="within-partner-sam.html#cb107-128" aria-hidden="true" tabindex="-1"></a><span class="st">generated quantities{</span></span>
+<span id="cb107-129"><a href="within-partner-sam.html#cb107-129" aria-hidden="true" tabindex="-1"></a><span class="st">//cor and cov matrices of SRN parameters and residuals</span></span>
+<span id="cb107-130"><a href="within-partner-sam.html#cb107-130" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Gcor = LP * LP&#39;; //P SRN correlation matric</span></span>
+<span id="cb107-131"><a href="within-partner-sam.html#cb107-131" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Rcor = LR * LR&#39;; //residual correlation matrix</span></span>
+<span id="cb107-132"><a href="within-partner-sam.html#cb107-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-133"><a href="within-partner-sam.html#cb107-133" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Rcov = diag_matrix(sd_R)*Rcor*diag_matrix(sd_R); //residual covariance</span></span>
+<span id="cb107-134"><a href="within-partner-sam.html#cb107-134" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Gcov = diag_matrix(sd_P)*Pcor*diag_matrix(sd_P); //P SRN covariance</span></span>
+<span id="cb107-135"><a href="within-partner-sam.html#cb107-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-136"><a href="within-partner-sam.html#cb107-136" aria-hidden="true" tabindex="-1"></a><span class="st">//variances</span></span>
+<span id="cb107-137"><a href="within-partner-sam.html#cb107-137" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_P = sd_P .* sd_P</span></span>
+<span id="cb107-138"><a href="within-partner-sam.html#cb107-138" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_R = sd_R .* sd_R;</span></span>
+<span id="cb107-139"><a href="within-partner-sam.html#cb107-139" aria-hidden="true" tabindex="-1"></a><span class="st">}&quot;</span>, <span class="st">&quot;sam3_1P.stan&quot;</span>)</span></code></pre></div>
 
 </div>
 </div>
