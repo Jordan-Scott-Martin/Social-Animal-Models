@@ -93,8 +93,8 @@ model{
   
   vector[N_sex] linpred_m; //expected value for male responses
   vector[N_sex] linpred_f; //expected value for female responses
-  vector[N_sex] zeta_m; //residuals for male responses
-  vector[N_sex] zeta_f; //residuals for male responses
+  vector[N_sex] epsilon_m; //residuals for male responses
+  vector[N_sex] epsilon_f; //residuals for male responses
   vector[Idyad] w_pred; //linear predictor of fitness
   
   //Male and female aggression response model
@@ -157,20 +157,20 @@ model{
     //residual trait values
     if(time[n]==1)
       {
-        zeta_m [n] = AG_m[n] - linpred_m[n];
-        zeta_f [n] = AG_f[n] - linpred_f[n];
+        epsilon_m [n] = AG_m[n] - linpred_m[n];
+        epsilon_f [n] = AG_f[n] - linpred_f[n];
       }
     else
       {
-       linpred_m[n] = linpred_m[n] + phi * zeta_f[n-1];
-       zeta_m[n] = AG_m[n] - linpred_m[n]; 
+       linpred_m[n] = linpred_m[n] + phi * epsilon_f[n-1];
+       epsilon_m[n] = AG_m[n] - linpred_m[n]; 
        
-       linpred_f[n] = linpred_f[n] + phi * zeta_m[n-1];
-       zeta_f[n] = AG_f[n] - linpred_f[n]; 
+       linpred_f[n] = linpred_f[n] + phi * epsilon_m[n-1];
+       epsilon_f[n] = AG_f[n] - linpred_f[n]; 
       }
   
     //correlated residuals between partners
-    [zeta_m[n],zeta_f[n]]' ~ multi_normal_cholesky([0,0], diag_pre_multiply(sd_R, LR));
+    [epsilon_m[n],epsilon_f[n]]' ~ multi_normal_cholesky([0,0], diag_pre_multiply(sd_R, LR));
   }
     
   //fitness response model
