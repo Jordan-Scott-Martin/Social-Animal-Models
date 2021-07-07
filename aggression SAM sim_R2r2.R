@@ -364,26 +364,6 @@ simSAM<-function(){
   
   #individual prediction at t = 1
   
-  #males
-  #eta_j{t=1} = mu_j + psi_j*(mu_k - mu_meanK)
-  pair_df[pair_df$turn==1,"eta_m"] = pair_df[pair_df$turn==1,"P0m"] + 
-    (psi_1 + pair_df[pair_df$turn==1,"P1m"])*(pair_df[pair_df$turn==1,"P0f"]-pair_df[pair_df$turn==1,"meanP0m"])
-  #females
-  #eta_k{t=1} = mu_k + psi_k*(mu_j - mu_meanJ)                                                                                                                
-  pair_df[pair_df$turn==1,"eta_f"] = pair_df[pair_df$turn==1,"P0f"] + 
-    (psi_1 + pair_df[pair_df$turn==1,"P1f"])*(pair_df[pair_df$turn==1,"P0m"]-pair_df[pair_df$turn==1,"meanP0f"])
-  
-  #individual prediction at t = 2
-  
-  #eta_j{t=2} = mu_j + psi_j*(eta_k{t=1} - eta_meanK{t=1})
-  pair_df[pair_df$turn==2,"eta_m"] = pair_df[pair_df$turn==2,"P0m"] +
-    (psi_1 + pair_df[pair_df$turn==2,"P1m"])*(pair_df[pair_df$turn==1,"eta_f"]-pair_df[pair_df$turn==1,"meaneta_m"])
-  
-  #females
-  pair_df[pair_df$turn==2,"eta_f"] = pair_df[pair_df$turn==2,"P0f"] + 
-    (psi_1 + pair_df[pair_df$turn==2,"P1f"])*(pair_df[pair_df$turn==1,"eta_m"]-pair_df[pair_df$turn==1,"meaneta_f"])
-  
-  #individual prediction at t = 1
   
   #males
   #eta_j{t=1} = mu_j + psi_j*(mu_k - mu_meanK)
