@@ -30,4 +30,9 @@ simulate-data-3
 estimate-the-model-1
 estimating-assortment-1
 phenotypic-model-2
+fitness-model
+simulate-data-4
+estimating-the-model-1
+estimating-assortment-2
+estimating-selection-differentials-and-genetic-responses
 extending-sams

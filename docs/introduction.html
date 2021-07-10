@@ -24,7 +24,7 @@
 <meta name="author" content="Jordan S. Martin &amp; Adrian V. Jaeggi" />
 
 
-<meta name="date" content="2021-07-07" />
+<meta name="date" content="2021-07-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -203,7 +203,14 @@ div.csl-indent {
 <li class="chapter" data-level="4.3" data-path="within-and-between-partner-sam.html"><a href="within-and-between-partner-sam.html#estimating-assortment-1"><i class="fa fa-check"></i><b>4.3</b> Estimating assortment</a></li>
 <li class="chapter" data-level="4.4" data-path="within-and-between-partner-sam.html"><a href="within-and-between-partner-sam.html#phenotypic-model-2"><i class="fa fa-check"></i><b>4.4</b> Phenotypic model</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="extending-sams.html"><a href="extending-sams.html"><i class="fa fa-check"></i><b>5</b> Extending SAMs</a></li>
+<li class="chapter" data-level="5" data-path="fitness-model.html"><a href="fitness-model.html"><i class="fa fa-check"></i><b>5</b> Fitness model</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="fitness-model.html"><a href="fitness-model.html#simulate-data-4"><i class="fa fa-check"></i><b>5.1</b> Simulate data</a></li>
+<li class="chapter" data-level="5.2" data-path="fitness-model.html"><a href="fitness-model.html#estimating-the-model-1"><i class="fa fa-check"></i><b>5.2</b> Estimating the model</a></li>
+<li class="chapter" data-level="5.3" data-path="fitness-model.html"><a href="fitness-model.html#estimating-assortment-2"><i class="fa fa-check"></i><b>5.3</b> Estimating assortment</a></li>
+<li class="chapter" data-level="5.4" data-path="fitness-model.html"><a href="fitness-model.html#estimating-selection-differentials-and-genetic-responses"><i class="fa fa-check"></i><b>5.4</b> Estimating selection differentials and genetic responses</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extending-sams.html"><a href="extending-sams.html"><i class="fa fa-check"></i><b>6</b> Extending SAMs</a></li>
 <li class="chapter" data-level="" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i>Resources</a></li>
 </ul>
 
@@ -225,7 +232,7 @@ div.csl-indent {
 <div id="header">
 <h1 class="title">Estimating Social Animal Models in Stan</h1>
 <p class="author"><em>Jordan S. Martin &amp; Adrian V. Jaeggi</em></p>
-<p class="date" style="margin-top: 1.5em;"><em>2021-07-07</em></p>
+<p class="date" style="margin-top: 1.5em;"><em>2021-07-10</em></p>
 </div>
 <div id="introduction" class="section level1 unnumbered">
 <h1>Introduction</h1>
@@ -233,7 +240,7 @@ div.csl-indent {
 body {
 text-align: justify}
 </style>
-<p><img src="Figure%201%20R2.png" /></p>
+<p><img src="Figure%201%20800%20dpi.png" /></p>
 <p>This guidebook provides a comprehensive overview of how to estimate social animal models (SAMs) with the Stan statistical programming language <span class="citation">(<a href="#ref-Stan" role="doc-biblioref">Carpenter et al. 2017</a>)</span> in R <span class="citation">(<a href="#ref-Rbase" role="doc-biblioref">R Core Team 2020</a>)</span>. A detailed theoretical treatment of SAMs and their empirical motivation can be found in the forthcoming paper <span class="citation">(<a href="#ref-SAM" role="doc-biblioref">Martin and Jaeggi 2021</a>)</span> “Social animal models for quantifying plasticity, assortment, and selection on interacting phenotypes.” This guide focuses on various issues related to coding SAMs in Stan for varying study designs and more complex trait interactions. The overarching goal of the guidebook is to aid researchers in flexibly and appropriately applying SAMs to their own empirical datasets. Therefore, in addition to basic coding tutorials, we also intend to add worked examples relevant to specific challenges such as modeling spatial autocorrelation or hierarchical phenotypes.</p>
 <p>Please contact <a href="mailto:jordan.martin@iem.uzh.ch?">Jordan Scott Martin</a> if you have any questions, as well as if you’d like to suggest a worked example of interest to your own research. The guidebook is a work in progress and will be updated over time.</p>
 
@@ -244,7 +251,7 @@ text-align: justify}
 Carpenter, B., A. Gelman, M. D. Hoffman, D. Lee, B. Goodrich, M. Betancourt, and... A. Riddell. 2017. <span>“Stan: A Probabilistic Programming Language.”</span> <em>Journal of Statistical Software</em> 74. <a href="https://www.jstatsoft.org/article/view/v076i01">https://www.jstatsoft.org/article/view/v076i01</a>.
 </div>
 <div id="ref-SAM" class="csl-entry">
-Martin, J. S., and A. V. Jaeggi. 2021. <span>“Social Animal Models for Quantifying Plasticity, Assortment, and Selection on Interacting Phenotypes.”</span> <em>Under Review</em> XX. <a href="https://XX">XX</a>.
+Martin, J. S., and A. V. Jaeggi. 2021. <span>“Social Animal Models for Quantifying Plasticity, Assortment, and Selection on Interacting Phenotypes.”</span> <em>Journal of Evolutionary Biology</em>. <a href="https://doi.org/10.1111/jeb.13900">https://doi.org/10.1111/jeb.13900</a>.
 </div>
 <div id="ref-Rbase" class="csl-entry">
 R Core Team. 2020. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org">https://www.R-project.org</a>.

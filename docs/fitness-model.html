@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5 Fitness model | Estimating Social Animal Models in Stan</title>
+  <meta name="description" content="5 Fitness model | Estimating Social Animal Models in Stan" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5 Fitness model | Estimating Social Animal Models in Stan" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5 Fitness model | Estimating Social Animal Models in Stan" />
+  
+  
+  
+
+<meta name="author" content="Jordan S. Martin &amp; Adrian V. Jaeggi" />
+
+
+<meta name="date" content="2021-07-10" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="within-and-between-partner-sam.html"/>
+<link rel="next" href="extending-sams.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="chapter" data-level="1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html"><i class="fa fa-check"></i><b>1</b> Using Stan in R</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#why-stan"><i class="fa fa-check"></i><b>1.1</b> Why Stan?</a></li>
+<li class="chapter" data-level="1.2" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#getting-started"><i class="fa fa-check"></i><b>1.2</b> Getting Started</a></li>
+<li class="chapter" data-level="1.3" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#bayesian-inference"><i class="fa fa-check"></i><b>1.3</b> Bayesian inference</a></li>
+<li class="chapter" data-level="1.4" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#basic-coding-tutorial"><i class="fa fa-check"></i><b>1.4</b> Basic coding tutorial</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#cholesky-decompositions"><i class="fa fa-check"></i><b>1.4.1</b> Cholesky decompositions</a></li>
+<li class="chapter" data-level="1.4.2" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#non-centered-random-effects"><i class="fa fa-check"></i><b>1.4.2</b> Non-centered random effects</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#animal-models"><i class="fa fa-check"></i><b>1.5</b> Animal models</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#simulate-data"><i class="fa fa-check"></i><b>1.5.1</b> Simulate data</a></li>
+<li class="chapter" data-level="1.5.2" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#kronecker-products"><i class="fa fa-check"></i><b>1.5.2</b> Kronecker products</a></li>
+<li class="chapter" data-level="1.5.3" data-path="using-stan-in-r.html"><a href="using-stan-in-r.html#identifying-genetic-effects"><i class="fa fa-check"></i><b>1.5.3</b> Identifying genetic effects</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="within-partner-sam.html"><a href="within-partner-sam.html"><i class="fa fa-check"></i><b>2</b> Within partner SAM</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="within-partner-sam.html"><a href="within-partner-sam.html#formal-overview"><i class="fa fa-check"></i><b>2.1</b> Formal overview</a></li>
+<li class="chapter" data-level="2.2" data-path="within-partner-sam.html"><a href="within-partner-sam.html#computational-approach"><i class="fa fa-check"></i><b>2.2</b> Computational approach</a></li>
+<li class="chapter" data-level="2.3" data-path="within-partner-sam.html"><a href="within-partner-sam.html#simulate-data-1"><i class="fa fa-check"></i><b>2.3</b> Simulate data</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="within-partner-sam.html"><a href="within-partner-sam.html#srn-parameters"><i class="fa fa-check"></i><b>2.3.1</b> SRN parameters</a></li>
+<li class="chapter" data-level="2.3.2" data-path="within-partner-sam.html"><a href="within-partner-sam.html#assortment"><i class="fa fa-check"></i><b>2.3.2</b> Assortment</a></li>
+<li class="chapter" data-level="2.3.3" data-path="within-partner-sam.html"><a href="within-partner-sam.html#repeated-measurements-within-the-partner"><i class="fa fa-check"></i><b>2.3.3</b> Repeated measurements within the partner</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="within-partner-sam.html"><a href="within-partner-sam.html#coding-the-model"><i class="fa fa-check"></i><b>2.4</b> Coding the model</a></li>
+<li class="chapter" data-level="2.5" data-path="within-partner-sam.html"><a href="within-partner-sam.html#estimating-the-model"><i class="fa fa-check"></i><b>2.5</b> Estimating the model</a></li>
+<li class="chapter" data-level="2.6" data-path="within-partner-sam.html"><a href="within-partner-sam.html#failure-to-detect-assortment"><i class="fa fa-check"></i><b>2.6</b> Failure to detect assortment</a></li>
+<li class="chapter" data-level="2.7" data-path="within-partner-sam.html"><a href="within-partner-sam.html#phenotypic-model"><i class="fa fa-check"></i><b>2.7</b> Phenotypic model</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="between-partner-sam.html"><a href="between-partner-sam.html"><i class="fa fa-check"></i><b>3</b> Between partner SAM</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="between-partner-sam.html"><a href="between-partner-sam.html#simulate-data-2"><i class="fa fa-check"></i><b>3.1</b> Simulate data</a></li>
+<li class="chapter" data-level="3.2" data-path="between-partner-sam.html"><a href="between-partner-sam.html#estimate-the-model"><i class="fa fa-check"></i><b>3.2</b> Estimate the model</a></li>
+<li class="chapter" data-level="3.3" data-path="between-partner-sam.html"><a href="between-partner-sam.html#estimating-assortment"><i class="fa fa-check"></i><b>3.3</b> Estimating assortment</a></li>
+<li class="chapter" data-level="3.4" data-path="between-partner-sam.html"><a href="between-partner-sam.html#phenotypic-model-1"><i class="fa fa-check"></i><b>3.4</b> Phenotypic model</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="within-and-between-partner-sam.html"><a href="within-and-between-partner-sam.html"><i class="fa fa-check"></i><b>4</b> Within-and-between partner SAM</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="within-and-between-partner-sam.html"><a href="within-and-between-partner-sam.html#simulate-data-3"><i class="fa fa-check"></i><b>4.1</b> Simulate data</a></li>
+<li class="chapter" data-level="4.2" data-path="within-and-between-partner-sam.html"><a href="within-and-between-partner-sam.html#estimate-the-model-1"><i class="fa fa-check"></i><b>4.2</b> Estimate the model</a></li>
+<li class="chapter" data-level="4.3" data-path="within-and-between-partner-sam.html"><a href="within-and-between-partner-sam.html#estimating-assortment-1"><i class="fa fa-check"></i><b>4.3</b> Estimating assortment</a></li>
+<li class="chapter" data-level="4.4" data-path="within-and-between-partner-sam.html"><a href="within-and-between-partner-sam.html#phenotypic-model-2"><i class="fa fa-check"></i><b>4.4</b> Phenotypic model</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="fitness-model.html"><a href="fitness-model.html"><i class="fa fa-check"></i><b>5</b> Fitness model</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="fitness-model.html"><a href="fitness-model.html#simulate-data-4"><i class="fa fa-check"></i><b>5.1</b> Simulate data</a></li>
+<li class="chapter" data-level="5.2" data-path="fitness-model.html"><a href="fitness-model.html#estimating-the-model-1"><i class="fa fa-check"></i><b>5.2</b> Estimating the model</a></li>
+<li class="chapter" data-level="5.3" data-path="fitness-model.html"><a href="fitness-model.html#estimating-assortment-2"><i class="fa fa-check"></i><b>5.3</b> Estimating assortment</a></li>
+<li class="chapter" data-level="5.4" data-path="fitness-model.html"><a href="fitness-model.html#estimating-selection-differentials-and-genetic-responses"><i class="fa fa-check"></i><b>5.4</b> Estimating selection differentials and genetic responses</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extending-sams.html"><a href="extending-sams.html"><i class="fa fa-check"></i><b>6</b> Extending SAMs</a></li>
+<li class="chapter" data-level="" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i>Resources</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Estimating Social Animal Models in Stan</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="fitness-model" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Fitness model</h1>
+<p>This chapter is a work in progress.</p>
+<p>Previous chapters showed how to estimate SRNs and assortment on SRN parameters using SAMs. In this chapter, we’ll extend this basic approach to model how between-individual variation in SRN parameters affects individuals’ relative fitness, which we’ll then use to predict patterns of adaptive social evolution in the phenotype.</p>
+<p>Our basic fitness model considers linear directional selection on each individual’s SRN intercept <span class="math inline">\(\mu_j\)</span> and slope <span class="math inline">\(\psi_j\)</span>, as well as directional social selection due to partner SRN intercepts <span class="math inline">\(\mu&#39;_k\)</span> and slopes <span class="math inline">\(\psi&#39;_k\)</span>. In addition, the magnitude of this directional selection is modulated by the interactive effects of the joint individual and partner phenotypes <span class="math inline">\(\mu_j\mu&#39;_k\)</span> and <span class="math inline">\(\psi_j\psi&#39;_k\)</span>. These interactive effects reflect synergy (+) or antagonism (-) between the trait values of individuals and their social partners. In <span class="citation"><a href="#ref-SAM" role="doc-biblioref">Martin and Jaeggi</a> (<a href="#ref-SAM" role="doc-biblioref">2021</a>)</span>, the fitness model is formally presented for the effects of the average social partner. For the purposes of this simulation, we instead consider a fitness model for the reproductive success of each individual and partner dyad across multiple reproductive seasons, rather than the effect of the average partner across seasons. In particular, following the within and between partner model (Ch. <a href="within-and-between-partner-sam.html#within-and-between-partner-sam">4</a> ), we assume that individuals are sampled repeated within partners (2x) across multiple partners (x4). For the fitness model, we assume that these pairs are (serially) monogamous breeding partners measured across breeding seasons, with a single fitness measure (e.g. fledgling success) taken once per pair at the end of the breeding season. Estimating fitness effects across these repeated measures provides more power for the estimation of selection and assortment, on the assumption that fitness effects do not meaningfully vary across breeding seasons. This may be unrealistic for a variety of reasons (e.g. density-dependent effects), in which case the fitness model can be expanded with season-specific coefficients.</p>
+<p>The model for relative fitness <span class="math inline">\(w\)</span> measure <span class="math inline">\(i\)</span> of individual <span class="math inline">\(j\)</span> with partner <span class="math inline">\(k\)</span> is therefore given as</p>
+<p><span class="math display">\[w_{ijk} =  \nu_0 + \beta_{N1} + \beta_{N2} + \beta_{S1} + \beta_{S2} + \beta_{I2} + \beta_{I2} \]</span>
+where we. Note that the interpretation of the regression coefficients is contingent on the potentially arbitrary designation of focal and social partner sex. In this case, we treat males as focals, such that <span class="math inline">\(\boldsymbol{\beta_N}\)</span> represent nonsocial selection gradients on male SRNs, while <span class="math inline">\(\boldsymbol{\beta_S}\)</span> represent social selection gradients acting on males due to female mating partners. For females in this simplified context of purely monogamous reproduction, the interpretation is reversed, given that <span class="math inline">\(w_{ijk}\)</span> is the shared fitness of both partners during their interaction. Under the further simplifying assumptions that <span class="math display">\[\beta_{N1}=\beta_{S1}\]</span> and <span class="math display">\[\beta_{N2}=\beta_{S2}\]</span>, a single selection differential can be used to characterize both males and females in the population. Of course, this will often be unrealistic, and males and female partners will often have only partially shared fitness outcomes, in which case more general sex-specific response models can also be specified</p>
+<p><span class="math display">\[w_{ij} =  \nu_0 + \beta_{N1}\mu_j + \beta_{N2}\psi_j + \beta_{S1}\mu&#39;_k + \beta_{S2}\psi&#39;_k + \beta_{I2}(\mu_j\mu&#39;_k) + \beta_{I2}(\psi_j\psi&#39;_k) \]</span>
+<span class="math display">\[w&#39;_{ik} =  \nu_0 + \beta&#39;_{N1}\mu&#39;_k + \beta&#39;_{N2}\psi&#39;_k + \beta&#39;_{S1}\mu_j + \beta&#39;_{S2}\psi_j + \beta&#39;_{I2}(\mu&#39;_k\mu_j) + \beta&#39;_{I2}(\psi&#39;_k\psi_j) \]</span>
+For pedagogical purposes, we simulate data under the simpler shared dyadic fitness model and will consider more complex cases in subsequent SAM extensions.</p>
+<div id="simulate-data-4" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Simulate data</h2>
+<p>The initial simulation approach is identical to previous chapters and can be reviewed there. We generate data appropriate for the within and between partner SAM.</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="fitness-model.html#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span>
+<span id="cb153-2"><a href="fitness-model.html#cb153-2" aria-hidden="true" tabindex="-1"></a><span class="co">#common settings</span></span>
+<span id="cb153-3"><a href="fitness-model.html#cb153-3" aria-hidden="true" tabindex="-1"></a>I_partner <span class="ot">=</span> <span class="dv">4</span> <span class="co">#partners/individual</span></span>
+<span id="cb153-4"><a href="fitness-model.html#cb153-4" aria-hidden="true" tabindex="-1"></a>I_obs <span class="ot">=</span> <span class="dv">2</span> <span class="co">#observations/individual/seasonal partner</span></span>
+<span id="cb153-5"><a href="fitness-model.html#cb153-5" aria-hidden="true" tabindex="-1"></a>I_sample <span class="ot">=</span> I_partner<span class="sc">*</span>I_obs <span class="co">#samples/individual</span></span>
+<span id="cb153-6"><a href="fitness-model.html#cb153-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb153-7"><a href="fitness-model.html#cb153-7" aria-hidden="true" tabindex="-1"></a><span class="co">#population properties</span></span>
+<span id="cb153-8"><a href="fitness-model.html#cb153-8" aria-hidden="true" tabindex="-1"></a>I<span class="ot">=</span><span class="dv">300</span> <span class="co">#total individuals for simulation</span></span>
+<span id="cb153-9"><a href="fitness-model.html#cb153-9" aria-hidden="true" tabindex="-1"></a>popmin<span class="ot">=</span><span class="dv">400</span></span>
+<span id="cb153-10"><a href="fitness-model.html#cb153-10" aria-hidden="true" tabindex="-1"></a>popmax<span class="ot">=</span><span class="dv">600</span></span>
+<span id="cb153-11"><a href="fitness-model.html#cb153-11" aria-hidden="true" tabindex="-1"></a>ngenerations <span class="ot">=</span> <span class="dv">10</span></span>
+<span id="cb153-12"><a href="fitness-model.html#cb153-12" aria-hidden="true" tabindex="-1"></a>nids<span class="ot">&lt;-</span><span class="fu">sample</span>(popmin<span class="sc">:</span>popmax, ngenerations, <span class="at">replace=</span><span class="cn">TRUE</span>) <span class="co">#N / generation</span></span>
+<span id="cb153-13"><a href="fitness-model.html#cb153-13" aria-hidden="true" tabindex="-1"></a>epm <span class="ot">=</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="fl">0.15</span>, <span class="fl">0.25</span>,<span class="at">by=</span><span class="fl">0.05</span>),<span class="dv">1</span>) <span class="co">#extra-pair mating</span></span>
+<span id="cb153-14"><a href="fitness-model.html#cb153-14" aria-hidden="true" tabindex="-1"></a>nonb <span class="ot">=</span> <span class="fu">sample</span>(<span class="fu">seq</span>(<span class="fl">0.4</span>,<span class="fl">0.6</span>,<span class="at">by=</span><span class="fl">0.05</span>),<span class="dv">1</span>) <span class="co">#proportion of non-breeding / generation</span></span>
+<span id="cb153-15"><a href="fitness-model.html#cb153-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb153-16"><a href="fitness-model.html#cb153-16" aria-hidden="true" tabindex="-1"></a><span class="co">#relatedness matrix</span></span>
+<span id="cb153-17"><a href="fitness-model.html#cb153-17" aria-hidden="true" tabindex="-1"></a>A_mat <span class="ot">&lt;-</span> <span class="fu">pedfun</span>(<span class="at">popmin=</span>popmin, <span class="at">popmax=</span>popmax, <span class="at">ngenerations=</span>ngenerations,</span>
+<span id="cb153-18"><a href="fitness-model.html#cb153-18" aria-hidden="true" tabindex="-1"></a>                  <span class="at">epm=</span>epm, <span class="at">nonb=</span>nonb, <span class="at">nids=</span>nids, <span class="at">I=</span>I, <span class="at">missing=</span><span class="cn">FALSE</span>)</span>
+<span id="cb153-19"><a href="fitness-model.html#cb153-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb153-20"><a href="fitness-model.html#cb153-20" aria-hidden="true" tabindex="-1"></a><span class="do">#####################################################################</span></span>
+<span id="cb153-21"><a href="fitness-model.html#cb153-21" aria-hidden="true" tabindex="-1"></a><span class="co">#Parameter values</span></span>
+<span id="cb153-22"><a href="fitness-model.html#cb153-22" aria-hidden="true" tabindex="-1"></a><span class="do">#####################################################################</span></span>
+<span id="cb153-23"><a href="fitness-model.html#cb153-23" aria-hidden="true" tabindex="-1"></a>alpha_0 <span class="ot">=</span> <span class="dv">0</span> <span class="co">#global intercept</span></span>
+<span id="cb153-24"><a href="fitness-model.html#cb153-24" aria-hidden="true" tabindex="-1"></a>psi_1 <span class="ot">=</span> <span class="sc">-</span><span class="fl">0.5</span> <span class="co">#population interaction coefficient</span></span>
+<span id="cb153-25"><a href="fitness-model.html#cb153-25" aria-hidden="true" tabindex="-1"></a>phi <span class="ot">=</span>  <span class="fl">0.5</span> <span class="co">#residual feedback coefficient (epsilon_j ~ epsilon_t-1k)</span></span>
+<span id="cb153-26"><a href="fitness-model.html#cb153-26" aria-hidden="true" tabindex="-1"></a>SD_intercept <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#standard deviation of SRN intercepts</span></span>
+<span id="cb153-27"><a href="fitness-model.html#cb153-27" aria-hidden="true" tabindex="-1"></a>SD_slope <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#SD of SRN slopes</span></span>
+<span id="cb153-28"><a href="fitness-model.html#cb153-28" aria-hidden="true" tabindex="-1"></a>r_alpha <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#assortment coefficient (expressed as correlation)</span></span>
+<span id="cb153-29"><a href="fitness-model.html#cb153-29" aria-hidden="true" tabindex="-1"></a>r_G <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#genetic correlation of random intercepts and slopes</span></span>
+<span id="cb153-30"><a href="fitness-model.html#cb153-30" aria-hidden="true" tabindex="-1"></a>r_E <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#environmental correlation</span></span>
+<span id="cb153-31"><a href="fitness-model.html#cb153-31" aria-hidden="true" tabindex="-1"></a>r_R <span class="ot">=</span> <span class="sc">-</span><span class="fl">0.3</span> <span class="co">#residual effect correlation (epsilon_tj = epsilon_tk)</span></span>
+<span id="cb153-32"><a href="fitness-model.html#cb153-32" aria-hidden="true" tabindex="-1"></a>V_G <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#genetic variance of REs</span></span>
+<span id="cb153-33"><a href="fitness-model.html#cb153-33" aria-hidden="true" tabindex="-1"></a>V_E <span class="ot">=</span> <span class="fl">0.3</span> <span class="co">#genetic variance of REs</span></span>
+<span id="cb153-34"><a href="fitness-model.html#cb153-34" aria-hidden="true" tabindex="-1"></a>res_V <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb153-35"><a href="fitness-model.html#cb153-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb153-36"><a href="fitness-model.html#cb153-36" aria-hidden="true" tabindex="-1"></a><span class="co">#Random effect correlations</span></span>
+<span id="cb153-37"><a href="fitness-model.html#cb153-37" aria-hidden="true" tabindex="-1"></a>G_cor <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,r_G,r_G,<span class="dv">1</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>) <span class="co">#mu_A, beta_A</span></span>
+<span id="cb153-38"><a href="fitness-model.html#cb153-38" aria-hidden="true" tabindex="-1"></a>G_sd  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">sqrt</span>(V_G),<span class="fu">sqrt</span>(V_G)) <span class="co">#G effect sds</span></span>
+<span id="cb153-39"><a href="fitness-model.html#cb153-39" aria-hidden="true" tabindex="-1"></a>G_cov <span class="ot">&lt;-</span> <span class="fu">diag</span>(G_sd) <span class="sc">%*%</span> G_cor <span class="sc">%*%</span> <span class="fu">diag</span>(G_sd)</span>
+<span id="cb153-40"><a href="fitness-model.html#cb153-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb153-41"><a href="fitness-model.html#cb153-41" aria-hidden="true" tabindex="-1"></a>E_cor <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,r_E,r_E,<span class="dv">1</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>) <span class="co">#mu_E, beta_E</span></span>
+<span id="cb153-42"><a href="fitness-model.html#cb153-42" aria-hidden="true" tabindex="-1"></a>E_sd  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">sqrt</span>(V_E),<span class="fu">sqrt</span>(V_E)) <span class="co">#E effect sds</span></span>
+<span id="cb153-43"><a href="fitness-model.html#cb153-43" aria-hidden="true" tabindex="-1"></a>E_cov <span class="ot">&lt;-</span> <span class="fu">diag</span>(E_sd) <span class="sc">%*%</span> E_cor <span class="sc">%*%</span> <span class="fu">diag</span>(E_sd)</span>
+<span id="cb153-44"><a href="fitness-model.html#cb153-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb153-45"><a href="fitness-model.html#cb153-45" aria-hidden="true" tabindex="-1"></a><span class="co">#matrices</span></span>
+<span id="cb153-46"><a href="fitness-model.html#cb153-46" aria-hidden="true" tabindex="-1"></a>G_block <span class="ot">&lt;-</span> G_cov <span class="sc">%x%</span> A_mat</span>
+<span id="cb153-47"><a href="fitness-model.html#cb153-47" aria-hidden="true" tabindex="-1"></a>E_block <span class="ot">&lt;-</span> E_cov <span class="sc">%x%</span> <span class="fu">diag</span>(<span class="dv">1</span>,I)</span>
+<span id="cb153-48"><a href="fitness-model.html#cb153-48" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb153-49"><a href="fitness-model.html#cb153-49" aria-hidden="true" tabindex="-1"></a><span class="co">#generate correlated REs</span></span>
+<span id="cb153-50"><a href="fitness-model.html#cb153-50" aria-hidden="true" tabindex="-1"></a>Gvalues <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="fu">rep</span>(<span class="dv">0</span>,I<span class="sc">*</span><span class="dv">2</span>), <span class="at">sigma=</span>G_block)</span>
+<span id="cb153-51"><a href="fitness-model.html#cb153-51" aria-hidden="true" tabindex="-1"></a>G_val <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(Gvalues, <span class="at">nrow=</span>I, <span class="at">ncol=</span><span class="dv">2</span>))</span>
+<span id="cb153-52"><a href="fitness-model.html#cb153-52" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(G_val)</span></code></pre></div>
+<pre><code>##          X1       X2
+## X1 1.000000 0.379681
+## X2 0.379681 1.000000</code></pre>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="fitness-model.html#cb155-1" aria-hidden="true" tabindex="-1"></a>Evalues <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="fu">rep</span>(<span class="dv">0</span>,I<span class="sc">*</span><span class="dv">2</span>), <span class="at">sigma=</span>E_block)</span>
+<span id="cb155-2"><a href="fitness-model.html#cb155-2" aria-hidden="true" tabindex="-1"></a>E_val <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(Evalues, <span class="at">nrow=</span>I, <span class="at">ncol=</span><span class="dv">2</span>))</span>
+<span id="cb155-3"><a href="fitness-model.html#cb155-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(E_val)</span></code></pre></div>
+<pre><code>##           X1        X2
+## X1 1.0000000 0.2753935
+## X2 0.2753935 1.0000000</code></pre>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="fitness-model.html#cb157-1" aria-hidden="true" tabindex="-1"></a><span class="co">#combine temporary object for all SRN parameters</span></span>
+<span id="cb157-2"><a href="fitness-model.html#cb157-2" aria-hidden="true" tabindex="-1"></a><span class="co">#use shorthand mu = 0, psi = 1</span></span>
+<span id="cb157-3"><a href="fitness-model.html#cb157-3" aria-hidden="true" tabindex="-1"></a>P <span class="ot">=</span> <span class="fu">cbind</span>(G_val,E_val)</span>
+<span id="cb157-4"><a href="fitness-model.html#cb157-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(P) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;A0&quot;</span>, <span class="st">&quot;A1&quot;</span>, <span class="st">&quot;E0&quot;</span>, <span class="st">&quot;E1&quot;</span>)</span>
+<span id="cb157-5"><a href="fitness-model.html#cb157-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb157-6"><a href="fitness-model.html#cb157-6" aria-hidden="true" tabindex="-1"></a><span class="co">#individual phenotypic REs</span></span>
+<span id="cb157-7"><a href="fitness-model.html#cb157-7" aria-hidden="true" tabindex="-1"></a><span class="co">#use shorthand mu = 0, psi = 1</span></span>
+<span id="cb157-8"><a href="fitness-model.html#cb157-8" aria-hidden="true" tabindex="-1"></a>P<span class="sc">$</span>P0 <span class="ot">=</span> P<span class="sc">$</span>A0 <span class="sc">+</span> P<span class="sc">$</span>E0 </span>
+<span id="cb157-9"><a href="fitness-model.html#cb157-9" aria-hidden="true" tabindex="-1"></a>P<span class="sc">$</span>P1 <span class="ot">=</span> P<span class="sc">$</span>A1 <span class="sc">+</span> P<span class="sc">$</span>E1</span>
+<span id="cb157-10"><a href="fitness-model.html#cb157-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb157-11"><a href="fitness-model.html#cb157-11" aria-hidden="true" tabindex="-1"></a><span class="co">#add ID</span></span>
+<span id="cb157-12"><a href="fitness-model.html#cb157-12" aria-hidden="true" tabindex="-1"></a>P<span class="sc">$</span>ID <span class="ot">=</span> <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span>I)</span>
+<span id="cb157-13"><a href="fitness-model.html#cb157-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb157-14"><a href="fitness-model.html#cb157-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb157-15"><a href="fitness-model.html#cb157-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb157-16"><a href="fitness-model.html#cb157-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb157-17"><a href="fitness-model.html#cb157-17" aria-hidden="true" tabindex="-1"></a>pairs <span class="ot">=</span> <span class="fu">list</span>()</span>
+<span id="cb157-18"><a href="fitness-model.html#cb157-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>I_partner){</span>
+<span id="cb157-19"><a href="fitness-model.html#cb157-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">#male RN intercept (x I_partner for multiple lifetime partners)</span></span>
+<span id="cb157-20"><a href="fitness-model.html#cb157-20" aria-hidden="true" tabindex="-1"></a>    sort.m <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">P0_m =</span> P<span class="sc">$</span>P0[<span class="dv">1</span><span class="sc">:</span>(I<span class="sc">/</span><span class="dv">2</span>)], <span class="at">ID_m =</span> (<span class="dv">1</span><span class="sc">:</span>(I<span class="sc">/</span><span class="dv">2</span>)) )</span>
+<span id="cb157-21"><a href="fitness-model.html#cb157-21" aria-hidden="true" tabindex="-1"></a>    sort.m<span class="ot">&lt;-</span>sort.m[<span class="fu">order</span>(sort.m[,<span class="st">&quot;P0_m&quot;</span>]),]</span>
+<span id="cb157-22"><a href="fitness-model.html#cb157-22" aria-hidden="true" tabindex="-1"></a>    <span class="co">#female phenotypic RN slopes</span></span>
+<span id="cb157-23"><a href="fitness-model.html#cb157-23" aria-hidden="true" tabindex="-1"></a>    sort.f <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">P0_f =</span> P<span class="sc">$</span>P0[(I<span class="sc">/</span><span class="dv">2</span> <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>I], <span class="at">ID_f =</span> ((I<span class="sc">/</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>I) )</span>
+<span id="cb157-24"><a href="fitness-model.html#cb157-24" aria-hidden="true" tabindex="-1"></a>    sort.f<span class="ot">&lt;-</span>sort.f[<span class="fu">order</span>(sort.f[,<span class="st">&quot;P0_f&quot;</span>]),]</span>
+<span id="cb157-25"><a href="fitness-model.html#cb157-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">#generate random dataset with desired rank-order correlation</span></span>
+<span id="cb157-26"><a href="fitness-model.html#cb157-26" aria-hidden="true" tabindex="-1"></a>    temp_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(r_alpha, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>) <span class="co">#cor of male and female values</span></span>
+<span id="cb157-27"><a href="fitness-model.html#cb157-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">diag</span>(temp_mat) <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co">#cor matrix</span></span>
+<span id="cb157-28"><a href="fitness-model.html#cb157-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">#sim values</span></span>
+<span id="cb157-29"><a href="fitness-model.html#cb157-29" aria-hidden="true" tabindex="-1"></a>    temp_data1<span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(<span class="at">n =</span> I<span class="sc">/</span><span class="dv">2</span>, <span class="at">mu =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">Sigma =</span> temp_mat, <span class="at">empirical=</span><span class="cn">TRUE</span>)</span>
+<span id="cb157-30"><a href="fitness-model.html#cb157-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">#ranks of random data</span></span>
+<span id="cb157-31"><a href="fitness-model.html#cb157-31" aria-hidden="true" tabindex="-1"></a>    rm <span class="ot">&lt;-</span> <span class="fu">rank</span>(temp_data1[ , <span class="dv">1</span>], <span class="at">ties.method =</span> <span class="st">&quot;first&quot;</span>)</span>
+<span id="cb157-32"><a href="fitness-model.html#cb157-32" aria-hidden="true" tabindex="-1"></a>    rf <span class="ot">&lt;-</span> <span class="fu">rank</span>(temp_data1[ , <span class="dv">2</span>], <span class="at">ties.method =</span> <span class="st">&quot;first&quot;</span>)</span>
+<span id="cb157-33"><a href="fitness-model.html#cb157-33" aria-hidden="true" tabindex="-1"></a>    <span class="co">#induce cor through rank-ordering of RN vectors</span></span>
+<span id="cb157-34"><a href="fitness-model.html#cb157-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cor</span>(sort.m<span class="sc">$</span>P0_m[rm], sort.f<span class="sc">$</span>P0_f[rf])</span>
+<span id="cb157-35"><a href="fitness-model.html#cb157-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">#sort partner ids into dataframe</span></span>
+<span id="cb157-36"><a href="fitness-model.html#cb157-36" aria-hidden="true" tabindex="-1"></a>    partner.id <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">ID_m =</span> sort.m<span class="sc">$</span>ID_m[rm], <span class="at">ID_f =</span> sort.f<span class="sc">$</span>ID_f[rf])</span>
+<span id="cb157-37"><a href="fitness-model.html#cb157-37" aria-hidden="true" tabindex="-1"></a>    partner.id <span class="ot">=</span> partner.id[<span class="fu">order</span>(partner.id[,<span class="st">&quot;ID_m&quot;</span>]),]</span>
+<span id="cb157-38"><a href="fitness-model.html#cb157-38" aria-hidden="true" tabindex="-1"></a>    <span class="co">#add to list</span></span>
+<span id="cb157-39"><a href="fitness-model.html#cb157-39" aria-hidden="true" tabindex="-1"></a>    pairs[[j]] <span class="ot">=</span> partner.id</span>
+<span id="cb157-40"><a href="fitness-model.html#cb157-40" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb157-41"><a href="fitness-model.html#cb157-41" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb157-42"><a href="fitness-model.html#cb157-42" aria-hidden="true" tabindex="-1"></a>partner.id <span class="ot">=</span> <span class="fu">bind_rows</span>(pairs)</span>
+<span id="cb157-43"><a href="fitness-model.html#cb157-43" aria-hidden="true" tabindex="-1"></a>partner.id <span class="ot">=</span> partner.id[<span class="fu">order</span>(partner.id<span class="sc">$</span>ID_m),]</span>
+<span id="cb157-44"><a href="fitness-model.html#cb157-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb157-45"><a href="fitness-model.html#cb157-45" aria-hidden="true" tabindex="-1"></a><span class="co">#put all dyads together</span></span>
+<span id="cb157-46"><a href="fitness-model.html#cb157-46" aria-hidden="true" tabindex="-1"></a>partner.id<span class="sc">$</span>dyadn <span class="ot">=</span> <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(partner.id))</span>
+<span id="cb157-47"><a href="fitness-model.html#cb157-47" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb157-48"><a href="fitness-model.html#cb157-48" aria-hidden="true" tabindex="-1"></a><span class="co">#add values back to dataframe (male and joint)</span></span>
+<span id="cb157-49"><a href="fitness-model.html#cb157-49" aria-hidden="true" tabindex="-1"></a>partner.id<span class="sc">$</span>P0m <span class="ot">&lt;-</span> P<span class="sc">$</span>P0[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_m,P<span class="sc">$</span>ID)]</span>
+<span id="cb157-50"><a href="fitness-model.html#cb157-50" aria-hidden="true" tabindex="-1"></a>partner.id<span class="sc">$</span>P0f <span class="ot">&lt;-</span> P<span class="sc">$</span>P0[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_f,P<span class="sc">$</span>ID)]</span>
+<span id="cb157-51"><a href="fitness-model.html#cb157-51" aria-hidden="true" tabindex="-1"></a>partner.id<span class="sc">$</span>P1m <span class="ot">&lt;-</span> P<span class="sc">$</span>P1[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_m,P<span class="sc">$</span>ID)]</span>
+<span id="cb157-52"><a href="fitness-model.html#cb157-52" aria-hidden="true" tabindex="-1"></a>partner.id<span class="sc">$</span>P1f <span class="ot">&lt;-</span> P<span class="sc">$</span>P1[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_f,P<span class="sc">$</span>ID)]</span>
+<span id="cb157-53"><a href="fitness-model.html#cb157-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb157-54"><a href="fitness-model.html#cb157-54" aria-hidden="true" tabindex="-1"></a>partner.id<span class="sc">$</span>A0m <span class="ot">&lt;-</span> P<span class="sc">$</span>A0[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_m,P<span class="sc">$</span>ID)]</span>
+<span id="cb157-55"><a href="fitness-model.html#cb157-55" aria-hidden="true" tabindex="-1"></a>partner.id<span class="sc">$</span>A0f <span class="ot">&lt;-</span> P<span class="sc">$</span>A0[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_f,P<span class="sc">$</span>ID)]</span>
+<span id="cb157-56"><a href="fitness-model.html#cb157-56" aria-hidden="true" tabindex="-1"></a>partner.id<span class="sc">$</span>A1m <span class="ot">&lt;-</span> P<span class="sc">$</span>A1[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_m,P<span class="sc">$</span>ID)]</span>
+<span id="cb157-57"><a href="fitness-model.html#cb157-57" aria-hidden="true" tabindex="-1"></a>partner.id<span class="sc">$</span>A1f <span class="ot">&lt;-</span> P<span class="sc">$</span>A1[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_f,P<span class="sc">$</span>ID)]</span>
+<span id="cb157-58"><a href="fitness-model.html#cb157-58" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb157-59"><a href="fitness-model.html#cb157-59" aria-hidden="true" tabindex="-1"></a>partner.id<span class="sc">$</span>E0m <span class="ot">&lt;-</span> P<span class="sc">$</span>E0[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_m,P<span class="sc">$</span>ID)]</span>
+<span id="cb157-60"><a href="fitness-model.html#cb157-60" aria-hidden="true" tabindex="-1"></a>partner.id<span class="sc">$</span>E0f <span class="ot">&lt;-</span> P<span class="sc">$</span>E0[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_f,P<span class="sc">$</span>ID)]</span>
+<span id="cb157-61"><a href="fitness-model.html#cb157-61" aria-hidden="true" tabindex="-1"></a>partner.id<span class="sc">$</span>E1m <span class="ot">&lt;-</span> P<span class="sc">$</span>E1[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_m,P<span class="sc">$</span>ID)]</span>
+<span id="cb157-62"><a href="fitness-model.html#cb157-62" aria-hidden="true" tabindex="-1"></a>partner.id<span class="sc">$</span>E1f <span class="ot">&lt;-</span> P<span class="sc">$</span>E1[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_f,P<span class="sc">$</span>ID)]</span>
+<span id="cb157-63"><a href="fitness-model.html#cb157-63" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb157-64"><a href="fitness-model.html#cb157-64" aria-hidden="true" tabindex="-1"></a><span class="co">#check correlation again</span></span>
+<span id="cb157-65"><a href="fitness-model.html#cb157-65" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(partner.id<span class="sc">$</span>P0m, partner.id<span class="sc">$</span>P0f)</span></code></pre></div>
+<pre><code>## [1] 0.2958643</code></pre>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="fitness-model.html#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="co">#calculate mean partner phenotype for each subject</span></span>
+<span id="cb159-2"><a href="fitness-model.html#cb159-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb159-3"><a href="fitness-model.html#cb159-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#average female for male partners</span></span>
+<span id="cb159-4"><a href="fitness-model.html#cb159-4" aria-hidden="true" tabindex="-1"></a>  mean_0m <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(P0f <span class="sc">~</span> ID_m, mean, <span class="at">data =</span> partner.id)</span>
+<span id="cb159-5"><a href="fitness-model.html#cb159-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(mean_0m)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;meanP0m&quot;</span></span>
+<span id="cb159-6"><a href="fitness-model.html#cb159-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb159-7"><a href="fitness-model.html#cb159-7" aria-hidden="true" tabindex="-1"></a>  mean_1m <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(P1f <span class="sc">~</span> ID_m, mean, <span class="at">data =</span> partner.id)</span>
+<span id="cb159-8"><a href="fitness-model.html#cb159-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(mean_1m)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;meanP1m&quot;</span></span>
+<span id="cb159-9"><a href="fitness-model.html#cb159-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb159-10"><a href="fitness-model.html#cb159-10" aria-hidden="true" tabindex="-1"></a>  partner.id<span class="sc">$</span>meanP0m <span class="ot">&lt;-</span> mean_0m<span class="sc">$</span>meanP0m[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_m,mean_0m<span class="sc">$</span>ID_m)]</span>
+<span id="cb159-11"><a href="fitness-model.html#cb159-11" aria-hidden="true" tabindex="-1"></a>  partner.id<span class="sc">$</span>meanP1m <span class="ot">&lt;-</span> mean_1m<span class="sc">$</span>meanP1m[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_m,mean_1m<span class="sc">$</span>ID_m)]</span>
+<span id="cb159-12"><a href="fitness-model.html#cb159-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb159-13"><a href="fitness-model.html#cb159-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">#average male for female partners</span></span>
+<span id="cb159-14"><a href="fitness-model.html#cb159-14" aria-hidden="true" tabindex="-1"></a>  mean_0f <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(P0m <span class="sc">~</span> ID_f, mean, <span class="at">data =</span> partner.id)</span>
+<span id="cb159-15"><a href="fitness-model.html#cb159-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(mean_0f)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;meanP0f&quot;</span></span>
+<span id="cb159-16"><a href="fitness-model.html#cb159-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb159-17"><a href="fitness-model.html#cb159-17" aria-hidden="true" tabindex="-1"></a>  mean_1f <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(P1m <span class="sc">~</span> ID_f, mean, <span class="at">data =</span> partner.id)</span>
+<span id="cb159-18"><a href="fitness-model.html#cb159-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(mean_1f)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;meanP1f&quot;</span></span>
+<span id="cb159-19"><a href="fitness-model.html#cb159-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb159-20"><a href="fitness-model.html#cb159-20" aria-hidden="true" tabindex="-1"></a>  partner.id<span class="sc">$</span>meanP0f <span class="ot">&lt;-</span> mean_0f<span class="sc">$</span>meanP0f[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_f,mean_0f<span class="sc">$</span>ID_f)]</span>
+<span id="cb159-21"><a href="fitness-model.html#cb159-21" aria-hidden="true" tabindex="-1"></a>  partner.id<span class="sc">$</span>meanP1f <span class="ot">&lt;-</span> mean_1f<span class="sc">$</span>meanP1f[<span class="fu">match</span>(partner.id<span class="sc">$</span>ID_f,mean_1f<span class="sc">$</span>ID_f)]</span>
+<span id="cb159-22"><a href="fitness-model.html#cb159-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb159-23"><a href="fitness-model.html#cb159-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">#number of dyads</span></span>
+<span id="cb159-24"><a href="fitness-model.html#cb159-24" aria-hidden="true" tabindex="-1"></a>  ndyad <span class="ot">=</span> <span class="fu">nrow</span>(partner.id)</span>
+<span id="cb159-25"><a href="fitness-model.html#cb159-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb159-26"><a href="fitness-model.html#cb159-26" aria-hidden="true" tabindex="-1"></a>  <span class="co">#expand for repeated measures</span></span>
+<span id="cb159-27"><a href="fitness-model.html#cb159-27" aria-hidden="true" tabindex="-1"></a>  partner.id<span class="sc">$</span>rep <span class="ot">&lt;-</span> I_obs</span>
+<span id="cb159-28"><a href="fitness-model.html#cb159-28" aria-hidden="true" tabindex="-1"></a>  pair_df <span class="ot">&lt;-</span> partner.id[<span class="fu">rep</span>(<span class="fu">row.names</span>(partner.id), partner.id<span class="sc">$</span>rep),]</span>
+<span id="cb159-29"><a href="fitness-model.html#cb159-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb159-30"><a href="fitness-model.html#cb159-30" aria-hidden="true" tabindex="-1"></a>  <span class="co">#correlations</span></span>
+<span id="cb159-31"><a href="fitness-model.html#cb159-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(partner.id<span class="sc">$</span>P0m, partner.id<span class="sc">$</span>P0f)</span></code></pre></div>
+<pre><code>## [1] 0.2958643</code></pre>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="fitness-model.html#cb161-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(partner.id<span class="sc">$</span>P1m, partner.id<span class="sc">$</span>P0f)</span></code></pre></div>
+<pre><code>## [1] 0.0465309</code></pre>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="fitness-model.html#cb163-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(partner.id<span class="sc">$</span>P0m, partner.id<span class="sc">$</span>P1f)</span></code></pre></div>
+<pre><code>## [1] 0.09183948</code></pre>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="fitness-model.html#cb165-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(partner.id<span class="sc">$</span>P1m, partner.id<span class="sc">$</span>P1f)</span></code></pre></div>
+<pre><code>## [1] 0.04940489</code></pre>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="fitness-model.html#cb167-1" aria-hidden="true" tabindex="-1"></a><span class="do">#####################################################################</span></span>
+<span id="cb167-2"><a href="fitness-model.html#cb167-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Additional effects</span></span>
+<span id="cb167-3"><a href="fitness-model.html#cb167-3" aria-hidden="true" tabindex="-1"></a><span class="do">#####################################################################</span></span>
+<span id="cb167-4"><a href="fitness-model.html#cb167-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb167-5"><a href="fitness-model.html#cb167-5" aria-hidden="true" tabindex="-1"></a><span class="co">#correlated  residuals between male and females</span></span>
+<span id="cb167-6"><a href="fitness-model.html#cb167-6" aria-hidden="true" tabindex="-1"></a>R_cor <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,r_R,r_R,<span class="dv">1</span>), <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb167-7"><a href="fitness-model.html#cb167-7" aria-hidden="true" tabindex="-1"></a>res_sd <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(res_V)</span>
+<span id="cb167-8"><a href="fitness-model.html#cb167-8" aria-hidden="true" tabindex="-1"></a>R_cov <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">c</span>(res_sd,res_sd)) <span class="sc">%*%</span> R_cor <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="fu">c</span>(res_sd,res_sd))</span>
+<span id="cb167-9"><a href="fitness-model.html#cb167-9" aria-hidden="true" tabindex="-1"></a>res_ind<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="fu">rmvnorm</span>(<span class="fu">nrow</span>(pair_df), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), R_cov))</span>
+<span id="cb167-10"><a href="fitness-model.html#cb167-10" aria-hidden="true" tabindex="-1"></a>pair_df<span class="sc">$</span>resAGm <span class="ot">=</span> res_ind<span class="sc">$</span>X1</span>
+<span id="cb167-11"><a href="fitness-model.html#cb167-11" aria-hidden="true" tabindex="-1"></a>pair_df<span class="sc">$</span>resAGf <span class="ot">=</span> res_ind<span class="sc">$</span>X2</span>
+<span id="cb167-12"><a href="fitness-model.html#cb167-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb167-13"><a href="fitness-model.html#cb167-13" aria-hidden="true" tabindex="-1"></a><span class="do">#####################################################################</span></span>
+<span id="cb167-14"><a href="fitness-model.html#cb167-14" aria-hidden="true" tabindex="-1"></a><span class="co">#Simulate responses over t = {1,2} per partner</span></span>
+<span id="cb167-15"><a href="fitness-model.html#cb167-15" aria-hidden="true" tabindex="-1"></a><span class="do">#####################################################################</span></span>
+<span id="cb167-16"><a href="fitness-model.html#cb167-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb167-17"><a href="fitness-model.html#cb167-17" aria-hidden="true" tabindex="-1"></a><span class="co">#add interaction number</span></span>
+<span id="cb167-18"><a href="fitness-model.html#cb167-18" aria-hidden="true" tabindex="-1"></a>pair_df<span class="sc">$</span>turn <span class="ot">=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),ndyad) </span>
+<span id="cb167-19"><a href="fitness-model.html#cb167-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb167-20"><a href="fitness-model.html#cb167-20" aria-hidden="true" tabindex="-1"></a><span class="co">#average male social environment at time = 1</span></span>
+<span id="cb167-21"><a href="fitness-model.html#cb167-21" aria-hidden="true" tabindex="-1"></a>pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;meaneta_m&quot;</span>] <span class="ot">=</span>  pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;meanP0m&quot;</span>] <span class="sc">+</span> </span>
+<span id="cb167-22"><a href="fitness-model.html#cb167-22" aria-hidden="true" tabindex="-1"></a>  (psi_1 <span class="sc">+</span> pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;meanP1m&quot;</span>])<span class="sc">*</span>(pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;P0m&quot;</span>])</span>
+<span id="cb167-23"><a href="fitness-model.html#cb167-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb167-24"><a href="fitness-model.html#cb167-24" aria-hidden="true" tabindex="-1"></a><span class="co">#average female social environment at time = 1</span></span>
+<span id="cb167-25"><a href="fitness-model.html#cb167-25" aria-hidden="true" tabindex="-1"></a>pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;meaneta_f&quot;</span>] <span class="ot">=</span>  pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;meanP0f&quot;</span>] <span class="sc">+</span> </span>
+<span id="cb167-26"><a href="fitness-model.html#cb167-26" aria-hidden="true" tabindex="-1"></a>  (psi_1 <span class="sc">+</span> pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;meanP1f&quot;</span>])<span class="sc">*</span>(pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;P0f&quot;</span>])</span>
+<span id="cb167-27"><a href="fitness-model.html#cb167-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb167-28"><a href="fitness-model.html#cb167-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb167-29"><a href="fitness-model.html#cb167-29" aria-hidden="true" tabindex="-1"></a><span class="co">#individual prediction at t = 1</span></span>
+<span id="cb167-30"><a href="fitness-model.html#cb167-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb167-31"><a href="fitness-model.html#cb167-31" aria-hidden="true" tabindex="-1"></a>  <span class="co">#males</span></span>
+<span id="cb167-32"><a href="fitness-model.html#cb167-32" aria-hidden="true" tabindex="-1"></a>  <span class="co">#eta_j{t=1} = mu_j + psi_j*(mu_k - mu_meanK)</span></span>
+<span id="cb167-33"><a href="fitness-model.html#cb167-33" aria-hidden="true" tabindex="-1"></a>  pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;eta_m&quot;</span>] <span class="ot">=</span> pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;P0m&quot;</span>] <span class="sc">+</span> </span>
+<span id="cb167-34"><a href="fitness-model.html#cb167-34" aria-hidden="true" tabindex="-1"></a>  (psi_1 <span class="sc">+</span> pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;P1m&quot;</span>])<span class="sc">*</span>(pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;P0f&quot;</span>])</span>
+<span id="cb167-35"><a href="fitness-model.html#cb167-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb167-36"><a href="fitness-model.html#cb167-36" aria-hidden="true" tabindex="-1"></a>  <span class="co">#females</span></span>
+<span id="cb167-37"><a href="fitness-model.html#cb167-37" aria-hidden="true" tabindex="-1"></a>  <span class="co">#eta_k{t=1} = mu_k + psi_k*(mu_j - mu_meanJ)                                                                                                              </span></span>
+<span id="cb167-38"><a href="fitness-model.html#cb167-38" aria-hidden="true" tabindex="-1"></a>  pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;eta_f&quot;</span>] <span class="ot">=</span> pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;P0f&quot;</span>] <span class="sc">+</span> </span>
+<span id="cb167-39"><a href="fitness-model.html#cb167-39" aria-hidden="true" tabindex="-1"></a>  (psi_1 <span class="sc">+</span> pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;P1f&quot;</span>])<span class="sc">*</span>(pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;P0m&quot;</span>])</span>
+<span id="cb167-40"><a href="fitness-model.html#cb167-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb167-41"><a href="fitness-model.html#cb167-41" aria-hidden="true" tabindex="-1"></a><span class="co">#individual prediction at t = 2</span></span>
+<span id="cb167-42"><a href="fitness-model.html#cb167-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb167-43"><a href="fitness-model.html#cb167-43" aria-hidden="true" tabindex="-1"></a>  <span class="co">#eta_j{t=2} = mu_j + psi_j*(eta_k{t=1} - eta_meanK{t=1})</span></span>
+<span id="cb167-44"><a href="fitness-model.html#cb167-44" aria-hidden="true" tabindex="-1"></a>  pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">2</span>,<span class="st">&quot;eta_m&quot;</span>] <span class="ot">=</span> pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">2</span>,<span class="st">&quot;P0m&quot;</span>] <span class="sc">+</span></span>
+<span id="cb167-45"><a href="fitness-model.html#cb167-45" aria-hidden="true" tabindex="-1"></a>    (psi_1 <span class="sc">+</span> pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">2</span>,<span class="st">&quot;P1m&quot;</span>])<span class="sc">*</span>(pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;eta_f&quot;</span>])</span>
+<span id="cb167-46"><a href="fitness-model.html#cb167-46" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb167-47"><a href="fitness-model.html#cb167-47" aria-hidden="true" tabindex="-1"></a>  <span class="co">#females</span></span>
+<span id="cb167-48"><a href="fitness-model.html#cb167-48" aria-hidden="true" tabindex="-1"></a>  pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">2</span>,<span class="st">&quot;eta_f&quot;</span>] <span class="ot">=</span> pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">2</span>,<span class="st">&quot;P0f&quot;</span>] <span class="sc">+</span> </span>
+<span id="cb167-49"><a href="fitness-model.html#cb167-49" aria-hidden="true" tabindex="-1"></a>    (psi_1 <span class="sc">+</span> pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">2</span>,<span class="st">&quot;P1f&quot;</span>])<span class="sc">*</span>(pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;eta_m&quot;</span>])</span>
+<span id="cb167-50"><a href="fitness-model.html#cb167-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb167-51"><a href="fitness-model.html#cb167-51" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb167-52"><a href="fitness-model.html#cb167-52" aria-hidden="true" tabindex="-1"></a>  <span class="co">#add intercept and residual</span></span>
+<span id="cb167-53"><a href="fitness-model.html#cb167-53" aria-hidden="true" tabindex="-1"></a>  pair_df<span class="sc">$</span>AG_m <span class="ot">=</span> alpha_0 <span class="sc">+</span> pair_df<span class="sc">$</span>eta_m <span class="sc">+</span> pair_df<span class="sc">$</span>resAGm</span>
+<span id="cb167-54"><a href="fitness-model.html#cb167-54" aria-hidden="true" tabindex="-1"></a>  pair_df<span class="sc">$</span>AG_f <span class="ot">=</span> alpha_0 <span class="sc">+</span> pair_df<span class="sc">$</span>eta_f <span class="sc">+</span> pair_df<span class="sc">$</span>resAGf</span>
+<span id="cb167-55"><a href="fitness-model.html#cb167-55" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb167-56"><a href="fitness-model.html#cb167-56" aria-hidden="true" tabindex="-1"></a>  <span class="co">#add residual feedback</span></span>
+<span id="cb167-57"><a href="fitness-model.html#cb167-57" aria-hidden="true" tabindex="-1"></a>  pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">2</span>,<span class="st">&quot;AG_m&quot;</span>] <span class="ot">=</span> pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">2</span>,<span class="st">&quot;AG_m&quot;</span>] <span class="sc">+</span> phi <span class="sc">*</span> pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;resAGf&quot;</span>]</span>
+<span id="cb167-58"><a href="fitness-model.html#cb167-58" aria-hidden="true" tabindex="-1"></a>  pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">2</span>,<span class="st">&quot;AG_f&quot;</span>] <span class="ot">=</span> pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">2</span>,<span class="st">&quot;AG_f&quot;</span>] <span class="sc">+</span> phi <span class="sc">*</span> pair_df[pair_df<span class="sc">$</span>turn<span class="sc">==</span><span class="dv">1</span>,<span class="st">&quot;resAGm&quot;</span>]</span></code></pre></div>
+<p>We can now simulate the relative fitness measure for each dyad during their interaction. We set the regression coefficients for moderate effect sizes.</p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="fitness-model.html#cb168-1" aria-hidden="true" tabindex="-1"></a><span class="co">#set coefficients</span></span>
+<span id="cb168-2"><a href="fitness-model.html#cb168-2" aria-hidden="true" tabindex="-1"></a>nu_0 <span class="ot">=</span> <span class="dv">1</span> <span class="co">#relative fitness intercept</span></span>
+<span id="cb168-3"><a href="fitness-model.html#cb168-3" aria-hidden="true" tabindex="-1"></a>beta_n1 <span class="ot">=</span> <span class="fl">0.3</span></span>
+<span id="cb168-4"><a href="fitness-model.html#cb168-4" aria-hidden="true" tabindex="-1"></a>beta_n2 <span class="ot">=</span> <span class="sc">-</span><span class="fl">0.3</span></span>
+<span id="cb168-5"><a href="fitness-model.html#cb168-5" aria-hidden="true" tabindex="-1"></a>beta_s1 <span class="ot">=</span> <span class="fl">0.3</span></span>
+<span id="cb168-6"><a href="fitness-model.html#cb168-6" aria-hidden="true" tabindex="-1"></a>beta_s2 <span class="ot">=</span> <span class="sc">-</span><span class="fl">0.3</span></span>
+<span id="cb168-7"><a href="fitness-model.html#cb168-7" aria-hidden="true" tabindex="-1"></a>beta_i1 <span class="ot">=</span> <span class="sc">-</span><span class="fl">0.3</span></span>
+<span id="cb168-8"><a href="fitness-model.html#cb168-8" aria-hidden="true" tabindex="-1"></a>beta_i2 <span class="ot">=</span> <span class="sc">-</span><span class="fl">0.3</span></span>
+<span id="cb168-9"><a href="fitness-model.html#cb168-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb168-10"><a href="fitness-model.html#cb168-10" aria-hidden="true" tabindex="-1"></a><span class="co">#dyad fitness (nu_0 = 1 so that w is relative fitness w = W/W_mean for the unbiased population mean fitness)</span></span>
+<span id="cb168-11"><a href="fitness-model.html#cb168-11" aria-hidden="true" tabindex="-1"></a>pair_df<span class="sc">$</span>w_mu <span class="ot">=</span> nu_0 <span class="sc">+</span> beta_n1<span class="sc">*</span>pair_df<span class="sc">$</span>P0m <span class="sc">+</span> beta_n2<span class="sc">*</span>pair_df<span class="sc">$</span>P1m <span class="sc">+</span> beta_s1<span class="sc">*</span>pair_df<span class="sc">$</span>P0f <span class="sc">+</span> beta_s2<span class="sc">*</span>pair_df<span class="sc">$</span>P1f <span class="sc">+</span></span>
+<span id="cb168-12"><a href="fitness-model.html#cb168-12" aria-hidden="true" tabindex="-1"></a>                              beta_i1<span class="sc">*</span>(pair_df<span class="sc">$</span>P0m<span class="sc">*</span>pair_df<span class="sc">$</span>P0f) <span class="sc">+</span> beta_i2<span class="sc">*</span>(pair_df<span class="sc">$</span>P1m<span class="sc">*</span>pair_df<span class="sc">$</span>P1f)</span>
+<span id="cb168-13"><a href="fitness-model.html#cb168-13" aria-hidden="true" tabindex="-1"></a><span class="co">#remove redundant elements </span></span>
+<span id="cb168-14"><a href="fitness-model.html#cb168-14" aria-hidden="true" tabindex="-1"></a>w_mu<span class="ot">&lt;-</span>pair_df[<span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(pair_df), <span class="at">by=</span>I_obs),<span class="st">&quot;w_mu&quot;</span>]</span>
+<span id="cb168-15"><a href="fitness-model.html#cb168-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb168-16"><a href="fitness-model.html#cb168-16" aria-hidden="true" tabindex="-1"></a><span class="co">#add stochastic effects (same sd as phenotype)</span></span>
+<span id="cb168-17"><a href="fitness-model.html#cb168-17" aria-hidden="true" tabindex="-1"></a>w <span class="ot">=</span> w_mu <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(w_mu),<span class="dv">0</span>, res_sd)</span></code></pre></div>
+<p>We’ll need additional indices for the Stan code to appropriately estimate the fitness model.</p>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="fitness-model.html#cb169-1" aria-hidden="true" tabindex="-1"></a><span class="do">#####################################################################</span></span>
+<span id="cb169-2"><a href="fitness-model.html#cb169-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Prepare data for Stan</span></span>
+<span id="cb169-3"><a href="fitness-model.html#cb169-3" aria-hidden="true" tabindex="-1"></a><span class="do">#####################################################################</span></span>
+<span id="cb169-4"><a href="fitness-model.html#cb169-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb169-5"><a href="fitness-model.html#cb169-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#individual indices</span></span>
+<span id="cb169-6"><a href="fitness-model.html#cb169-6" aria-hidden="true" tabindex="-1"></a>  Im <span class="ot">=</span> I<span class="sc">/</span><span class="dv">2</span> <span class="co">#number of males</span></span>
+<span id="cb169-7"><a href="fitness-model.html#cb169-7" aria-hidden="true" tabindex="-1"></a>  If <span class="ot">=</span> I<span class="sc">/</span><span class="dv">2</span> <span class="co">#number of females</span></span>
+<span id="cb169-8"><a href="fitness-model.html#cb169-8" aria-hidden="true" tabindex="-1"></a>  N_sex <span class="ot">=</span> (I<span class="sc">/</span><span class="dv">2</span>)<span class="sc">*</span><span class="dv">2</span><span class="sc">*</span><span class="dv">4</span> <span class="co">#total observations per sex</span></span>
+<span id="cb169-9"><a href="fitness-model.html#cb169-9" aria-hidden="true" tabindex="-1"></a>  idm<span class="ot">&lt;-</span>pair_df<span class="sc">$</span>ID_m <span class="co">#male ID</span></span>
+<span id="cb169-10"><a href="fitness-model.html#cb169-10" aria-hidden="true" tabindex="-1"></a>  idf<span class="ot">&lt;-</span>pair_df<span class="sc">$</span>ID_f <span class="co">#female ID</span></span>
+<span id="cb169-11"><a href="fitness-model.html#cb169-11" aria-hidden="true" tabindex="-1"></a>  idf<span class="ot">&lt;-</span>idf <span class="sc">-</span> (Im) <span class="co">#index within female vector</span></span>
+<span id="cb169-12"><a href="fitness-model.html#cb169-12" aria-hidden="true" tabindex="-1"></a>  dyadAG <span class="ot">&lt;-</span> pair_df<span class="sc">$</span>dyadn</span>
+<span id="cb169-13"><a href="fitness-model.html#cb169-13" aria-hidden="true" tabindex="-1"></a>  dyadw <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span>ndyad)</span>
+<span id="cb169-14"><a href="fitness-model.html#cb169-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb169-15"><a href="fitness-model.html#cb169-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">#partner IDs for male individuals</span></span>
+<span id="cb169-16"><a href="fitness-model.html#cb169-16" aria-hidden="true" tabindex="-1"></a>  partners_m<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">idfocal =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>(I<span class="sc">/</span><span class="dv">2</span>)), <span class="co">#all partners ID</span></span>
+<span id="cb169-17"><a href="fitness-model.html#cb169-17" aria-hidden="true" tabindex="-1"></a>                         <span class="at">partner1 =</span> <span class="cn">NA</span>, <span class="at">partner2 =</span> <span class="cn">NA</span>, <span class="at">partner3 =</span> <span class="cn">NA</span>, <span class="at">partner4 =</span> <span class="cn">NA</span>)</span>
+<span id="cb169-18"><a href="fitness-model.html#cb169-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(I<span class="sc">/</span><span class="dv">2</span>)){partners_m[i,<span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>)] <span class="ot">&lt;-</span>partner.id[partner.id<span class="sc">$</span>ID_m<span class="sc">==</span>i,<span class="st">&quot;ID_f&quot;</span>]}</span>
+<span id="cb169-19"><a href="fitness-model.html#cb169-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb169-20"><a href="fitness-model.html#cb169-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">#partner IDs for female individuals</span></span>
+<span id="cb169-21"><a href="fitness-model.html#cb169-21" aria-hidden="true" tabindex="-1"></a>  partners_f<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">idfocal =</span> <span class="fu">rep</span>((I<span class="sc">/</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>I), <span class="co">#all partners ID</span></span>
+<span id="cb169-22"><a href="fitness-model.html#cb169-22" aria-hidden="true" tabindex="-1"></a>                         <span class="at">partner1 =</span> <span class="cn">NA</span>, <span class="at">partner2 =</span> <span class="cn">NA</span>, <span class="at">partner3 =</span> <span class="cn">NA</span>, <span class="at">partner4 =</span> <span class="cn">NA</span>)</span>
+<span id="cb169-23"><a href="fitness-model.html#cb169-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> (I<span class="sc">/</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>I){partners_f[i<span class="sc">-</span>(I<span class="sc">/</span><span class="dv">2</span>),<span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>)] <span class="ot">&lt;-</span>partner.id[partner.id<span class="sc">$</span>ID_f<span class="sc">==</span>i,<span class="st">&quot;ID_m&quot;</span>]}</span>
+<span id="cb169-24"><a href="fitness-model.html#cb169-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb169-25"><a href="fitness-model.html#cb169-25" aria-hidden="true" tabindex="-1"></a><span class="do">######################</span></span>
+<span id="cb169-26"><a href="fitness-model.html#cb169-26" aria-hidden="true" tabindex="-1"></a><span class="co">#data prep for Stan</span></span>
+<span id="cb169-27"><a href="fitness-model.html#cb169-27" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb169-28"><a href="fitness-model.html#cb169-28" aria-hidden="true" tabindex="-1"></a> stan_data <span class="ot">&lt;-</span></span>
+<span id="cb169-29"><a href="fitness-model.html#cb169-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">N_sex =</span> N_sex, <span class="at">I =</span> I, <span class="at">Im=</span>Im, <span class="at">If =</span> If, <span class="at">idm =</span> idm, <span class="at">idf =</span> idf,</span>
+<span id="cb169-30"><a href="fitness-model.html#cb169-30" aria-hidden="true" tabindex="-1"></a>         <span class="at">partners_m =</span> partners_m, <span class="at">partners_f =</span> partners_f,</span>
+<span id="cb169-31"><a href="fitness-model.html#cb169-31" aria-hidden="true" tabindex="-1"></a>         <span class="at">AG_m =</span> pair_df<span class="sc">$</span>AG_m, <span class="at">AG_f =</span> pair_df<span class="sc">$</span>AG_f, <span class="at">time =</span> pair_df<span class="sc">$</span>turn, <span class="at">A =</span> A_mat,</span>
+<span id="cb169-32"><a href="fitness-model.html#cb169-32" aria-hidden="true" tabindex="-1"></a>         <span class="co">#new indices and data</span></span>
+<span id="cb169-33"><a href="fitness-model.html#cb169-33" aria-hidden="true" tabindex="-1"></a>         <span class="at">Idyad=</span>ndyad, <span class="at">dyadw =</span> dyadw, <span class="at">idmw =</span> partner.id<span class="sc">$</span>ID_m, <span class="at">idfw =</span> <span class="fu">c</span>(partner.id<span class="sc">$</span>ID_f<span class="sc">-</span>Im),  <span class="at">w =</span> w)</span></code></pre></div>
+</div>
+<div id="estimating-the-model-1" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Estimating the model</h2>
+<p>We’re now prepared to extend the Stan code for the within and between partner model to account for selection on SRN intercepts and slopes. This involves specifying the fitness model described above as an additional response model, with SRN parameters simultaneously specified on the phenotype and fitness. As described in the main text, this multi-response model will avoid various sources of statistical bias that result from estimating these models in isolation. Fortunately, in contrast to the more complex SRN model, it is quite straightforward to add the fitness model with a few additional declarations in the <code>data</code>, <code>parameters</code>, and <code>model</code> program blocks. These changes are separated out with comments in the code below for clarity.</p>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="fitness-model.html#cb170-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(<span class="st">&quot;</span></span>
+<span id="cb170-2"><a href="fitness-model.html#cb170-2" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
+<span id="cb170-3"><a href="fitness-model.html#cb170-3" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-4"><a href="fitness-model.html#cb170-4" aria-hidden="true" tabindex="-1"></a><span class="st">  //indices and scalars used for model specification</span></span>
+<span id="cb170-5"><a href="fitness-model.html#cb170-5" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; N_sex; //total aggression observations per sex (I/2 * 4 lifetime partners)</span></span>
+<span id="cb170-6"><a href="fitness-model.html#cb170-6" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; I; //total individuals (M + F)</span></span>
+<span id="cb170-7"><a href="fitness-model.html#cb170-7" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; Im; //number of males</span></span>
+<span id="cb170-8"><a href="fitness-model.html#cb170-8" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; If; //number of females</span></span>
+<span id="cb170-9"><a href="fitness-model.html#cb170-9" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; idm[N_sex]; //index of male AG observations (of length N_sex)</span></span>
+<span id="cb170-10"><a href="fitness-model.html#cb170-10" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; idf[N_sex]; //index of female AG observations</span></span>
+<span id="cb170-11"><a href="fitness-model.html#cb170-11" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; partners_m [Im,5]; //index of male partner IDs, first column is focal ID (1 + 4 IDs)</span></span>
+<span id="cb170-12"><a href="fitness-model.html#cb170-12" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; partners_f [If,5]; //index of female partner IDs, first column is focal ID (1 + 4 IDs)</span></span>
+<span id="cb170-13"><a href="fitness-model.html#cb170-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-14"><a href="fitness-model.html#cb170-14" aria-hidden="true" tabindex="-1"></a><span class="st">  //empirical data</span></span>
+<span id="cb170-15"><a href="fitness-model.html#cb170-15" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,I] A; //relatedness matrix</span></span>
+<span id="cb170-16"><a href="fitness-model.html#cb170-16" aria-hidden="true" tabindex="-1"></a><span class="st">  real AG_m[N_sex]; //male aggression measurements</span></span>
+<span id="cb170-17"><a href="fitness-model.html#cb170-17" aria-hidden="true" tabindex="-1"></a><span class="st">  real AG_f[N_sex]; //female aggression measurements</span></span>
+<span id="cb170-18"><a href="fitness-model.html#cb170-18" aria-hidden="true" tabindex="-1"></a><span class="st">  real time[N_sex]; //time index (=1 for all measures)</span></span>
+<span id="cb170-19"><a href="fitness-model.html#cb170-19" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-20"><a href="fitness-model.html#cb170-20" aria-hidden="true" tabindex="-1"></a><span class="st">  //new fitness data</span></span>
+<span id="cb170-21"><a href="fitness-model.html#cb170-21" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; Idyad; //number of dyads</span></span>
+<span id="cb170-22"><a href="fitness-model.html#cb170-22" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; idmw[Idyad]; //index of male w observations</span></span>
+<span id="cb170-23"><a href="fitness-model.html#cb170-23" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; idfw[Idyad]; //index of female w observations</span></span>
+<span id="cb170-24"><a href="fitness-model.html#cb170-24" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=1&gt; dyadw[Idyad]; //index of dyads for FS</span></span>
+<span id="cb170-25"><a href="fitness-model.html#cb170-25" aria-hidden="true" tabindex="-1"></a><span class="st">  real w[Idyad]; // dyad response</span></span>
+<span id="cb170-26"><a href="fitness-model.html#cb170-26" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb170-27"><a href="fitness-model.html#cb170-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-28"><a href="fitness-model.html#cb170-28" aria-hidden="true" tabindex="-1"></a><span class="st">transformed data{</span></span>
+<span id="cb170-29"><a href="fitness-model.html#cb170-29" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,I] LA = cholesky_decompose(A); //lower-triangle A matrix</span></span>
+<span id="cb170-30"><a href="fitness-model.html#cb170-30" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-31"><a href="fitness-model.html#cb170-31" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb170-32"><a href="fitness-model.html#cb170-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-33"><a href="fitness-model.html#cb170-33" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
+<span id="cb170-34"><a href="fitness-model.html#cb170-34" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-35"><a href="fitness-model.html#cb170-35" aria-hidden="true" tabindex="-1"></a><span class="st">  //new fitness parameters</span></span>
+<span id="cb170-36"><a href="fitness-model.html#cb170-36" aria-hidden="true" tabindex="-1"></a><span class="st">  real nu_0; //fitness global intercept</span></span>
+<span id="cb170-37"><a href="fitness-model.html#cb170-37" aria-hidden="true" tabindex="-1"></a><span class="st">  real&lt;lower=0, upper = 1&gt;sd_delta; //residual of fitness</span></span>
+<span id="cb170-38"><a href="fitness-model.html#cb170-38" aria-hidden="true" tabindex="-1"></a><span class="st">  real beta_N1; //selection gradients</span></span>
+<span id="cb170-39"><a href="fitness-model.html#cb170-39" aria-hidden="true" tabindex="-1"></a><span class="st">  real beta_N2; //could also be specified as vectors</span></span>
+<span id="cb170-40"><a href="fitness-model.html#cb170-40" aria-hidden="true" tabindex="-1"></a><span class="st">  real beta_S1; </span></span>
+<span id="cb170-41"><a href="fitness-model.html#cb170-41" aria-hidden="true" tabindex="-1"></a><span class="st">  real beta_S2;</span></span>
+<span id="cb170-42"><a href="fitness-model.html#cb170-42" aria-hidden="true" tabindex="-1"></a><span class="st">  real beta_I1;</span></span>
+<span id="cb170-43"><a href="fitness-model.html#cb170-43" aria-hidden="true" tabindex="-1"></a><span class="st">  real beta_I2;</span></span>
+<span id="cb170-44"><a href="fitness-model.html#cb170-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-45"><a href="fitness-model.html#cb170-45" aria-hidden="true" tabindex="-1"></a><span class="st">  //population effects</span></span>
+<span id="cb170-46"><a href="fitness-model.html#cb170-46" aria-hidden="true" tabindex="-1"></a><span class="st">  real alpha_0; //aggression global intercept</span></span>
+<span id="cb170-47"><a href="fitness-model.html#cb170-47" aria-hidden="true" tabindex="-1"></a><span class="st">  real psi_1; //expected interaction coefficient</span></span>
+<span id="cb170-48"><a href="fitness-model.html#cb170-48" aria-hidden="true" tabindex="-1"></a><span class="st">  real beta_B; //between partner effect</span></span>
+<span id="cb170-49"><a href="fitness-model.html#cb170-49" aria-hidden="true" tabindex="-1"></a><span class="st">  real&lt;lower=-1,upper=1&gt; phi; //(-1,1) ensures unique solution</span></span>
+<span id="cb170-50"><a href="fitness-model.html#cb170-50" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-51"><a href="fitness-model.html#cb170-51" aria-hidden="true" tabindex="-1"></a><span class="st">  //no way to partition feedback when t=1</span></span>
+<span id="cb170-52"><a href="fitness-model.html#cb170-52" aria-hidden="true" tabindex="-1"></a><span class="st">  //real&lt;lower=-1,upper=1&gt; phi; //(-1,1) ensures unique solution</span></span>
+<span id="cb170-53"><a href="fitness-model.html#cb170-53" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-54"><a href="fitness-model.html#cb170-54" aria-hidden="true" tabindex="-1"></a><span class="st">  //random effects (standard deviations)</span></span>
+<span id="cb170-55"><a href="fitness-model.html#cb170-55" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0, upper = 1&gt;[2] sd_P; //phenotypic SRN mu &amp; psi SDs</span></span>
+<span id="cb170-56"><a href="fitness-model.html#cb170-56" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0, upper = 1&gt;[2] sd_R; //male &amp; female residual SDs</span></span>
+<span id="cb170-57"><a href="fitness-model.html#cb170-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-58"><a href="fitness-model.html#cb170-58" aria-hidden="true" tabindex="-1"></a><span class="st">  cholesky_factor_corr[2] LG; //genetic SRN correlations</span></span>
+<span id="cb170-59"><a href="fitness-model.html#cb170-59" aria-hidden="true" tabindex="-1"></a><span class="st">  cholesky_factor_corr[2] LE; //permanent environmental SRN correlations</span></span>
+<span id="cb170-60"><a href="fitness-model.html#cb170-60" aria-hidden="true" tabindex="-1"></a><span class="st">  cholesky_factor_corr[2] LR; //sex-specific residual correlations</span></span>
+<span id="cb170-61"><a href="fitness-model.html#cb170-61" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-62"><a href="fitness-model.html#cb170-62" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] std_devG; //individual-level unscaled G SRN deviations</span></span>
+<span id="cb170-63"><a href="fitness-model.html#cb170-63" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] std_devE; //individual-level unscaled E SRN deviations</span></span>
+<span id="cb170-64"><a href="fitness-model.html#cb170-64" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-65"><a href="fitness-model.html#cb170-65" aria-hidden="true" tabindex="-1"></a><span class="st">  //SRN heritability parmameters, i.e. Var(G_RN) / Var(P_RN) </span></span>
+<span id="cb170-66"><a href="fitness-model.html#cb170-66" aria-hidden="true" tabindex="-1"></a><span class="st">  //see supplementary appendix SI for further explanation of this parameter</span></span>
+<span id="cb170-67"><a href="fitness-model.html#cb170-67" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0,upper=1&gt;[2] SRN_h2;</span></span>
+<span id="cb170-68"><a href="fitness-model.html#cb170-68" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb170-69"><a href="fitness-model.html#cb170-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-70"><a href="fitness-model.html#cb170-70" aria-hidden="true" tabindex="-1"></a><span class="st">transformed parameters {</span></span>
+<span id="cb170-71"><a href="fitness-model.html#cb170-71" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0&gt;[2] sd_G; //SDs of G effects (derived from sd_P)</span></span>
+<span id="cb170-72"><a href="fitness-model.html#cb170-72" aria-hidden="true" tabindex="-1"></a><span class="st">  vector&lt;lower=0&gt;[2] sd_E; //SDs of E effects (derived from sd_P)</span></span>
+<span id="cb170-73"><a href="fitness-model.html#cb170-73" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-74"><a href="fitness-model.html#cb170-74" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] SRN_P; //scaled P SRN parameter deviations</span></span>
+<span id="cb170-75"><a href="fitness-model.html#cb170-75" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] SRN_G; //scaled G SRN parameter deviations</span></span>
+<span id="cb170-76"><a href="fitness-model.html#cb170-76" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[I,2] SRN_E; //scaled E SRN parameter deviations</span></span>
+<span id="cb170-77"><a href="fitness-model.html#cb170-77" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-78"><a href="fitness-model.html#cb170-78" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[If, 2] partner_meanm; //average SRN parameters of males&#39; partners</span></span>
+<span id="cb170-79"><a href="fitness-model.html#cb170-79" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[Im, 2] partner_meanf; //average SRN parameters of females&#39; partners</span></span>
+<span id="cb170-80"><a href="fitness-model.html#cb170-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-81"><a href="fitness-model.html#cb170-81" aria-hidden="true" tabindex="-1"></a><span class="st">  //standard deviations of genetic effects</span></span>
+<span id="cb170-82"><a href="fitness-model.html#cb170-82" aria-hidden="true" tabindex="-1"></a><span class="st">  //simplified from sqrt ( total RN phenotype variance * h2 )</span></span>
+<span id="cb170-83"><a href="fitness-model.html#cb170-83" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_G[1] = sd_P[1] * sqrt(SRN_h2[1]); //genetic SD for RN intercepts </span></span>
+<span id="cb170-84"><a href="fitness-model.html#cb170-84" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_G[2] = sd_P[2] * sqrt(SRN_h2[2]);  //genetic SD for RN slopes</span></span>
+<span id="cb170-85"><a href="fitness-model.html#cb170-85" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-86"><a href="fitness-model.html#cb170-86" aria-hidden="true" tabindex="-1"></a><span class="st">  //standard deviations of environmental effects (total phenotype SD * proportion environment SD)</span></span>
+<span id="cb170-87"><a href="fitness-model.html#cb170-87" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_E[1] = sd_P[1] * sqrt(1 - SRN_h2[1]); //environment SD for RN intercepts </span></span>
+<span id="cb170-88"><a href="fitness-model.html#cb170-88" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_E[2] = sd_P[2] * sqrt(1 - SRN_h2[2]); //environment SD for RN slopes </span></span>
+<span id="cb170-89"><a href="fitness-model.html#cb170-89" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-90"><a href="fitness-model.html#cb170-90" aria-hidden="true" tabindex="-1"></a><span class="st">  //matrix normal parameterization of Kronecker product between G and A</span></span>
+<span id="cb170-91"><a href="fitness-model.html#cb170-91" aria-hidden="true" tabindex="-1"></a><span class="st">  SRN_G =  LA * std_devG  * diag_pre_multiply(sd_G, LG)&#39; ; </span></span>
+<span id="cb170-92"><a href="fitness-model.html#cb170-92" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-93"><a href="fitness-model.html#cb170-93" aria-hidden="true" tabindex="-1"></a><span class="st">  //non-centered parameterization of permanent environmental effects</span></span>
+<span id="cb170-94"><a href="fitness-model.html#cb170-94" aria-hidden="true" tabindex="-1"></a><span class="st">  SRN_E = std_devE * diag_pre_multiply(sd_E, LE)&#39;;</span></span>
+<span id="cb170-95"><a href="fitness-model.html#cb170-95" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-96"><a href="fitness-model.html#cb170-96" aria-hidden="true" tabindex="-1"></a><span class="st">  //phenotypic RN effects (P = G + E); here G = additive genetic effects</span></span>
+<span id="cb170-97"><a href="fitness-model.html#cb170-97" aria-hidden="true" tabindex="-1"></a><span class="st">  SRN_P = SRN_G + SRN_E;</span></span>
+<span id="cb170-98"><a href="fitness-model.html#cb170-98" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-99"><a href="fitness-model.html#cb170-99" aria-hidden="true" tabindex="-1"></a><span class="st">  //calculate the mean SRN parameters of each male&#39;s lifetime partners</span></span>
+<span id="cb170-100"><a href="fitness-model.html#cb170-100" aria-hidden="true" tabindex="-1"></a><span class="st">  for(i in 1:Im) partner_meanm[i] = [mean(col(SRN_P[partners_m[i,2:5]],1)),</span></span>
+<span id="cb170-101"><a href="fitness-model.html#cb170-101" aria-hidden="true" tabindex="-1"></a><span class="st">                                mean(col(SRN_P[partners_m[i,2:5]],2))];</span></span>
+<span id="cb170-102"><a href="fitness-model.html#cb170-102" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-103"><a href="fitness-model.html#cb170-103" aria-hidden="true" tabindex="-1"></a><span class="st">  //calculate the mean SRN parameters of each female&#39;s lifetime partners</span></span>
+<span id="cb170-104"><a href="fitness-model.html#cb170-104" aria-hidden="true" tabindex="-1"></a><span class="st">  for(i in 1:If) partner_meanf[i] = [mean(col(SRN_P[partners_f[i,2:5]],1)),</span></span>
+<span id="cb170-105"><a href="fitness-model.html#cb170-105" aria-hidden="true" tabindex="-1"></a><span class="st">                                mean(col(SRN_P[partners_f[i,2:5]],2))];</span></span>
+<span id="cb170-106"><a href="fitness-model.html#cb170-106" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-107"><a href="fitness-model.html#cb170-107" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb170-108"><a href="fitness-model.html#cb170-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-109"><a href="fitness-model.html#cb170-109" aria-hidden="true" tabindex="-1"></a><span class="st">model{</span></span>
+<span id="cb170-110"><a href="fitness-model.html#cb170-110" aria-hidden="true" tabindex="-1"></a><span class="st"> //separate male and female vectors for efficiency</span></span>
+<span id="cb170-111"><a href="fitness-model.html#cb170-111" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[Im,2] SRN_Pm = SRN_P[1:Im]; //male SRN phenotypic deviations</span></span>
+<span id="cb170-112"><a href="fitness-model.html#cb170-112" aria-hidden="true" tabindex="-1"></a><span class="st">  matrix[If,2] SRN_Pf = SRN_P[(Im+1):I]; //female SRN phenotypic deviations</span></span>
+<span id="cb170-113"><a href="fitness-model.html#cb170-113" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-114"><a href="fitness-model.html#cb170-114" aria-hidden="true" tabindex="-1"></a><span class="st">  //separate SRN intercepts and slopes (phenotypic deviations)</span></span>
+<span id="cb170-115"><a href="fitness-model.html#cb170-115" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[Im] mu_m = col(SRN_Pm,1); //SRN intercepts</span></span>
+<span id="cb170-116"><a href="fitness-model.html#cb170-116" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[If] mu_f = col(SRN_Pf,1); </span></span>
+<span id="cb170-117"><a href="fitness-model.html#cb170-117" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[Im] psi_m = col(SRN_Pm,2); //SRN slopes</span></span>
+<span id="cb170-118"><a href="fitness-model.html#cb170-118" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[If] psi_f = col(SRN_Pf,2); </span></span>
+<span id="cb170-119"><a href="fitness-model.html#cb170-119" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-120"><a href="fitness-model.html#cb170-120" aria-hidden="true" tabindex="-1"></a><span class="st">  //separate mean partner SRN intercepts and slopes (deviations)</span></span>
+<span id="cb170-121"><a href="fitness-model.html#cb170-121" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[Im] mu_meanm = col(partner_meanm,1); //mean partner SRN intercept for males</span></span>
+<span id="cb170-122"><a href="fitness-model.html#cb170-122" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[If] mu_meanf = col(partner_meanf,1); //...for females</span></span>
+<span id="cb170-123"><a href="fitness-model.html#cb170-123" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[Im] psi_meanm = col(partner_meanm,2); //mean partner SRN slope for males</span></span>
+<span id="cb170-124"><a href="fitness-model.html#cb170-124" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[If] psi_meanf = col(partner_meanf,2); //...for females </span></span>
+<span id="cb170-125"><a href="fitness-model.html#cb170-125" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-126"><a href="fitness-model.html#cb170-126" aria-hidden="true" tabindex="-1"></a><span class="st">  //initialize vectors for constructing individual-centered linear predictors</span></span>
+<span id="cb170-127"><a href="fitness-model.html#cb170-127" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] eta_Wm; //within-individual centered male SRN trait value </span></span>
+<span id="cb170-128"><a href="fitness-model.html#cb170-128" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] eta_Wf; //within-individual centered female SRN trait value</span></span>
+<span id="cb170-129"><a href="fitness-model.html#cb170-129" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-130"><a href="fitness-model.html#cb170-130" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] eta_Bm; //individual male SRN trait value toward average partner </span></span>
+<span id="cb170-131"><a href="fitness-model.html#cb170-131" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] eta_Bf; //individual female SRN trait toward average partner</span></span>
+<span id="cb170-132"><a href="fitness-model.html#cb170-132" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] eta_meanm; //average SRN partner values for males</span></span>
+<span id="cb170-133"><a href="fitness-model.html#cb170-133" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] eta_meanf; //average SRN partner values for females</span></span>
+<span id="cb170-134"><a href="fitness-model.html#cb170-134" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-135"><a href="fitness-model.html#cb170-135" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] linpred_m; //expected value for male responses</span></span>
+<span id="cb170-136"><a href="fitness-model.html#cb170-136" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] linpred_f; //expected value for female responses</span></span>
+<span id="cb170-137"><a href="fitness-model.html#cb170-137" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] epsilon_m; //residuals for male responses</span></span>
+<span id="cb170-138"><a href="fitness-model.html#cb170-138" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[N_sex] epsilon_f; //residuals for male responses</span></span>
+<span id="cb170-139"><a href="fitness-model.html#cb170-139" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-140"><a href="fitness-model.html#cb170-140" aria-hidden="true" tabindex="-1"></a><span class="st">  //new fitness model declarations</span></span>
+<span id="cb170-141"><a href="fitness-model.html#cb170-141" aria-hidden="true" tabindex="-1"></a><span class="st">  vector[Idyad] w_pred; //linear predictor of fitness</span></span>
+<span id="cb170-142"><a href="fitness-model.html#cb170-142" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-143"><a href="fitness-model.html#cb170-143" aria-hidden="true" tabindex="-1"></a><span class="st">  //Male and female aggression response model</span></span>
+<span id="cb170-144"><a href="fitness-model.html#cb170-144" aria-hidden="true" tabindex="-1"></a><span class="st">  for (n in 1:N_sex) {</span></span>
+<span id="cb170-145"><a href="fitness-model.html#cb170-145" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb170-146"><a href="fitness-model.html#cb170-146" aria-hidden="true" tabindex="-1"></a><span class="st">    //SRN trait values</span></span>
+<span id="cb170-147"><a href="fitness-model.html#cb170-147" aria-hidden="true" tabindex="-1"></a><span class="st">    //assumes that n = 1 in the context of an ongoing social interaction</span></span>
+<span id="cb170-148"><a href="fitness-model.html#cb170-148" aria-hidden="true" tabindex="-1"></a><span class="st">    //if n = 1 prior to social context, then specify eta[t=1] = mu_j instead</span></span>
+<span id="cb170-149"><a href="fitness-model.html#cb170-149" aria-hidden="true" tabindex="-1"></a><span class="st">    if (time[n]==1)</span></span>
+<span id="cb170-150"><a href="fitness-model.html#cb170-150" aria-hidden="true" tabindex="-1"></a><span class="st">      {</span></span>
+<span id="cb170-151"><a href="fitness-model.html#cb170-151" aria-hidden="true" tabindex="-1"></a><span class="st">        //within-individual centered eta</span></span>
+<span id="cb170-152"><a href="fitness-model.html#cb170-152" aria-hidden="true" tabindex="-1"></a><span class="st">        //male eta[t=1] = mu_j + psi_j*(mu_k - mu_meanK)</span></span>
+<span id="cb170-153"><a href="fitness-model.html#cb170-153" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_Wm[n] = mu_m[idm[n]] +  (psi_1 + psi_m[idm[n]])*(mu_f[idf[n]] - mu_meanm[idm[n]]) ;</span></span>
+<span id="cb170-154"><a href="fitness-model.html#cb170-154" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb170-155"><a href="fitness-model.html#cb170-155" aria-hidden="true" tabindex="-1"></a><span class="st">        //female eta[t=1] = mu_k + psi_k*(mu_j - mu_meanJ)</span></span>
+<span id="cb170-156"><a href="fitness-model.html#cb170-156" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_Wf[n] = mu_f[idf[n]] +   (psi_1 + psi_f[idf[n]])*(mu_m[idm[n]] - mu_meanf[idf[n]]);</span></span>
+<span id="cb170-157"><a href="fitness-model.html#cb170-157" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb170-158"><a href="fitness-model.html#cb170-158" aria-hidden="true" tabindex="-1"></a><span class="st">        //average individual eta</span></span>
+<span id="cb170-159"><a href="fitness-model.html#cb170-159" aria-hidden="true" tabindex="-1"></a><span class="st">        //male eta[t=1] = mu_j + psi_j*mu_k</span></span>
+<span id="cb170-160"><a href="fitness-model.html#cb170-160" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_Bm[n] =   (psi_1 + psi_m[idm[n]])*mu_meanm[idm[n]];</span></span>
+<span id="cb170-161"><a href="fitness-model.html#cb170-161" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb170-162"><a href="fitness-model.html#cb170-162" aria-hidden="true" tabindex="-1"></a><span class="st">        //female eta[t=1] = mu_k + psi_k*mu_j</span></span>
+<span id="cb170-163"><a href="fitness-model.html#cb170-163" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_Bf[n] =   (psi_1 + psi_f[idf[n]])*mu_meanf[idf[n]];</span></span>
+<span id="cb170-164"><a href="fitness-model.html#cb170-164" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb170-165"><a href="fitness-model.html#cb170-165" aria-hidden="true" tabindex="-1"></a><span class="st">        //average partner eta[t=1]</span></span>
+<span id="cb170-166"><a href="fitness-model.html#cb170-166" aria-hidden="true" tabindex="-1"></a><span class="st">        //average eta males&#39; partners [t=1] = mu_meanK + psi_meanK*mu_j</span></span>
+<span id="cb170-167"><a href="fitness-model.html#cb170-167" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_meanm[n] = mu_meanm[idm[n]] +   (psi_1 + psi_meanm[idm[n]])*mu_m[idm[n]];</span></span>
+<span id="cb170-168"><a href="fitness-model.html#cb170-168" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb170-169"><a href="fitness-model.html#cb170-169" aria-hidden="true" tabindex="-1"></a><span class="st">        //average eta females&#39; partners [t=1] = mu_meanJ + psi_meanJ*mu_k</span></span>
+<span id="cb170-170"><a href="fitness-model.html#cb170-170" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_meanf[n] = mu_meanf[idf[n]] +   (psi_1 + psi_meanf[idf[n]])*mu_f[idf[n]];</span></span>
+<span id="cb170-171"><a href="fitness-model.html#cb170-171" aria-hidden="true" tabindex="-1"></a><span class="st">      }    </span></span>
+<span id="cb170-172"><a href="fitness-model.html#cb170-172" aria-hidden="true" tabindex="-1"></a><span class="st">    else</span></span>
+<span id="cb170-173"><a href="fitness-model.html#cb170-173" aria-hidden="true" tabindex="-1"></a><span class="st">      {</span></span>
+<span id="cb170-174"><a href="fitness-model.html#cb170-174" aria-hidden="true" tabindex="-1"></a><span class="st">        //within-individual centered eta</span></span>
+<span id="cb170-175"><a href="fitness-model.html#cb170-175" aria-hidden="true" tabindex="-1"></a><span class="st">        //male eta[t=2] = mu_j + psi_j*(eta_k[t=1] - eta_meanK[t=1])</span></span>
+<span id="cb170-176"><a href="fitness-model.html#cb170-176" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_Wm[n] = mu_m[idm[n]] +   (psi_1 + psi_m[idm[n]])*(eta_Wf[n-1] - eta_meanm[n-1]);</span></span>
+<span id="cb170-177"><a href="fitness-model.html#cb170-177" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb170-178"><a href="fitness-model.html#cb170-178" aria-hidden="true" tabindex="-1"></a><span class="st">        //female eta[t=2] = mu_k + psi_k*(eta_j[t=1] - eta_meanJ[t=1])</span></span>
+<span id="cb170-179"><a href="fitness-model.html#cb170-179" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_Wf[n] = mu_f[idf[n]] +   (psi_1 + psi_f[idf[n]])*(eta_Wm[n-1] - eta_meanf[n-1]);</span></span>
+<span id="cb170-180"><a href="fitness-model.html#cb170-180" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb170-181"><a href="fitness-model.html#cb170-181" aria-hidden="true" tabindex="-1"></a><span class="st">        //average individual eta</span></span>
+<span id="cb170-182"><a href="fitness-model.html#cb170-182" aria-hidden="true" tabindex="-1"></a><span class="st">        //male average eta[t=2] = mu_j + psi_j*eta_meanK[t=1]</span></span>
+<span id="cb170-183"><a href="fitness-model.html#cb170-183" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_Bm[n] =  (psi_1 + psi_m[idm[n]])*eta_meanm[n-1];</span></span>
+<span id="cb170-184"><a href="fitness-model.html#cb170-184" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb170-185"><a href="fitness-model.html#cb170-185" aria-hidden="true" tabindex="-1"></a><span class="st">        //female average eta[t=2] = mu_k + psi_k*eta_meanJ[t=1]</span></span>
+<span id="cb170-186"><a href="fitness-model.html#cb170-186" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_Bf[n] =  (psi_1 + psi_f[idf[n]])*eta_meanf[n-1];</span></span>
+<span id="cb170-187"><a href="fitness-model.html#cb170-187" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb170-188"><a href="fitness-model.html#cb170-188" aria-hidden="true" tabindex="-1"></a><span class="st">        //average eta males&#39; partners [t=1] = mu_meanK + psi_meanK*mean eta_j[t-1]</span></span>
+<span id="cb170-189"><a href="fitness-model.html#cb170-189" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_meanm[n] = mu_meanm[idm[n]] +  (psi_1 + psi_meanm[idm[n]])*(mu_m[idm[n]] + eta_Bm[n-1]);</span></span>
+<span id="cb170-190"><a href="fitness-model.html#cb170-190" aria-hidden="true" tabindex="-1"></a><span class="st">        </span></span>
+<span id="cb170-191"><a href="fitness-model.html#cb170-191" aria-hidden="true" tabindex="-1"></a><span class="st">        //female average partner eta</span></span>
+<span id="cb170-192"><a href="fitness-model.html#cb170-192" aria-hidden="true" tabindex="-1"></a><span class="st">        eta_meanf[n] = mu_meanf[idf[n]] +  (psi_1 + psi_meanf[idf[n]])*(mu_f[idf[n]] +   eta_Bf[n-1]); </span></span>
+<span id="cb170-193"><a href="fitness-model.html#cb170-193" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb170-194"><a href="fitness-model.html#cb170-194" aria-hidden="true" tabindex="-1"></a><span class="st">    </span></span>
+<span id="cb170-195"><a href="fitness-model.html#cb170-195" aria-hidden="true" tabindex="-1"></a><span class="st">    //add global intercept and between-individual parameters to linear predictor</span></span>
+<span id="cb170-196"><a href="fitness-model.html#cb170-196" aria-hidden="true" tabindex="-1"></a><span class="st">    //other fixed effects can also be added here</span></span>
+<span id="cb170-197"><a href="fitness-model.html#cb170-197" aria-hidden="true" tabindex="-1"></a><span class="st">    linpred_m[n] = alpha_0 + eta_Wm[n] + beta_B*eta_Bm[n]; //+beta_B*eta_Bm[n]</span></span>
+<span id="cb170-198"><a href="fitness-model.html#cb170-198" aria-hidden="true" tabindex="-1"></a><span class="st">    linpred_f[n] = alpha_0 + eta_Wf[n] + beta_B*eta_Bf[n]; //+beta_B*eta_Bf[n]</span></span>
+<span id="cb170-199"><a href="fitness-model.html#cb170-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-200"><a href="fitness-model.html#cb170-200" aria-hidden="true" tabindex="-1"></a><span class="st">    //residual trait values</span></span>
+<span id="cb170-201"><a href="fitness-model.html#cb170-201" aria-hidden="true" tabindex="-1"></a><span class="st">    if(time[n]==1)</span></span>
+<span id="cb170-202"><a href="fitness-model.html#cb170-202" aria-hidden="true" tabindex="-1"></a><span class="st">      {</span></span>
+<span id="cb170-203"><a href="fitness-model.html#cb170-203" aria-hidden="true" tabindex="-1"></a><span class="st">        epsilon_m [n] = AG_m[n] - linpred_m[n];</span></span>
+<span id="cb170-204"><a href="fitness-model.html#cb170-204" aria-hidden="true" tabindex="-1"></a><span class="st">        epsilon_f [n] = AG_f[n] - linpred_f[n];</span></span>
+<span id="cb170-205"><a href="fitness-model.html#cb170-205" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb170-206"><a href="fitness-model.html#cb170-206" aria-hidden="true" tabindex="-1"></a><span class="st">    else</span></span>
+<span id="cb170-207"><a href="fitness-model.html#cb170-207" aria-hidden="true" tabindex="-1"></a><span class="st">      {</span></span>
+<span id="cb170-208"><a href="fitness-model.html#cb170-208" aria-hidden="true" tabindex="-1"></a><span class="st">       linpred_m[n] = linpred_m[n] + phi * epsilon_f[n-1];</span></span>
+<span id="cb170-209"><a href="fitness-model.html#cb170-209" aria-hidden="true" tabindex="-1"></a><span class="st">       epsilon_m[n] = AG_m[n] - linpred_m[n]; </span></span>
+<span id="cb170-210"><a href="fitness-model.html#cb170-210" aria-hidden="true" tabindex="-1"></a><span class="st">       </span></span>
+<span id="cb170-211"><a href="fitness-model.html#cb170-211" aria-hidden="true" tabindex="-1"></a><span class="st">       linpred_f[n] = linpred_f[n] + phi * epsilon_m[n-1];</span></span>
+<span id="cb170-212"><a href="fitness-model.html#cb170-212" aria-hidden="true" tabindex="-1"></a><span class="st">       epsilon_f[n] = AG_f[n] - linpred_f[n]; </span></span>
+<span id="cb170-213"><a href="fitness-model.html#cb170-213" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb170-214"><a href="fitness-model.html#cb170-214" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-215"><a href="fitness-model.html#cb170-215" aria-hidden="true" tabindex="-1"></a><span class="st">    //correlated residuals between partners</span></span>
+<span id="cb170-216"><a href="fitness-model.html#cb170-216" aria-hidden="true" tabindex="-1"></a><span class="st">    [epsilon_m[n],epsilon_f[n]]&#39; ~ multi_normal_cholesky([0,0], diag_pre_multiply(sd_R, LR));</span></span>
+<span id="cb170-217"><a href="fitness-model.html#cb170-217" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb170-218"><a href="fitness-model.html#cb170-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-219"><a href="fitness-model.html#cb170-219" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-220"><a href="fitness-model.html#cb170-220" aria-hidden="true" tabindex="-1"></a><span class="st">  //new fitness model</span></span>
+<span id="cb170-221"><a href="fitness-model.html#cb170-221" aria-hidden="true" tabindex="-1"></a><span class="st">  w_pred = nu_0 + beta_N1*mu_m[idmw] + beta_N2*psi_m[idmw] + beta_S1*mu_f[idfw] + beta_S2*psi_f[idfw] + </span></span>
+<span id="cb170-222"><a href="fitness-model.html#cb170-222" aria-hidden="true" tabindex="-1"></a><span class="st">                  beta_I1*(mu_m[idmw].*mu_f[idfw]) + beta_I2*(psi_m[idmw].*psi_f[idfw]);</span></span>
+<span id="cb170-223"><a href="fitness-model.html#cb170-223" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-224"><a href="fitness-model.html#cb170-224" aria-hidden="true" tabindex="-1"></a><span class="st">  w ~ normal(w_pred, sd_delta);</span></span>
+<span id="cb170-225"><a href="fitness-model.html#cb170-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-226"><a href="fitness-model.html#cb170-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-227"><a href="fitness-model.html#cb170-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-228"><a href="fitness-model.html#cb170-228" aria-hidden="true" tabindex="-1"></a><span class="st">//model priors</span></span>
+<span id="cb170-229"><a href="fitness-model.html#cb170-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-230"><a href="fitness-model.html#cb170-230" aria-hidden="true" tabindex="-1"></a><span class="st">  //fixed effects</span></span>
+<span id="cb170-231"><a href="fitness-model.html#cb170-231" aria-hidden="true" tabindex="-1"></a><span class="st">  alpha_0 ~ std_normal();</span></span>
+<span id="cb170-232"><a href="fitness-model.html#cb170-232" aria-hidden="true" tabindex="-1"></a><span class="st">  psi_1 ~ std_normal();</span></span>
+<span id="cb170-233"><a href="fitness-model.html#cb170-233" aria-hidden="true" tabindex="-1"></a><span class="st">  beta_B ~ std_normal();</span></span>
+<span id="cb170-234"><a href="fitness-model.html#cb170-234" aria-hidden="true" tabindex="-1"></a><span class="st">  phi ~ std_normal();</span></span>
+<span id="cb170-235"><a href="fitness-model.html#cb170-235" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-236"><a href="fitness-model.html#cb170-236" aria-hidden="true" tabindex="-1"></a><span class="st">  //random effects</span></span>
+<span id="cb170-237"><a href="fitness-model.html#cb170-237" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(sd_P) ~ cauchy(0,1);</span></span>
+<span id="cb170-238"><a href="fitness-model.html#cb170-238" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(sd_R) ~ cauchy(0,1);</span></span>
+<span id="cb170-239"><a href="fitness-model.html#cb170-239" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-240"><a href="fitness-model.html#cb170-240" aria-hidden="true" tabindex="-1"></a><span class="st">  LG ~ lkj_corr_cholesky(2);</span></span>
+<span id="cb170-241"><a href="fitness-model.html#cb170-241" aria-hidden="true" tabindex="-1"></a><span class="st">  LE ~ lkj_corr_cholesky(2);</span></span>
+<span id="cb170-242"><a href="fitness-model.html#cb170-242" aria-hidden="true" tabindex="-1"></a><span class="st">  LR ~ lkj_corr_cholesky(2);</span></span>
+<span id="cb170-243"><a href="fitness-model.html#cb170-243" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-244"><a href="fitness-model.html#cb170-244" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(std_devG) ~ std_normal();</span></span>
+<span id="cb170-245"><a href="fitness-model.html#cb170-245" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(std_devE) ~ std_normal();</span></span>
+<span id="cb170-246"><a href="fitness-model.html#cb170-246" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-247"><a href="fitness-model.html#cb170-247" aria-hidden="true" tabindex="-1"></a><span class="st">  //reaction norm heritability</span></span>
+<span id="cb170-248"><a href="fitness-model.html#cb170-248" aria-hidden="true" tabindex="-1"></a><span class="st">  to_vector(SRN_h2) ~ beta(1.2,1.2);</span></span>
+<span id="cb170-249"><a href="fitness-model.html#cb170-249" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-250"><a href="fitness-model.html#cb170-250" aria-hidden="true" tabindex="-1"></a><span class="st">  //new fitness priors</span></span>
+<span id="cb170-251"><a href="fitness-model.html#cb170-251" aria-hidden="true" tabindex="-1"></a><span class="st">  nu_0 ~ std_normal();</span></span>
+<span id="cb170-252"><a href="fitness-model.html#cb170-252" aria-hidden="true" tabindex="-1"></a><span class="st">  sd_delta ~ cauchy(0,1);</span></span>
+<span id="cb170-253"><a href="fitness-model.html#cb170-253" aria-hidden="true" tabindex="-1"></a><span class="st">  beta_N1 ~ std_normal();</span></span>
+<span id="cb170-254"><a href="fitness-model.html#cb170-254" aria-hidden="true" tabindex="-1"></a><span class="st">  beta_N2 ~ std_normal();</span></span>
+<span id="cb170-255"><a href="fitness-model.html#cb170-255" aria-hidden="true" tabindex="-1"></a><span class="st">  beta_S1 ~ std_normal();</span></span>
+<span id="cb170-256"><a href="fitness-model.html#cb170-256" aria-hidden="true" tabindex="-1"></a><span class="st">  beta_S2 ~ std_normal();</span></span>
+<span id="cb170-257"><a href="fitness-model.html#cb170-257" aria-hidden="true" tabindex="-1"></a><span class="st">  beta_I1 ~ std_normal();</span></span>
+<span id="cb170-258"><a href="fitness-model.html#cb170-258" aria-hidden="true" tabindex="-1"></a><span class="st">  beta_I2 ~ std_normal();</span></span>
+<span id="cb170-259"><a href="fitness-model.html#cb170-259" aria-hidden="true" tabindex="-1"></a><span class="st">  </span></span>
+<span id="cb170-260"><a href="fitness-model.html#cb170-260" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb170-261"><a href="fitness-model.html#cb170-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-262"><a href="fitness-model.html#cb170-262" aria-hidden="true" tabindex="-1"></a><span class="st">generated quantities{</span></span>
+<span id="cb170-263"><a href="fitness-model.html#cb170-263" aria-hidden="true" tabindex="-1"></a><span class="st">//cor and cov matrices of SRN parameters and residuals</span></span>
+<span id="cb170-264"><a href="fitness-model.html#cb170-264" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Gcor = LG * LG&#39;; //G SRN correlation matric</span></span>
+<span id="cb170-265"><a href="fitness-model.html#cb170-265" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Ecor = LE * LE&#39;; //E SRN correlation matric</span></span>
+<span id="cb170-266"><a href="fitness-model.html#cb170-266" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Rcor = LR * LR&#39;; //residual correlation matrix</span></span>
+<span id="cb170-267"><a href="fitness-model.html#cb170-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-268"><a href="fitness-model.html#cb170-268" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Rcov = diag_matrix(sd_R)*Rcor*diag_matrix(sd_R); //residual covariance</span></span>
+<span id="cb170-269"><a href="fitness-model.html#cb170-269" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Gcov = diag_matrix(sd_G)*Gcor*diag_matrix(sd_G); //G SRN covariance</span></span>
+<span id="cb170-270"><a href="fitness-model.html#cb170-270" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Ecov = diag_matrix(sd_E)*Ecor*diag_matrix(sd_E); //E SRN covariance</span></span>
+<span id="cb170-271"><a href="fitness-model.html#cb170-271" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Pcov = Gcov + Ecov; //P SRN covariance</span></span>
+<span id="cb170-272"><a href="fitness-model.html#cb170-272" aria-hidden="true" tabindex="-1"></a><span class="st">matrix[2,2] Pcor = inverse(diag_matrix(sd_P))*Pcov*inverse(diag_matrix(sd_P)); //P SRN correlation</span></span>
+<span id="cb170-273"><a href="fitness-model.html#cb170-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-274"><a href="fitness-model.html#cb170-274" aria-hidden="true" tabindex="-1"></a><span class="st">//variances</span></span>
+<span id="cb170-275"><a href="fitness-model.html#cb170-275" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_P = sd_P .* sd_P;</span></span>
+<span id="cb170-276"><a href="fitness-model.html#cb170-276" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_G = sd_G .* sd_G;</span></span>
+<span id="cb170-277"><a href="fitness-model.html#cb170-277" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_E = sd_E .* sd_E;</span></span>
+<span id="cb170-278"><a href="fitness-model.html#cb170-278" aria-hidden="true" tabindex="-1"></a><span class="st">vector&lt;lower=0&gt;[2] V_R = sd_R .* sd_R;</span></span>
+<span id="cb170-279"><a href="fitness-model.html#cb170-279" aria-hidden="true" tabindex="-1"></a><span class="st">}&quot;</span>, <span class="st">&quot;sam5_w.stan&quot;</span>)</span></code></pre></div>
+<p>Depending on the sample size set during the simulation, this model will likely take 30+ min to finish sampling. The total number of iterations can be reduced to save time, but is set to a large value here to ensure sufficient effective sample sizes for some parameters.</p>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="fitness-model.html#cb171-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
+<span id="cb171-2"><a href="fitness-model.html#cb171-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb171-3"><a href="fitness-model.html#cb171-3" aria-hidden="true" tabindex="-1"></a>sam_5 <span class="ot">=</span> <span class="fu">stan_model</span>(<span class="st">&quot;sam5_w.stan&quot;</span>)</span>
+<span id="cb171-4"><a href="fitness-model.html#cb171-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb171-5"><a href="fitness-model.html#cb171-5" aria-hidden="true" tabindex="-1"></a>stan_results5 <span class="ot">&lt;-</span> <span class="fu">sampling</span>(sam_5, <span class="at">data=</span>stan_data, <span class="at">init =</span> <span class="dv">0</span>, <span class="at">warmup=</span><span class="dv">1500</span>, <span class="at">iter =</span> <span class="dv">6000</span>,</span>
+<span id="cb171-6"><a href="fitness-model.html#cb171-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span>, <span class="at">control=</span><span class="fu">list</span>(<span class="at">adapt_delta=</span><span class="fl">0.90</span>) )</span>
+<span id="cb171-7"><a href="fitness-model.html#cb171-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb171-8"><a href="fitness-model.html#cb171-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bayesplot) </span>
+<span id="cb171-9"><a href="fitness-model.html#cb171-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_areas</span>(stan_results5, <span class="at">pars =</span> <span class="fu">c</span>( <span class="st">&quot;psi_1&quot;</span>, <span class="st">&quot;nu_0&quot;</span>, <span class="st">&quot;beta_B&quot;</span>, <span class="st">&quot;beta_N1&quot;</span>, <span class="st">&quot;beta_N2&quot;</span>,</span>
+<span id="cb171-10"><a href="fitness-model.html#cb171-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;beta_S1&quot;</span>, <span class="st">&quot;beta_S2&quot;</span>, <span class="st">&quot;beta_I1&quot;</span>, <span class="st">&quot;beta_I2&quot;</span>, <span class="st">&quot;V_P[1]&quot;</span>, <span class="st">&quot;V_P[2]&quot;</span>, <span class="st">&quot;Gcor[2,1]&quot;</span>, <span class="st">&quot;Ecor[2,1]&quot;</span>, <span class="st">&quot;Rcor[2,1]&quot;</span>, </span>
+<span id="cb171-11"><a href="fitness-model.html#cb171-11" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Pcor[2,1]&quot;</span>,  <span class="st">&quot;SRN_h2[1]&quot;</span>,  <span class="st">&quot;SRN_h2[2]&quot;</span>), <span class="at">prob =</span> <span class="fl">0.9</span> )</span></code></pre></div>
+<p><img src="SAMs_files/figure-html/unnamed-chunk-72-1.png" width="672" /></p>
+<p>The model appears to be accurately recovering the directions and relative magnitudes of the selection coefficients in the fitness model (beta_N1 = 0.3, beta_N2 = -0.3, beta_S1 = 0.3 beta_S2 = -0.3 beta_i1 = -0.3 beta_i2 = -0.3). We can further summarize all model parameters.</p>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="fitness-model.html#cb172-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(stan_results5, <span class="at">pars =</span> <span class="fu">c</span>( <span class="st">&quot;psi_1&quot;</span>, <span class="st">&quot;nu_0&quot;</span>, <span class="st">&quot;beta_B&quot;</span>, <span class="st">&quot;beta_N1&quot;</span>, <span class="st">&quot;beta_N2&quot;</span>,</span>
+<span id="cb172-2"><a href="fitness-model.html#cb172-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;beta_S1&quot;</span>, <span class="st">&quot;beta_S2&quot;</span>, <span class="st">&quot;beta_I1&quot;</span>, <span class="st">&quot;beta_I2&quot;</span>, <span class="st">&quot;V_P[1]&quot;</span>, <span class="st">&quot;V_P[2]&quot;</span>, <span class="st">&quot;Gcor[2,1]&quot;</span>, <span class="st">&quot;Ecor[2,1]&quot;</span>, <span class="st">&quot;Rcor[2,1]&quot;</span>, </span>
+<span id="cb172-3"><a href="fitness-model.html#cb172-3" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">&quot;Pcor[2,1]&quot;</span>,  <span class="st">&quot;SRN_h2[1]&quot;</span>,  <span class="st">&quot;SRN_h2[2]&quot;</span>), <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.05</span>,<span class="fl">0.95</span>))</span></code></pre></div>
+<pre><code>## $summary
+##                 mean      se_mean         sd          5%         95%      n_eff      Rhat
+## psi_1     -0.4527313 0.0008550073 0.08149778 -0.58779776 -0.31989746  9085.5654 1.0004493
+## nu_0       0.8776437 0.0006925249 0.07308187  0.75596780  0.99495608 11136.4957 1.0002941
+## beta_B     1.1032618 0.0008311257 0.09671123  0.94987500  1.26858872 13540.0547 1.0001706
+## beta_N1    0.3614423 0.0006161406 0.08048551  0.23139605  0.49736300 17063.7997 1.0000944
+## beta_N2   -0.3853030 0.0007796202 0.08619047 -0.52826220 -0.24598381 12222.2836 1.0000121
+## beta_S1    0.4855504 0.0006988276 0.08868769  0.34339269  0.63607499 16105.9580 1.0000800
+## beta_S2   -0.4508371 0.0007420408 0.08429997 -0.59289329 -0.31561720 12906.2275 1.0002689
+## beta_I1   -0.3853197 0.0008558324 0.11176652 -0.57397500 -0.20624867 17054.7755 1.0002271
+## beta_I2   -0.2759304 0.0012660441 0.12587964 -0.48866345 -0.07525791  9885.8353 1.0002466
+## V_P[1]     0.5175650 0.0008397614 0.06142572  0.42341172  0.62451039  5350.4302 1.0010683
+## V_P[2]     0.5807625 0.0009864920 0.07986853  0.45986324  0.72139489  6554.8724 1.0003965
+## Gcor[2,1]  0.5860291 0.0086088506 0.28714878  0.01436339  0.92092269  1112.5604 1.0065240
+## Ecor[2,1]  0.2971188 0.0038196074 0.12446080  0.08053505  0.47205656  1061.7633 1.0047172
+## Rcor[2,1] -0.2876013 0.0002076650 0.02980038 -0.33540736 -0.23798839 20592.8845 0.9998589
+## Pcor[2,1]  0.3743611 0.0007902797 0.06849605  0.25820605  0.48404871  7512.2381 1.0003543
+## SRN_h2[1]  0.2491618 0.0048778181 0.13288177  0.06075622  0.49173484   742.1294 1.0026756
+## SRN_h2[2]  0.2145549 0.0048879204 0.13285115  0.03528569  0.46530776   738.7243 1.0034893
+## 
+## $c_summary
+## , , chains = chain:1
+## 
+##            stats
+## parameter         mean         sd           5%         95%
+##   psi_1     -0.4543640 0.08097797 -0.586103394 -0.31989552
+##   nu_0       0.8777700 0.07258000  0.759119699  0.99267204
+##   beta_B     1.0998916 0.09587740  0.945658908  1.26060825
+##   beta_N1    0.3624241 0.08041744  0.231279960  0.49726552
+##   beta_N2   -0.3853863 0.08678232 -0.532552793 -0.24549007
+##   beta_S1    0.4856843 0.08859489  0.345993242  0.63761679
+##   beta_S2   -0.4488105 0.08466956 -0.592302886 -0.31517885
+##   beta_I1   -0.3857054 0.11283347 -0.576604374 -0.20492764
+##   beta_I2   -0.2763870 0.12680537 -0.489119931 -0.07407778
+##   V_P[1]     0.5171800 0.06195689  0.424884290  0.62624255
+##   V_P[2]     0.5815993 0.08047415  0.460964657  0.72269052
+##   Gcor[2,1]  0.5876390 0.28993577  0.006682073  0.92257037
+##   Ecor[2,1]  0.2875170 0.13696481  0.052976044  0.47356330
+##   Rcor[2,1] -0.2872456 0.03038291 -0.336230796 -0.23653782
+##   Pcor[2,1]  0.3740663 0.06778139  0.259896306  0.48345048
+##   SRN_h2[1]  0.2464020 0.13568017  0.047673374  0.49091239
+##   SRN_h2[2]  0.2229619 0.14505884  0.031108441  0.50844510
+## 
+## , , chains = chain:2
+## 
+##            stats
+## parameter         mean         sd          5%         95%
+##   psi_1     -0.4531014 0.08017372 -0.58794249 -0.32383968
+##   nu_0       0.8805409 0.07007190  0.76291251  0.99484206
+##   beta_B     1.1063380 0.09716227  0.95151829  1.27319198
+##   beta_N1    0.3588412 0.08120365  0.22845496  0.49681714
+##   beta_N2   -0.3834621 0.08757066 -0.52482057 -0.23614991
+##   beta_S1    0.4832604 0.08782948  0.34130132  0.63070709
+##   beta_S2   -0.4525490 0.08299032 -0.58965413 -0.31776645
+##   beta_I1   -0.3811201 0.11153092 -0.57079808 -0.20067110
+##   beta_I2   -0.2794236 0.12451555 -0.49382651 -0.08796025
+##   V_P[1]     0.5203205 0.06114542  0.42492574  0.62571678
+##   V_P[2]     0.5794294 0.07908520  0.46010380  0.72059465
+##   Gcor[2,1]  0.6141196 0.26534211  0.09413185  0.92643625
+##   Ecor[2,1]  0.2955353 0.11474390  0.08939812  0.45917313
+##   Rcor[2,1] -0.2875919 0.02984449 -0.33482091 -0.23776582
+##   Pcor[2,1]  0.3750387 0.06774200  0.26305156  0.48191381
+##   SRN_h2[1]  0.2572050 0.12882567  0.07550081  0.49183285
+##   SRN_h2[2]  0.2114794 0.12296533  0.04028720  0.44194384
+## 
+## , , chains = chain:3
+## 
+##            stats
+## parameter         mean         sd          5%         95%
+##   psi_1     -0.4519454 0.08302642 -0.59004708 -0.31551700
+##   nu_0       0.8764904 0.07470361  0.75173778  0.99595889
+##   beta_B     1.1037670 0.09697889  0.95100208  1.26869406
+##   beta_N1    0.3632090 0.08030714  0.23577613  0.49825630
+##   beta_N2   -0.3849070 0.08465037 -0.52577375 -0.25011849
+##   beta_S1    0.4870062 0.08886338  0.34594838  0.63810421
+##   beta_S2   -0.4507514 0.08593504 -0.59522081 -0.31348501
+##   beta_I1   -0.3896413 0.11325099 -0.58453526 -0.21152919
+##   beta_I2   -0.2717239 0.12607426 -0.48421179 -0.06764086
+##   V_P[1]     0.5155505 0.06119720  0.41967462  0.62145663
+##   V_P[2]     0.5808202 0.08067216  0.45811448  0.72388621
+##   Gcor[2,1]  0.5586896 0.30854191 -0.06616901  0.91513844
+##   Ecor[2,1]  0.3075114 0.11732418  0.09572650  0.48233210
+##   Rcor[2,1] -0.2878474 0.02947281 -0.33540335 -0.23820239
+##   Pcor[2,1]  0.3744108 0.06926845  0.25743732  0.48642527
+##   SRN_h2[1]  0.2455846 0.13266476  0.05954303  0.48604202
+##   SRN_h2[2]  0.2067622 0.12706554  0.03038364  0.43960743
+## 
+## , , chains = chain:4
+## 
+##            stats
+## parameter         mean         sd          5%         95%
+##   psi_1     -0.4515145 0.08178286 -0.58457800 -0.31668579
+##   nu_0       0.8757736 0.07480378  0.74976939  0.99672998
+##   beta_B     1.1030503 0.09674435  0.95047612  1.26940971
+##   beta_N1    0.3612951 0.07996800  0.23115334  0.49773954
+##   beta_N2   -0.3874568 0.08571157 -0.52941256 -0.25103136
+##   beta_S1    0.4862506 0.08944059  0.34183546  0.63671164
+##   beta_S2   -0.4512374 0.08356024 -0.59366186 -0.31554965
+##   beta_I1   -0.3848121 0.10928081 -0.56658244 -0.21065848
+##   beta_I2   -0.2761870 0.12603445 -0.49009652 -0.07567226
+##   V_P[1]     0.5172089 0.06132330  0.42414056  0.62392368
+##   V_P[2]     0.5812011 0.07923984  0.46084565  0.71397394
+##   Gcor[2,1]  0.5836682 0.28046449  0.03921815  0.91681518
+##   Ecor[2,1]  0.2979114 0.12680072  0.08107332  0.46954997
+##   Rcor[2,1] -0.2877204 0.02949882 -0.33511233 -0.23865628
+##   Pcor[2,1]  0.3739285 0.06919402  0.25458461  0.48406768
+##   SRN_h2[1]  0.2474555 0.13397350  0.06013291  0.49551310
+##   SRN_h2[2]  0.2170162 0.13473802  0.04198399  0.46819166</code></pre>
+</div>
+<div id="estimating-assortment-2" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Estimating assortment</h2>
+<p>The mean partner intrinsic trait values calculated in the model can then be used to estimate the assortment coefficients of interest.</p>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="fitness-model.html#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="co">#extract posteriors</span></span>
+<span id="cb174-2"><a href="fitness-model.html#cb174-2" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> rstan<span class="sc">::</span><span class="fu">extract</span>(stan_results5)</span>
+<span id="cb174-3"><a href="fitness-model.html#cb174-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb174-4"><a href="fitness-model.html#cb174-4" aria-hidden="true" tabindex="-1"></a><span class="co">#temporary vectors for assortment coefficients</span></span>
+<span id="cb174-5"><a href="fitness-model.html#cb174-5" aria-hidden="true" tabindex="-1"></a>SRN_PV <span class="ot">=</span> post<span class="sc">$</span>V_P</span>
+<span id="cb174-6"><a href="fitness-model.html#cb174-6" aria-hidden="true" tabindex="-1"></a>SRN_Psd <span class="ot">=</span> post<span class="sc">$</span>sd_P</span>
+<span id="cb174-7"><a href="fitness-model.html#cb174-7" aria-hidden="true" tabindex="-1"></a>SRN_PVmean <span class="ot">=</span> post<span class="sc">$</span>V_P <span class="sc">/</span> I_partner <span class="co">#expected variance for mean of partners</span></span>
+<span id="cb174-8"><a href="fitness-model.html#cb174-8" aria-hidden="true" tabindex="-1"></a>SRN_Psdmean <span class="ot">=</span> <span class="fu">sqrt</span>(SRN_PVmean) <span class="co">#expected SD for mean of partners</span></span>
+<span id="cb174-9"><a href="fitness-model.html#cb174-9" aria-hidden="true" tabindex="-1"></a>SRN_focal1 <span class="ot">&lt;-</span> post<span class="sc">$</span>SRN_P[,,<span class="dv">1</span>] <span class="co">#individual intercepts</span></span>
+<span id="cb174-10"><a href="fitness-model.html#cb174-10" aria-hidden="true" tabindex="-1"></a>SRN_focal2 <span class="ot">&lt;-</span> post<span class="sc">$</span>SRN_P[,,<span class="dv">2</span>] <span class="co">#individual slopes</span></span>
+<span id="cb174-11"><a href="fitness-model.html#cb174-11" aria-hidden="true" tabindex="-1"></a>SRN_partner1 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(post<span class="sc">$</span>partner_meanm[,,<span class="dv">1</span>], post<span class="sc">$</span>partner_meanf[,,<span class="dv">1</span>])</span>
+<span id="cb174-12"><a href="fitness-model.html#cb174-12" aria-hidden="true" tabindex="-1"></a>SRN_partner2 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(post<span class="sc">$</span>partner_meanm[,,<span class="dv">2</span>], post<span class="sc">$</span>partner_meanf[,,<span class="dv">2</span>])</span>
+<span id="cb174-13"><a href="fitness-model.html#cb174-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb174-14"><a href="fitness-model.html#cb174-14" aria-hidden="true" tabindex="-1"></a><span class="co">#scale mean partner variance to variance of single partner</span></span>
+<span id="cb174-15"><a href="fitness-model.html#cb174-15" aria-hidden="true" tabindex="-1"></a>SRN_partner1s <span class="ot">=</span> SRN_partner1</span>
+<span id="cb174-16"><a href="fitness-model.html#cb174-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(SRN_partner1))</span>
+<span id="cb174-17"><a href="fitness-model.html#cb174-17" aria-hidden="true" tabindex="-1"></a>    {SRN_partner1s[j,] <span class="ot">=</span> ( SRN_partner1[j,] <span class="sc">/</span> SRN_Psdmean[j,<span class="dv">1</span>] ) <span class="sc">*</span> SRN_Psd[j,<span class="dv">1</span>] }</span>
+<span id="cb174-18"><a href="fitness-model.html#cb174-18" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb174-19"><a href="fitness-model.html#cb174-19" aria-hidden="true" tabindex="-1"></a>SRN_partner2s <span class="ot">=</span> SRN_partner2</span>
+<span id="cb174-20"><a href="fitness-model.html#cb174-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(SRN_partner2))</span>
+<span id="cb174-21"><a href="fitness-model.html#cb174-21" aria-hidden="true" tabindex="-1"></a>    {SRN_partner2s[j,] <span class="ot">=</span> ( SRN_partner2[j,] <span class="sc">/</span> SRN_Psdmean[j,<span class="dv">2</span>] ) <span class="sc">*</span> SRN_Psd[j,<span class="dv">2</span>] }</span>
+<span id="cb174-22"><a href="fitness-model.html#cb174-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb174-23"><a href="fitness-model.html#cb174-23" aria-hidden="true" tabindex="-1"></a><span class="co">#assortment matrix</span></span>
+<span id="cb174-24"><a href="fitness-model.html#cb174-24" aria-hidden="true" tabindex="-1"></a>Beta_alpha <span class="ot">=</span> <span class="fu">list</span>()</span>
+<span id="cb174-25"><a href="fitness-model.html#cb174-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb174-26"><a href="fitness-model.html#cb174-26" aria-hidden="true" tabindex="-1"></a><span class="co">#generate matrices across each posterior sample</span></span>
+<span id="cb174-27"><a href="fitness-model.html#cb174-27" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(SRN_focal1))</span>
+<span id="cb174-28"><a href="fitness-model.html#cb174-28" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb174-29"><a href="fitness-model.html#cb174-29" aria-hidden="true" tabindex="-1"></a>            Beta_mat <span class="ot">=</span> <span class="fu">matrix</span>(<span class="cn">NA</span>,<span class="dv">2</span>,<span class="dv">2</span>)</span>
+<span id="cb174-30"><a href="fitness-model.html#cb174-30" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb174-31"><a href="fitness-model.html#cb174-31" aria-hidden="true" tabindex="-1"></a>            <span class="co">#mu&#39; ~ mu</span></span>
+<span id="cb174-32"><a href="fitness-model.html#cb174-32" aria-hidden="true" tabindex="-1"></a>            Beta_mat[<span class="dv">1</span>,<span class="dv">1</span>] <span class="ot">=</span>  <span class="fu">cov</span>(SRN_focal1[j,], SRN_partner1s[j,])<span class="sc">/</span><span class="fu">var</span>(SRN_focal1[j,])</span>
+<span id="cb174-33"><a href="fitness-model.html#cb174-33" aria-hidden="true" tabindex="-1"></a>            <span class="co">#mu&#39; ~ psi</span></span>
+<span id="cb174-34"><a href="fitness-model.html#cb174-34" aria-hidden="true" tabindex="-1"></a>            Beta_mat[<span class="dv">2</span>,<span class="dv">1</span>] <span class="ot">=</span>  <span class="fu">cov</span>(SRN_focal2[j,], SRN_partner1s[j,])<span class="sc">/</span><span class="fu">var</span>(SRN_focal2[j,])</span>
+<span id="cb174-35"><a href="fitness-model.html#cb174-35" aria-hidden="true" tabindex="-1"></a>            <span class="co">#psi&#39; ~ mu                                                        </span></span>
+<span id="cb174-36"><a href="fitness-model.html#cb174-36" aria-hidden="true" tabindex="-1"></a>            Beta_mat[<span class="dv">1</span>,<span class="dv">2</span>] <span class="ot">=</span>  <span class="fu">cov</span>(SRN_focal1[j,], SRN_partner2s[j,])<span class="sc">/</span><span class="fu">var</span>(SRN_focal1[j,])</span>
+<span id="cb174-37"><a href="fitness-model.html#cb174-37" aria-hidden="true" tabindex="-1"></a>            <span class="co">#psi&#39; ~ psi</span></span>
+<span id="cb174-38"><a href="fitness-model.html#cb174-38" aria-hidden="true" tabindex="-1"></a>            Beta_mat[<span class="dv">2</span>,<span class="dv">2</span>] <span class="ot">=</span>  <span class="fu">cov</span>(SRN_focal2[j,], SRN_partner2s[j,])<span class="sc">/</span><span class="fu">var</span>(SRN_focal2[j,])</span>
+<span id="cb174-39"><a href="fitness-model.html#cb174-39" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb174-40"><a href="fitness-model.html#cb174-40" aria-hidden="true" tabindex="-1"></a>            Beta_alpha[[j]] <span class="ot">=</span> Beta_mat</span>
+<span id="cb174-41"><a href="fitness-model.html#cb174-41" aria-hidden="true" tabindex="-1"></a>    } </span>
+<span id="cb174-42"><a href="fitness-model.html#cb174-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb174-43"><a href="fitness-model.html#cb174-43" aria-hidden="true" tabindex="-1"></a><span class="co">#extract beta_mu&#39;mu (assortment on SRN intercepts)</span></span>
+<span id="cb174-44"><a href="fitness-model.html#cb174-44" aria-hidden="true" tabindex="-1"></a>Beta_mu <span class="ot">=</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(Beta_alpha, <span class="cf">function</span>(x) x[<span class="dv">1</span>,<span class="dv">1</span>]))</span>
+<span id="cb174-45"><a href="fitness-model.html#cb174-45" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(Beta_mu); <span class="fu">sum</span>(Beta_mu <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="sc">/</span><span class="fu">length</span>(Beta_mu)</span></code></pre></div>
+<pre><code>## [1] 0.3606704</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p>Positive assortment of moderate effect size is detected and is estimated to be slightly larger than the true population value.</p>
+</div>
+<div id="estimating-selection-differentials-and-genetic-responses" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> Estimating selection differentials and genetic responses</h2>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="fitness-model.html#cb177-1" aria-hidden="true" tabindex="-1"></a><span class="co">#generate other relevant matrices</span></span>
+<span id="cb177-2"><a href="fitness-model.html#cb177-2" aria-hidden="true" tabindex="-1"></a>  Beta_N <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(post<span class="sc">$</span>beta_N1,post<span class="sc">$</span>beta_N2),<span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb177-3"><a href="fitness-model.html#cb177-3" aria-hidden="true" tabindex="-1"></a>  Beta_S <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">c</span>(post<span class="sc">$</span>beta_S1,post<span class="sc">$</span>beta_S2),<span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb177-4"><a href="fitness-model.html#cb177-4" aria-hidden="true" tabindex="-1"></a>  P <span class="ot">=</span> post<span class="sc">$</span>Pcov</span>
+<span id="cb177-5"><a href="fitness-model.html#cb177-5" aria-hidden="true" tabindex="-1"></a>  G <span class="ot">=</span> post<span class="sc">$</span>Gcov</span>
+<span id="cb177-6"><a href="fitness-model.html#cb177-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb177-7"><a href="fitness-model.html#cb177-7" aria-hidden="true" tabindex="-1"></a><span class="co">#selection differential</span></span>
+<span id="cb177-8"><a href="fitness-model.html#cb177-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb177-9"><a href="fitness-model.html#cb177-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">#initialize dataframe</span></span>
+<span id="cb177-10"><a href="fitness-model.html#cb177-10" aria-hidden="true" tabindex="-1"></a>  s_SRN <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">s_mu =</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="fu">nrow</span>(Beta_N)), <span class="at">s_psi =</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="fu">nrow</span>(Beta_N)))</span>
+<span id="cb177-11"><a href="fitness-model.html#cb177-11" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb177-12"><a href="fitness-model.html#cb177-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">#populate with selection differentials</span></span>
+<span id="cb177-13"><a href="fitness-model.html#cb177-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(P)){</span>
+<span id="cb177-14"><a href="fitness-model.html#cb177-14" aria-hidden="true" tabindex="-1"></a>      s_SRN[j,] <span class="ot">=</span> P[j,,] <span class="sc">%*%</span> <span class="fu">t</span>(<span class="fu">t</span>(Beta_N[j,])) <span class="sc">+</span> <span class="fu">diag</span>(<span class="fu">diag</span>(P[j,,]),<span class="dv">2</span>,) <span class="sc">%*%</span> Beta_alpha[[j]] <span class="sc">%*%</span> <span class="fu">t</span>(<span class="fu">t</span>(Beta_S[j,])) }</span>
+<span id="cb177-15"><a href="fitness-model.html#cb177-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb177-16"><a href="fitness-model.html#cb177-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span>(s_SRN,<span class="dv">2</span>,median); <span class="fu">apply</span>(s_SRN,<span class="dv">2</span>,mad)</span></code></pre></div>
+<pre><code>##       s_mu      s_psi 
+##  0.1625455 -0.1160145</code></pre>
+<pre><code>##       s_mu      s_psi 
+## 0.04229772 0.04721040</code></pre>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="fitness-model.html#cb180-1" aria-hidden="true" tabindex="-1"></a><span class="co">#response to selection</span></span>
+<span id="cb180-2"><a href="fitness-model.html#cb180-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb180-3"><a href="fitness-model.html#cb180-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#initialize dataframe</span></span>
+<span id="cb180-4"><a href="fitness-model.html#cb180-4" aria-hidden="true" tabindex="-1"></a>  response_SRN <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">delta_mu=</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="fu">nrow</span>(Beta_N)), <span class="at">delta_psi =</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="fu">nrow</span>(Beta_N)))</span>
+<span id="cb180-5"><a href="fitness-model.html#cb180-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb180-6"><a href="fitness-model.html#cb180-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#populate with response to selection</span></span>
+<span id="cb180-7"><a href="fitness-model.html#cb180-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(G)){</span>
+<span id="cb180-8"><a href="fitness-model.html#cb180-8" aria-hidden="true" tabindex="-1"></a>  response_SRN[j,] <span class="ot">=</span> G[j,,] <span class="sc">%*%</span> <span class="fu">t</span>(<span class="fu">t</span>(Beta_N[j,])) <span class="sc">+</span> <span class="fu">diag</span>(<span class="fu">diag</span>(G[j,,]),<span class="dv">2</span>,) <span class="sc">%*%</span> Beta_alpha[[j]] <span class="sc">%*%</span> <span class="fu">t</span>(<span class="fu">t</span>(Beta_S[j,]))  }</span>
+<span id="cb180-9"><a href="fitness-model.html#cb180-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb180-10"><a href="fitness-model.html#cb180-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span>(response_SRN,<span class="dv">2</span>,median); <span class="fu">apply</span>(response_SRN,<span class="dv">2</span>,mad)</span></code></pre></div>
+<pre><code>##     delta_mu    delta_psi 
+##  0.026708616 -0.009630985</code></pre>
+<pre><code>##   delta_mu  delta_psi 
+## 0.02452616 0.01739438</code></pre>
+
+</div>
+</div>
+<h3>Resources</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-SAM" class="csl-entry">
+Martin, J. S., and A. V. Jaeggi. 2021. <span>“Social Animal Models for Quantifying Plasticity, Assortment, and Selection on Interacting Phenotypes.”</span> <em>Journal of Evolutionary Biology</em>. <a href="https://doi.org/10.1111/jeb.13900">https://doi.org/10.1111/jeb.13900</a>.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="within-and-between-partner-sam.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="extending-sams.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
